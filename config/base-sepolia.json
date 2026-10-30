@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "network": "base-sepolia",
+  "chainId": 84532,
+  "nativeCurrency": { "name": "Test Ether", "symbol": "ETH", "decimals": 18 },
+  "readRpcUrl": "https://sepolia.base.org",
+  "transactionSubmissionUrl": "https://sepolia-sequencer.base.org",
+  "blockExplorerUrl": "https://sepolia.basescan.org",
+  "gasPriceOracle": "0x420000000000000000000000000000000000000F",
+  "requiredReceiptBlockTag": "finalized",
+  "allowFinalityFallback": false,
+  "deploymentStatus": "not_deployed",
+  "tokenAddress": null,
+  "paymentRouterAddress": null,
+  "paidServiceUrl": null,
+  "broadcastEnabled": false,
+  "networkFees": ["L2 execution", "L1 data/security", "operator fee when configured"],
+  "note": "Unsigned preparation only. A public RPC observation is not a Mote deployment. Never use local fixture keys on this network. Test assets have no promised monetary value or redemption.",
+  "officialReferences": [
+    "https://docs.base.org/get-started/connect-to-base",
+    "https://docs.base.org/get-started/get-funds",
+    "https://docs.base.org/specifications/transactions/network-fees",
+    "https://docs.base.org/specifications/transactions/transaction-finality",
+    "https://docs.base.org/specifications/reference/base-contracts"
+  ]
+}

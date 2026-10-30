@@ -1,0 +1,222 @@
+
+> mote-local-prototype@0.3.0-preflight.1 test
+> node --test --test-concurrency=1 test/*.test.mjs
+
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_141.node'
+Require stack:
+- <project>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <project>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ client offers free discovery and quote, while spending is disabled by default (723.205042ms)
+✔ client rejects external origins, altered destinations, unrequested offers, expired quotes, and invalid keys (12.742875ms)
+✔ client enforces both token and native-fee budgets before signing a payment (18.925292ms)
+✔ client rejects result-hash tampering before an offered payment is authorized (15.751792ms)
+✔ concurrent payments reserve atomically and only one fits a one-quote budget (93.166667ms)
+✔ concurrent retries of the same quote pay once and leave no token allowance (67.127208ms)
+✔ a dropped paid response is recovered without a second payment (90.642334ms)
+✔ HTTP 202 settlement-pending preserves recovery guidance and does not repay (75.716459ms)
+✔ uncertain transaction wait retains its reservation and reconciles the original hash (102.82775ms)
+✔ an unrelated reverted transaction cannot release an unknown payment reservation (130.706667ms)
+✔ client rejects a tampered signed receipt and retries delivery without paying again (86.427583ms)
+✔ concurrent recoveries account for an uncertain approval and payment exactly once (99.042208ms)
+✔ recovery keeps the native-fee cap when an earlier approval hash is unknown (77.471458ms)
+✔ recovering an externally paid quote after ALREADY_PAID accounts for its spend (75.862708ms)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_141.node'
+Require stack:
+- <project>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <project>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ fixed supply, six decimals, standard ERC20 transfer and exact approvals (770.022375ms)
+✔ signed payment transfers exact amount, emits binding receipt, and consumes approval (87.839083ms)
+✔ wrong payer, altered amount, altered request, wrong chain and wrong router are rejected (88.567209ms)
+✔ expired, zero amount, zero quote ID and unauthorized signatures are rejected (42.668584ms)
+✔ failed approval or insufficient balance cannot consume a quote or charge the payer (158.8415ms)
+✔ a second router cannot replay another router signature (61.088917ms)
+✔ competing transactions cannot spend the same token balance twice (74.208459ms)
+✔ reset local chains reject old-boot quote signatures (99.237042ms)
+(node:17948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_141.node'
+Require stack:
+- <project>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <project>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ active same-instance submission rejects changed offer, order key and unidentified explicit proof (923.55075ms)
+✔ active recovery rejects a different proof when the original hash is recorded (590.060542ms)
+✔ active recovery rejects a different proof when the original hash is known only to the active recovery (562.95675ms)
+✔ separate clients share a durable total budget across successful process restart (994.677625ms)
+✔ two independent processes cannot reserve or spend beyond their shared one-payment cap (588.966708ms)
+✔ separate concurrent processes using the same quote settle it only once (1034.994792ms)
+✔ SIGKILL before approve dispatch retains state and recovery never resends (1702.6505ms)
+✔ SIGKILL after approve dispatch retains state and recovery never resends (1741.531167ms)
+✔ SIGKILL before pay dispatch retains state and recovery never resends (1798.133292ms)
+✔ SIGKILL after pay dispatch retains state and recovery never resends (1881.270208ms)
+✔ SIGKILL after reservation commit recovers committed evidence without resubmission or duplicate fees (2896.446833ms)
+✔ SIGKILL after approval hash persistence recovers committed evidence without resubmission or duplicate fees (2213.577833ms)
+✔ SIGKILL after payment hash persistence recovers committed evidence without resubmission or duplicate fees (1897.479083ms)
+✔ SIGKILL after settlement accounting commit before delivery recovers committed evidence without resubmission or duplicate fees (1909.9655ms)
+✔ a dropped committed delivery response is recovered after process restart without any send (999.3445ms)
+✔ changed policy ID or policy contents cannot reset an existing journal budget (760.214166ms)
+✔ missing persistent state fails closed before approvals or payments (382.90375ms)
+✔ corrupt persistent state fails closed before approvals or payments (387.576708ms)
+✔ readonly persistent state fails closed before approvals or payments (387.100042ms)
+✔ journal becoming missing after client startup blocks the first broadcast (403.821292ms)
+✔ journal becoming readonly after client startup blocks the first broadcast (407.511ms)
+✔ recovery of an untracked offer cannot create a fresh budget or send a transaction (401.439375ms)
+(node:18088) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_141.node'
+Require stack:
+- <project>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <project>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ free root, manifest, OpenAPI and health provide truthful local discovery without spending (739.198667ms)
+✔ HTTP quote retries preserve exact offer; conflicting key rejects changed input (11.899416ms)
+✔ HTTP payment proof and result recovery complete once on the local chain (98.205667ms)
+✔ malformed JSON, wrong envelope, unsupported fields and absent idempotency fail clearly (4.590667ms)
+✔ unknown transaction produces a pending status, never a success result or second payment (11.41ms)
+✔ local HTTP rejects browser cross-origin and DNS-rebinding Host headers (4.045291ms)
+✔ body, nesting and node limits reject resource abuse before issuing offers (2.255458ms)
+✔ duplicate decoded JSON keys and invalid UTF-8 are rejected instead of silently normalized (3.1955ms)
+✔ very deep JSON and unsafe integers produce bounded client errors (0.867584ms)
+(node:18089) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ explicit initialization pins full policy and chain identity; opening never creates or resets authority (10.476708ms)
+✔ policy, offer and unsigned intent reject unknown fields and unbounded approval calldata (6.195958ms)
+✔ shared reservations enforce totals, preserve ownership, and retain cancelled tombstones (9.701333ms)
+✔ separate processes cannot reserve more than one shared budget under a simultaneous start (138.710084ms)
+✔ exact original intent and receipt accounting survive restart without charging twice (21.179334ms)
+✔ crashed unrecorded submission keeps authority reserved and cannot be resumed by another process (7.698083ms)
+✔ observed payment accounts once but cannot release an unknown original fee or wallet gate (20.350291ms)
+✔ read-only, deleted, replaced and locked journals fail closed without fallback (1131.3385ms)
+✔ valid SQLite corruption cannot erase an active reservation even with a recomputed row checksum (8.85425ms)
+✔ active handle detects an in-place corrupted SQLite header before authorizing a send (4.697833ms)
+✔ hard-linked journal aliases cannot split wallet authority into separate WAL paths (3.611292ms)
+✔ missing fee accounting is corruption rather than silently freed native budget (15.683209ms)
+✔ changed receipt evidence cannot overwrite monotonic spending or replace an original hash (17.613875ms)
+✔ MCP refuses remote, credentialed, path and redirect-prone API origins (0.860583ms)
+✔ discovery is free metadata with explicit custom protocol and payment boundaries (0.90875ms)
+✔ MCP modern 2026-07-28 lists only non-spending tools and forwards discovery, quote and proof (143.047542ms)
+✔ MCP supports the negotiated 2025-11-25 legacy initialization (95.281791ms)
+✔ public MCP pins its HTTPS origin; fixtures require an explicit separate loopback mode (0.955375ms)
+✔ public MCP bounds input before transport and leaves instruction-shaped text as data (0.878542ms)
+✔ public MCP HTTP client omits credentials and never follows metadata links or the protected MCP route (2.008ms)
+✔ public MCP rejects changed response origins and malformed or oversized responses (1.322709ms)
+✔ public MCP preserves authentication failures without attempting auth, retries or another endpoint (0.192625ms)
+✔ public MCP enforces a concurrency ceiling and times out stalled transport (32.189292ms)
+✔ public MCP rejects actual HTTP redirects without following them (16.545458ms)
+✔ public MCP deadline covers slow HTTP headers and stalled response bodies (108.295708ms)
+✔ public MCP SDK stdio modern discovery and audit use only the anonymous fixture HTTP API (150.366792ms)
+✔ public MCP SDK supports the legacy 2025-11-25 initialization without HTTP or auth (97.358417ms)
+✔ official MCP Client and StdioClientTransport legacy connect, list and call the public bridge (161.825375ms)
+✔ official MCP Client and StdioClientTransport modern connect, list and call the public bridge (256.984709ms)
+✔ official-client evaluation script produces honest controlled evidence against a loopback fixture (252.7055ms)
+✔ free discovery exposes exact paths, zero cost, limits, and honest settlement state (20.043375ms)
+✔ public and local modes produce identical core results with explicit free hash receipt (3.808959ms)
+✔ public parser rejects duplicate, malformed, over-limit, and invalid UTF-8 inputs (1.579375ms)
+✔ schema failure is a useful successful response, unsupported schema is a caller error (0.455334ms)
+✔ stateless MCP discovers and calls only the free bounded audit tool (0.569292ms)
+✔ stalled streamed body times out and is canceled without execution (5005.293041ms)
+✔ worker-safe validator yields exact pointer, constraint, and observed type (2.401041ms)
+✔ required checks own properties and escapes JSON pointers (0.210875ms)
+✔ reject malformed and unsupported schemas without code generation or network refs (0.579875ms)
+✔ canonicalization preserves instruction-like input as literal data (0.090417ms)
+✔ bounded numeric representation rejects precision-losing integer values (0.102958ms)
+✔ limits reject deep, wide, oversized inputs and too many subschemas (0.340416ms)
+✔ prototype keys are ordinary data, with no prototype mutation (0.452875ms)
+(node:18139) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_141.node'
+Require stack:
+- <project>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <project>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ free quote binds canonical request, payer, exact integer price and EIP-712 signature (731.686959ms)
+✔ simultaneous same-key quotes return one offer; conflicting input or payer is rejected (10.535375ms)
+✔ invalid payer, missing idempotency key and unsupported schema fail before charging (8.235375ms)
+✔ real payment delivers canonical output and signed receipt; replays do not debit again (111.71225ms)
+✔ wrong-router, another quote payment, malformed and unconfirmed proofs cannot unlock a result (96.825875ms)
+✔ reverted EVM transaction cannot serve as a successful payment proof (14.416708ms)
+✔ concurrent reconciliation rejects in-flight duplicate then replays one committed result (64.689125ms)
+✔ dropped response recovers identical stored receipt after service restart without another payment (91.567583ms)
+✔ crash after chain verification recovers from original transaction without charging twice (81.450167ms)
+✔ SQLite store rejects a different local chain boot instead of silently replaying old state (82.71375ms)
+✔ reorganized local chain cannot return a previously paid result as settled (74.332208ms)
+✔ embedded instructions stay ordinary document data and validation failures remain useful results (59.4745ms)
+(node:18140) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_141.node'
+Require stack:
+- <project>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <project>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ quote capacity rejects new keys while preserving existing idempotent retries and conflicts (13.115167ms)
+✔ reconciliation-key capacity preserves prior keys and read recovery instead of growing unbounded (18.50275ms)
+✔ concurrent quote signing cannot exceed the atomic store capacity after all callers pass precheck (833.709667ms)
+✔ CLI exposes no broadcast, signer, alternate RPC or credential option (1700.17925ms)
+✔ offline CLI validates roles before creating files and never overwrites a prepared plan (3403.732875ms)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_141.node'
+Require stack:
+- <project>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <project>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ verification bundle recompiles all sources without imports and preserves existing bytecode (1477.311958ms)
+✔ plan is deterministic, unsigned, zero-value and explicit about prediction and authority (3.50525ms)
+✔ configuration rejects secrets, missing roles, zero addresses, other chains and unsafe nonces (0.655417ms)
+✔ plan recomputation rejects changed arguments, bytecode, nonces, flags or added fields even after rehashing (12.691958ms)
+✔ local rehearsal deploys both exact creations and verifies finalized RPC evidence without claiming public deployment (45.290167ms)
+✔ verification rejects a different RPC chain before reading deployment evidence (2.895334ms)
+✔ finalized support, finalized height and canonical hashes are mandatory with no fallback (132.082042ms)
+✔ creation proofs reject missing receipts, reverts, wrong hashes, sender, nonce, value and arguments (97.255333ms)
+✔ runtime verification handles real immutable values but rejects changed executable code (56.153334ms)
+✔ verification independently checks supply, router immutables, signature domain and mint allocation (145.791833ms)
+✔ local 84532 fixture accepts the first exact payment signed for its actual router domain (95.260042ms)
+✔ local payment replay and wrong-chain signatures fail; deployment evidence remains valid after use (55.370167ms)
+✔ reader pins endpoint, omits credentials, rejects redirects, and uses unique matching RPC IDs (4.084125ms)
+✔ reader denies writes, signing, arbitrary methods and malformed params before invoking fetch (0.615375ms)
+✔ reader exposes bounded safe calls needed for a deployment verifier without sending a transaction (0.946ms)
+✔ reader rejects mismatched IDs, malformed envelopes, duplicate result/error, and remote RPC errors (1.1825ms)
+✔ reader rejects redirected/wrong-origin, HTTP failures and oversized declared or streamed bodies (0.688625ms)
+✔ reader timeout covers fetch and stalled response body even when a mock ignores abort (0.662542ms)
+✔ inspection reports observed heads, oracle code and explicit non-deployment/non-fee scope (1.554125ms)
+✔ inspection fails closed for wrong/changing chain and malformed or missing finality (1.159542ms)
+✔ inspection rejects inverted heads, same-height hash conflicts, broken ancestry and reorgs (0.298333ms)
+✔ inspection fails when oracle code is missing or malformed instead of claiming fee readiness (0.21625ms)
+✔ known pruned genesis produces an explicitly partial diagnostic with no pinned identity or readiness (0.834958ms)
+✔ pruned genesis never weakens finality checks or disguises other genesis RPC errors (0.852958ms)
+ℹ tests 137
+ℹ suites 0
+ℹ pass 137
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 50103.851792

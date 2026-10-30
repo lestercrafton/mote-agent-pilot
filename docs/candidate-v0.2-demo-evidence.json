@@ -1,0 +1,24 @@
+{
+  "candidate": "0.2.0-candidate.1",
+  "at": "2026-10-30T04:55:02.820Z",
+  "mode": "controlled local EVM fixture; no public financial action",
+  "chainId": 31337,
+  "actualLocalEvmSettlement": true,
+  "deliveryFailureInjected": true,
+  "journalReopened": true,
+  "sameAuthorityAndBudgetRestored": true,
+  "resultRecovered": true,
+  "recoverySendCalls": 0,
+  "repeatedQuotePaidAgain": false,
+  "freshQuoteBeyondPersistedBudgetRejected": true,
+  "amountBaseUnits": "3300",
+  "paymentTransactionHash": "0x977ea1fe43205714ce88a9d7bc43db3076c02d3216ad07ccef170c23787ba470",
+  "budget": {
+    "tokenReserved": "0",
+    "tokenSpent": "3300",
+    "gasReservedWei": "0",
+    "gasSpentWei": "235480000000000"
+  },
+  "publicServiceChanged": false,
+  "note": "This demo reopens client/storage handles; separate-process SIGKILL and concurrency cases are verified by the candidate tests."
+}

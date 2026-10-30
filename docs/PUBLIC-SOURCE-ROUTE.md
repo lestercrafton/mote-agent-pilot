@@ -1,0 +1,21 @@
+# Public source delivery route assessment
+
+This route assessment was checked 2026-10-30 and updated after the parent verified the dedicated public repository. No container registry, credential, Render service or public contract was created by this assessment. Earlier immutable archives stay unchanged. A previously denied Sites credential handoff was not retried or replaced with an indirect execution path.
+
+Render documents three source choices: connected Git provider, Public Git Repository URL, or Existing Image. Public URL/image pulls do not need a private-repository credential. The public Git URL instructions say this option is intended for a repository the deploying account does not belong to; do not hide that documented caveat when choosing an owned public repository. There is no direct source-tar upload route documented in the reviewed service/deploy instructions. [Web service sources](https://render.com/docs/web-services).
+
+For Git, publish only this candidate's reviewed source into a dedicated repository, then retain the full commit SHA and source-archive SHA-256. Disable automatic deployment and use Render's **Deploy a specific commit** action after review. A branch or release tag alone is mutable. Check the actual deployed commit against the reviewed SHA before enabling the final runtime. [Specific-commit deployment](https://render.com/docs/deploys#deploying-a-specific-commit).
+
+For a prebuilt public image, use the complete image reference with `@sha256:...`, not a moving tag. Render requires `linux/amd64` and a compressed image smaller than 10 GB. Retain the image at its digest: Render pulls again for deployments/restarts, and image rollback depends on the old digest remaining accessible. Building/publishing a new image still requires an approved registry destination and publication access; a public pull route does not supply that authority. [Prebuilt images and digest pins](https://render.com/docs/deploying-an-image).
+
+## Verified source destination and remaining checks
+
+The dedicated public repository [lestercrafton/mote-agent-pilot](https://github.com/lestercrafton/mote-agent-pilot) was created through the existing authenticated GitHub UI after candidate review. The existing native connector verified its public visibility and push/admin access without a new token, OAuth grant or credential transfer. The initial repository commit is `1b112a516e96f75f4a7bd751c8156936cba01735`; candidate source synchronization is pending this documentation checkpoint. That initial commit is not the reviewed candidate source release.
+
+The connected GitHub tools support source file/blob/tree/commit operations on this repository. Read-only CLI authentication inspection reported its stored GitHub token invalid; it was not displayed, refreshed or replaced. Existing unrelated repositories were not repurposed, and private source content was not read for publication. The previously denied Sites credential handoff remains untouched.
+
+Use Render's Public Git Repository URL input for this public repository. It does not require a provider access grant, repository secret or OAuth connection. The authenticated source-write connector and Render's anonymous source-read route are separate. Before deployment, record the full candidate source commit SHA and archive SHA-256, confirm the remote content matches the reviewed source, and select that exact commit. No paid Render resource or new live pilot endpoint has been created.
+
+Publication review must exclude `.git`, `node_modules`, runtime directories, credentials, environment files, key material, live databases/WAL/locks, payer journals, private inputs and account/billing details. Do not follow symlinks while collecting source: this development checkout's `node_modules` links outside the candidate tree. Preserve licenses and the lockfile, mark all test balances and signatures as fixtures, sanitize local user paths in evidence, and state that testnet deployment is not yet established. The Docker build context uses a separate allowlist; it is not a substitute for the public-source archive review.
+
+The existing free service, this public source repository and an eventual paid-token test service are separate artifacts. Hosting authorization and personal budgets are recorded outside this portable source document.

@@ -1,0 +1,21 @@
+✔ public MCP pins its HTTPS origin; fixtures require an explicit separate loopback mode (0.749917ms)
+✔ public MCP bounds input before transport and leaves instruction-shaped text as data (1.183458ms)
+✔ public MCP HTTP client omits credentials and never follows metadata links or the protected MCP route (2.714875ms)
+✔ public MCP rejects changed response origins and malformed or oversized responses (1.388792ms)
+✔ public MCP preserves authentication failures without attempting auth, retries or another endpoint (0.225083ms)
+✔ public MCP enforces a concurrency ceiling and times out stalled transport (31.760458ms)
+✔ public MCP rejects actual HTTP redirects without following them (20.109167ms)
+✔ public MCP deadline covers slow HTTP headers and stalled response bodies (105.589916ms)
+✔ public MCP SDK stdio modern discovery and audit use only the anonymous fixture HTTP API (112.839292ms)
+✔ public MCP SDK supports the legacy 2025-11-25 initialization without HTTP or auth (81.449292ms)
+✔ official MCP Client and StdioClientTransport legacy connect, list and call the public bridge (138.418208ms)
+✔ official MCP Client and StdioClientTransport modern connect, list and call the public bridge (220.145333ms)
+✔ official-client evaluation script produces honest controlled evidence against a loopback fixture (211.559791ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1074.357583

@@ -1,0 +1,11 @@
+{
+  "nodeVersion": "v24.22.2",
+  "install": "npm ci --omit=dev --ignore-scripts --no-audit --no-fund",
+  "installedPackages": 14,
+  "productionImportsPassed": true,
+  "developmentChainAbsent": true,
+  "compilerAbsent": true,
+  "httpRuntimeTestsPassed": 11,
+  "credentialsUsed": false,
+  "publicTransaction": false
+}

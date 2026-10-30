@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "status": "observed",
+  "readOnly": true,
+  "chainId": 11155111,
+  "network": "ethereum-sepolia",
+  "endpoint": "https://ethereum-sepolia-rpc.publicnode.com",
+  "observedAt": "2026-10-30T12:12:00.961Z",
+  "genesis": {
+    "number": "0",
+    "numberHex": "0x0",
+    "hash": "0x25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9",
+    "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "timestamp": "1633267481"
+  },
+  "genesisMatchesRegistry": true,
+  "heads": {
+    "finalized": {
+      "number": "12026524",
+      "numberHex": "0xb7829c",
+      "hash": "0x24d4e500db37e7546b055c816587dbed1e396ab5fac3dcd30258700b8e63e724",
+      "parentHash": "0xf7e53ebc8dac64ed34f56e8bb046fd43e3e4b6a0dc0b5fe05101fb9e0b83115f",
+      "timestamp": "1793361492"
+    },
+    "safe": {
+      "number": "12026556",
+      "numberHex": "0xb782bc",
+      "hash": "0xf9fbd97862c3d19a4ad363a1f587ac162275459bf5ee2e9bce83043de5a3b27e",
+      "parentHash": "0x0068becad1391c03b365998763dfa4afae75f73d7b07d26f804e101adf6b9178",
+      "timestamp": "1793361876"
+    },
+    "latest": {
+      "number": "12026592",
+      "numberHex": "0xb782e0",
+      "hash": "0x0d5956cca28fa4ec5aead1f555987d27b0250ad1dc16c7fc128bc2529a6b6bdc",
+      "parentHash": "0x0f8de23f56f66e53ba748f13ea4d9311e2a673420ea1e966b4bc1a9a17134b19",
+      "timestamp": "1793362308"
+    }
+  },
+  "finality": {
+    "tagsSupported": true,
+    "canonicalHeadHashesChecked": true,
+    "numericConfirmationFallback": false,
+    "trust": "Single third-party RPC report checked against a canonical genesis fingerprint; not independent consensus verification"
+  },
+  "fees": {
+    "status": "not-estimated",
+    "feeModel": "ethereum-eip1559",
+    "requiredComponents": [
+      "execution gas for ordinary type-2 transactions"
+    ],
+    "totalSpendCapProvided": false
+  },
+  "chainIdentityPinned": false,
+  "readiness": false,
+  "deploymentVerified": false,
+  "broadcastEnabled": false
+}

@@ -1,0 +1,24 @@
+{
+  "status": "local-functional-passed-constrained-unverified",
+  "localEvidence": "resource-verification-local-v0.5.json",
+  "baseCompatibilitySmoke": "resource-smoke-base-v0.5.json",
+  "containerGateEvidence": "resource-container-gate-v0.5.json",
+  "observedNode": "v24.22.2",
+  "fullSyntheticRows": 1000,
+  "fullSyntheticAttempts": 4000,
+  "localFunctionalChecksPassed": true,
+  "constrainedAcceptancePassed": false,
+  "dockerOrAlternativeEngineFound": false,
+  "containerRunAttempted": false,
+  "productionOmitDevRunCompleted": false,
+  "hostedValidation": false,
+  "externalRpcCalls": 0,
+  "publicTransactions": 0,
+  "persistentKeysCreated": 0,
+  "notes": [
+    "Read-only PATH/common Docker binary inspection found no local container engine.",
+    "Loopback required a sandbox escalation; the local test then completed.",
+    "Full local evidence includes separate backup/restore processes; combined child memory remains unmeasured without cgroups.",
+    "Prior immutable source archives were not changed."
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "source": "https://hub.docker.com/v2/repositories/library/node/tags/24.22.2-bookworm-slim",
+  "observedDate": "2026-10-30",
+  "tag": "24.22.2-bookworm-slim",
+  "manifestDigest": "sha256:c86ecead9e55a5210ac1727de38a4ca840bf03dcaf34dc9749addbf383b1920c",
+  "linuxAmd64Digest": "sha256:a43f7fc3e52e87d12a905f46eea0275def84ca8f2981a5b53fed44d7fb398ee0",
+  "imageBuilt": false,
+  "imagePublished": false,
+  "containerQualificationPassed": false
+}

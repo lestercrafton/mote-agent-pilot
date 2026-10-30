@@ -1,0 +1,13 @@
+# Transparent pilot costs and future cost recovery
+
+This pilot's MOTE tariff is **1000 + 10 × canonical input bytes** in six-decimal test-token units. It is a reproducible demonstration tariff, not a dollar quote, token price, claim of market value, stable peg or promise of redemption. The full exact amount, asset, network, recipient and expiry are signed before the payer commits. A schema mismatch is a successful validation result; malformed or unsupported requests are rejected before an offer is issued.
+
+Service payment and Ethereum transaction fees are separate. The payer policy bounds each native fee and the total budget; the client reserves both approval and payment authority before signing. It never buys native currency, swaps tokens, bridges, tops up, or assumes new funding. A wallet must already have authorized test ETH and test MOTE. Testnet gas faucets and initial token allocation are one-time onboarding dependencies and are not live in this candidate.
+
+A sustainable future service can charge enough to cover measured hosting, storage, operations and transaction-support costs. That requires observed usage, explicit pricing, a stable accounting unit and reviewed custody; creating a token does not itself pay the hosting bill. The current operator hosting expense is denominated in ordinary currency, while MOTE has no established conversion value. No automatic conversion, creator royalty, recurring payer charge or real-money cost-recovery fee is enabled.
+
+For a future reviewed launch, disclose an itemized service tariff independently of payer gas; publish pricing changes in signed offers with expiries; let the agent's external policy accept or reject each price automatically; and reconcile actual paid amounts against verified receipts. Treat token amounts, native gas, fiat hosting invoices and optional gifts as distinct accounting categories. Do not count quotes, duplicate recovery responses, failed transactions or synthetic test traffic as revenue or adoption.
+
+Tips remain disabled and no creator wallet is configured. Any future voluntary contribution needs the payer's explicit policy, has no effect on access or rankings, and must not be implied by a normal paid service call. The goal is useful autonomous service purchase under legitimate ownership and preauthorization, not speculative trading or independent financial authority for a model.
+
+Public testnet success is a prerequisite, not authorization, for real-value settlement. Further gates include demonstrated utility, independent security review, complete fee and loss accounting, custody/revocation/recovery, actual host capacity and a separately authorized financial launch. The current project claims no first-ever exchange mechanism and no outside adoption.

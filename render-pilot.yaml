@@ -1,0 +1,44 @@
+# PREPARATION: $7.25/month base is not a hard cap; authorization tracked separately.
+# Repository credentials and quote-key provisioning remain separate gates.
+# No public contracts, runtime keys or Render resources are created by this file.
+# First installation needs the same-instance setup override in docs/PILOT-RENDER.md.
+previews:
+  generation: off
+
+services:
+  - type: web
+    name: mote-testnet-pilot
+    runtime: node
+    plan: 0.5c-512mb
+    region: oregon
+    numInstances: 1
+    autoDeployTrigger: off
+    buildCommand: npm ci --omit=dev --ignore-scripts
+    startCommand: node scripts/testnet-server.mjs
+    healthCheckPath: /ready
+    disk:
+      name: mote-testnet-orders
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_VERSION
+        value: 24.22.2
+      - key: NODE_ENV
+        value: production
+      - key: MOTE_MODE
+        value: ethereum-sepolia-public-synthetic-test
+      - key: MOTE_CHAIN_CONFIG
+        value: /var/data/deployment.json
+      - key: MOTE_DATABASE
+        value: /var/data/orders.sqlite
+      - key: MOTE_RECOVERY_ONLY
+        value: "false"
+      # Public configuration pins, supplied only after deployment review.
+      - key: MOTE_CONFIG_HASH
+        sync: false
+      - key: MOTE_PUBLIC_ORIGIN
+        sync: false
+      # Future unfunded quote/receipt signer only. No value is supplied here.
+      # NEVER add a deployer/admin key, seed phrase or transaction signer.
+      - key: MOTE_ETHEREUM_SEPOLIA_QUOTE_PRIVATE_KEY
+        sync: false

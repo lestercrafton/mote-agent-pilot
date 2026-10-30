@@ -1,0 +1,33 @@
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- <project>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <project>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+{
+  "demonstration": "mote-testnet-pilot-local-evm",
+  "passed": true,
+  "controlledTest": true,
+  "chainId": 84532,
+  "localEvmOnly": true,
+  "publicBaseTransaction": false,
+  "realMoney": false,
+  "discovery": true,
+  "signedExactQuote": true,
+  "fixturePaymentTransaction": "0xca106a0a7c769af73ce0fd925ce902ec3acd905cd857219e0981399ebe5153a5",
+  "tokenAmount": "3580",
+  "merchantIncreaseExactlyOnce": true,
+  "duplicatePaymentRejected": true,
+  "droppedResponseRecovered": true,
+  "identicalReceiptAfterRestart": true,
+  "missingPostBackupRowReconstructed": true,
+  "restoredStateStillRecoveryOnly": true,
+  "publicStandardTransactionGuard": "BASE_TOTAL_FEE_CAP_UNENFORCEABLE",
+  "baseFeeBehaviorSimulated": false,
+  "resultHash": "0x7fdfcad524b158ecadd7b34230c0fca0976248c45bda379c7c480e86f411a40e",
+  "sourceConfigHash": "0x183fbdf604268fa034039e0a00532186b8900f2104bdbce288696607dfbc1956"
+}

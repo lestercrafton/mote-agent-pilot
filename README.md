@@ -1,2 +1,59 @@
-# mote-agent-pilot
-Experimental agent JSON preflight utility and unlaunched Ethereum Sepolia payment candidate. No real-value token or public settlement claimed.
+# Mote — v0.5.0-sepolia.1
+
+Mote is an agent-oriented JSON preflight utility with an **unlaunched Ethereum Sepolia wallet-payment candidate**. The free utility is live at https://mote-agent-utility.sunlightisfree.chatgpt.site . No public token, paid endpoint, public test transaction, token price, redemption promise or organic adoption is claimed. Mote is an unvetted working name; usefulness does not establish demand for a new currency.
+
+This candidate contains the actual settlement service, public-payer policy/journal, verified deployment configuration, finalized proof verification, durable orders, restart recovery and SQLite backup/restore. It preserves the older local prototypes. The service accepts only explicitly declared **public synthetic inputs**: stored documents, results and receipt recovery have no private-data authentication. Declaration is caller responsibility; it is not a privacy detector.
+
+**Ethereum Sepolia now has an enforceable payment path.** The standard client reserves the complete `gasLimit * maxFeePerGas` ceiling for each ordinary type-2 transaction, records its exact intent before a caller-provided signer acts, waits for canonical finality, and reconciles actual execution/state gas fees. It checks the caller's token, native-fee and total budgets automatically. Base Sepolia remains explicitly blocked because its additional fee components cannot be capped by that transaction format. See [Ethereum fee evidence](docs/ETHEREUM-FEES.md), [the wallet interface](docs/TESTNET-CLIENT.md) and [the public pilot runbook](docs/ETHEREUM-PILOT.md).
+
+Ethereum quotes default to one hour. The original active client waits up to 30 minutes per submitted transaction; a crash, timeout or unknown send retains reservations. Restart recovery is read-only and never resumes or repeats a send. There is no automatic fee increase, top-up or chain switch. The supported wallet is a trusted ordinary EOA signer; smart accounts, ERC-4337 and EIP-7702 delegation are outside this candidate.
+
+## Run the local rehearsal
+
+Use Node **24.22.2 LTS**, pinned by `.node-version`. Install development dependencies for the local EVM/compiler:
+
+```sh
+npm ci --ignore-scripts
+npm test
+npm run demo:sepolia
+```
+
+The new rehearsal runs the **same standard client and fee checks**, without fee-boundary overrides, against actual loopback EVM transactions. It discovers the service, obtains an exact signed quote, approves and pays within policy, loses the delivery response, reopens its durable budget journal and recovers the same result without paying twice. It rejects a fee limit before reservation or signer access. The simulator uses known public fixture accounts and immediate local finality; it is not the public network or a direct test of its current fork. The full regression suite passed **312/312 tests** on Node 24.22.2; a fresh production-only install passed **29/29 focused tests**. Evidence is in [the local wallet-payment result](docs/sepolia-demo-v0.5-evidence.json) and [the complete regression log](docs/sepolia-full-tests-v0.5.txt).
+
+The preserved `demo:testnet` separately verifies the Base-shaped service's backup/restore flow on an isolated EVM. Neither demo contacts a public blockchain, creates persistent keys or transfers anything of economic value. A bounded public **read-only** Ethereum observation verified the fixed provider's canonical genesis and finality tags; it did not deploy or spend.
+
+```sh
+npm run demo              # original local 31337 flow
+npm run demo:durable      # original durable local payer
+npm run public           # standalone free loopback utility, no chain
+npm run mcp:public       # stdio adapter to the existing live free service
+```
+
+The public MCP adapter requires a host capable of local stdio and no credentials. It calls only anonymous HTTPS discovery/health/audit, not the protected hosted MCP route. A separate portable source archive is supplied; [installation and protocol details](docs/PUBLIC-MCP.md) include exact host configuration. No remote MCP gateway or Registry identity is published.
+
+## Public-test pilot components
+
+| Component | Implementation and boundary |
+| --- | --- |
+| Fixed-supply token/router | OpenZeppelin ERC-20; 1,000,000 MOTE, six decimals; no mint, tax, blacklist, upgrade or royalty. Router consumes exact EIP-712 payer/request/amount/deadline quotes once. No market value or allocation plan. |
+| Deployment evidence | Unsigned two-contract planner, complete compiler input and readonly finalized verifier. Runtime pins origin, chain, contract bytecode/creation, roles, quote signer and deployment checkpoint; a config hash alone is not external trust. |
+| Orders | Compute and persist before signing; bind idempotency to payer/input; finalized exact-calldata/event proof; persist result and signed receipt before response. Fresh proof/anchor rechecks protect recovery from detected reorgs. |
+| SQLite | Explicit preinitialized database plus separate process gate. Missing/corrupt/changed identity fails closed. Online WAL-consistent backups; restore is quarantined recovery-only and cannot authorize new quotes. |
+| Payer | Exact origin/asset/router/payee policy, atomic shared budget and nonce ownership, separate approval/payment fee intents, monotonic evidence and retained unknown reservations. No keys in journal. Ethereum sends require the enforced complete type-2 ceiling; Base sends still fail closed. |
+| Runtime | One Node process on proposed Render 512 MB service with 1 GB mounted disk. Only an externally provisioned offline quote-attestation key belongs there; no deployer/holder key or transaction signer. Never auto-initializes state. |
+
+Start with [Ethereum Sepolia setup](docs/ETHEREUM-PILOT.md), [the HTTP protocol](docs/PILOT-HTTP.md), [Render runbook](docs/PILOT-RENDER.md), [recovery procedures](docs/TESTNET-RECOVERY.md), [payer policy](docs/TESTNET-CLIENT.md), [setup gates](docs/PILOT-SETUP.md) and [launch handoff](docs/HANDOFF.md). `render-pilot.yaml` includes the actual settlement service, not merely another copy of the existing free bootstrap. [Bounded local capacity measurements](docs/CAPACITY.md) include exact byte sizes and limits. [Full-store resource checks and host acceptance criteria](docs/RESOURCE-VERIFICATION.md) are prepared. Local runs cannot qualify a 512 MB Linux host; hosted capacity and availability remain unmeasured.
+
+## Utility semantics and limits
+
+64 KiB body; depth 16; 4,096 input nodes; arrays at most 1,024 items; schema at most 32 KiB and 128 subschemas. The supported `mote-draft-07-subset-v1` keywords are explicit. No remote references, regex, formats, combinators, coercion, repair or external fetching. Instructions in document strings remain data. Invalid UTF-8, duplicate decoded keys, unsafe integers and nonfinite numbers are rejected. Fractional numbers retain binary64 rounding; use strings for exact decimal amounts. Negative zero becomes zero.
+
+`mote-sorted-json-v1` sorts object keys by UTF-16 order, preserves arrays and hashes UTF-8 bytes with SHA-256. This is not RFC 8785 or full JSON Schema. Errors include exact instance path, keyword, expected constraint and observed type. Free receipts are unsigned hashes, not settlement.
+
+## Limits that remain
+
+Public service launch needs an approved account/source delivery route, separately approved dedicated signer provisioning, public testnet deployment/faucet actions and a verified persisted configuration. Hosting spending approval does not approve keys, repository OAuth, public transactions or real money. The supplied planner/admin CLI cannot broadcast. The Ethereum client can operate unattended once a legitimate caller supplies the funded test wallet, pinned deployed identity and policy; that public setup has not happened. The Base client remains blocked. Never substitute a fee estimate for the signed ceiling.
+
+Shared trusted single-host journals cannot prevent full rollback or duplicated independent authority. Unknown submissions may retain reservations indefinitely. Quarantined restore never silently resumes sales. Public admission limits are deliberately small (1,000 quotes, 4,000 attempts, 20 quotes per payer) and can be exhausted by anonymous callers; there is no production denial-of-service, private-data or multi-region guarantee. Old unconfirmed orders are not automatically discarded to create capacity. Original signed offers and input must be retained by callers for recovery of post-backup rows.
+
+No x402, ERC-3009, facilitator compatibility, stablecoin integration, swaps, bridges, topups, token sale, tips, or unsolicited agent promotion is implemented. Source releases are prototypes, not audits. Ganache's advisory-affected development tree is excluded from runtime installation and is only for isolated fixtures. [Transparent cost-recovery principles](docs/ECONOMICS.md) describe future sustainability without enabling real-value fees. Current public utility behavior and previous downloads are unchanged.

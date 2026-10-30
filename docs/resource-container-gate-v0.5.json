@@ -1,0 +1,22 @@
+{
+  "schema": "mote-resource-check-v1",
+  "status": "blocked-environment",
+  "profile": "full",
+  "environment": {
+    "node": "v24.22.2",
+    "platform": "darwin",
+    "architecture": "arm64",
+    "memoryMaxBytes": null,
+    "swapMaxBytes": null,
+    "cpuQuotaCores": null,
+    "memoryEvents": null,
+    "cpuStat": null,
+    "developmentPackagesPresent": [
+      "ganache",
+      "solc",
+      "@modelcontextprotocol/client"
+    ]
+  },
+  "acceptancePassed": false,
+  "reason": "Requires Node24.22.2 Linux x64, cgroup-v2 512MiB, swap0, CPU0.5 and omitted development dependencies."
+}

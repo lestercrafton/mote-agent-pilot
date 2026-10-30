@@ -1,0 +1,938 @@
+{
+  "evidenceVersion": "mote-local-capacity-measurement-v1",
+  "startedAt": "2026-10-30T11:54:55.380Z",
+  "finishedAt": "2026-10-30T11:54:56.431Z",
+  "localOnly": true,
+  "environment": {
+    "node": "v24.22.2",
+    "sqlite": "3.53.4",
+    "v8": "13.6.233.17-node.63",
+    "os": "darwin",
+    "osRelease": "24.6.0",
+    "architecture": "arm64",
+    "logicalCpus": 16,
+    "cpuModel": "Apple M3 Max",
+    "systemMemoryBytes": 51539607552,
+    "processMemoryLimitEnforced": false,
+    "render512MiBHostTested": false,
+    "serverAndLoadDriverShareProcess": true
+  },
+  "method": {
+    "transport": "loopback HTTP, no TLS",
+    "chainProofs": "controlled synthetic adapter responses; no chain settlement",
+    "keys": "well-known public development fixture, memory only",
+    "paidWork": "quote + controlled proof/result + exact GET receipt recovery",
+    "freeWork": "bounded JSON validation/canonicalization",
+    "quantiles": "nearest rank",
+    "warmup": "one free request per workload; no paid-path warmup",
+    "jobsPerConcurrency": 24,
+    "freeJobsPerWorkload": 10,
+    "concurrencies": [
+      1,
+      4
+    ],
+    "externalApiRequests": 0,
+    "publicRpcCalls": 0,
+    "transactionsSubmitted": 0,
+    "localHttpRequests": 208,
+    "mockProofChecks": 96,
+    "mockIdentityChecks": 49
+  },
+  "workloads": [
+    {
+      "name": "small-valid",
+      "expectedValid": true,
+      "inputJsonBytes": 290,
+      "inputFractionOfHttpBodyCap": 0.004,
+      "description": "small synthetic tool-call document and supported schema"
+    },
+    {
+      "name": "small-invalid",
+      "expectedValid": false,
+      "inputJsonBytes": 212,
+      "inputFractionOfHttpBodyCap": 0.003,
+      "description": "small synthetic tool-call document and supported schema"
+    },
+    {
+      "name": "near-byte-limit",
+      "expectedValid": true,
+      "inputJsonBytes": 64167,
+      "inputFractionOfHttpBodyCap": 0.979,
+      "description": "64,000 ASCII characters and a small supported schema; near byte cap, not worst-case schema/depth complexity"
+    }
+  ],
+  "discovery": {
+    "responseBodyBytes": 3723,
+    "requestBodyBytes": 0,
+    "countedRequests": 1
+  },
+  "paidPathWithMockProofs": [
+    {
+      "concurrency": 1,
+      "durationMs": 502.598,
+      "jobsPerSecond": 47.752,
+      "requestsPerJob": 3,
+      "baselineRssBytes": 122552320,
+      "endRssBytes": 164839424,
+      "overall": {
+        "jobs": 24,
+        "jobLatencyMs": {
+          "samples": 24,
+          "min": 15.929,
+          "mean": 20.933,
+          "p50": 20.473,
+          "p95": 28.282,
+          "max": 29.135
+        },
+        "requestBodyBytes": {
+          "samples": 24,
+          "min": 488,
+          "mean": 21832.333,
+          "p50": 566,
+          "p95": 64443,
+          "max": 64443
+        },
+        "responseBodyBytes": {
+          "samples": 24,
+          "min": 4953,
+          "mean": 47673,
+          "p50": 5211,
+          "p95": 132855,
+          "max": 132855
+        },
+        "quoteResponseBytes": {
+          "samples": 24,
+          "min": 1367,
+          "mean": 1368.333,
+          "p50": 1367,
+          "p95": 1371,
+          "max": 1371
+        },
+        "resultResponseBytes": {
+          "samples": 24,
+          "min": 1793,
+          "mean": 23152.333,
+          "p50": 1922,
+          "p95": 65742,
+          "max": 65742
+        },
+        "recoveryResponseBytes": {
+          "samples": 24,
+          "min": 1793,
+          "mean": 23152.333,
+          "p50": 1922,
+          "p95": 65742,
+          "max": 65742
+        },
+        "quoteLatencyMs": {
+          "samples": 24,
+          "min": 4.992,
+          "mean": 6.999,
+          "p50": 6.913,
+          "p95": 9.589,
+          "max": 10.793
+        },
+        "resultLatencyMs": {
+          "samples": 24,
+          "min": 5.923,
+          "mean": 7.937,
+          "p50": 7.794,
+          "p95": 10.75,
+          "max": 12.011
+        },
+        "recoveryLatencyMs": {
+          "samples": 24,
+          "min": 4.506,
+          "mean": 5.843,
+          "p50": 5.741,
+          "p95": 7.907,
+          "max": 7.933
+        }
+      },
+      "workloads": {
+        "small-valid": {
+          "jobs": 8,
+          "jobLatencyMs": {
+            "samples": 8,
+            "min": 15.929,
+            "mean": 19.47,
+            "p50": 17.364,
+            "p95": 27.211,
+            "max": 27.211
+          },
+          "requestBodyBytes": {
+            "samples": 8,
+            "min": 566,
+            "mean": 566,
+            "p50": 566,
+            "p95": 566,
+            "max": 566
+          },
+          "responseBodyBytes": {
+            "samples": 8,
+            "min": 4953,
+            "mean": 4953,
+            "p50": 4953,
+            "p95": 4953,
+            "max": 4953
+          },
+          "quoteResponseBytes": {
+            "samples": 8,
+            "min": 1367,
+            "mean": 1367,
+            "p50": 1367,
+            "p95": 1367,
+            "max": 1367
+          },
+          "resultResponseBytes": {
+            "samples": 8,
+            "min": 1793,
+            "mean": 1793,
+            "p50": 1793,
+            "p95": 1793,
+            "max": 1793
+          },
+          "recoveryResponseBytes": {
+            "samples": 8,
+            "min": 1793,
+            "mean": 1793,
+            "p50": 1793,
+            "p95": 1793,
+            "max": 1793
+          },
+          "quoteLatencyMs": {
+            "samples": 8,
+            "min": 5.114,
+            "mean": 6.761,
+            "p50": 6.057,
+            "p95": 10.793,
+            "max": 10.793
+          },
+          "resultLatencyMs": {
+            "samples": 8,
+            "min": 5.923,
+            "mean": 7.19,
+            "p50": 6.473,
+            "p95": 9.572,
+            "max": 9.572
+          },
+          "recoveryLatencyMs": {
+            "samples": 8,
+            "min": 4.506,
+            "mean": 5.404,
+            "p50": 4.973,
+            "p95": 6.495,
+            "max": 6.495
+          }
+        },
+        "small-invalid": {
+          "jobs": 8,
+          "jobLatencyMs": {
+            "samples": 8,
+            "min": 16.103,
+            "mean": 19.032,
+            "p50": 18.193,
+            "p95": 22.202,
+            "max": 22.202
+          },
+          "requestBodyBytes": {
+            "samples": 8,
+            "min": 488,
+            "mean": 488,
+            "p50": 488,
+            "p95": 488,
+            "max": 488
+          },
+          "responseBodyBytes": {
+            "samples": 8,
+            "min": 5211,
+            "mean": 5211,
+            "p50": 5211,
+            "p95": 5211,
+            "max": 5211
+          },
+          "quoteResponseBytes": {
+            "samples": 8,
+            "min": 1367,
+            "mean": 1367,
+            "p50": 1367,
+            "p95": 1367,
+            "max": 1367
+          },
+          "resultResponseBytes": {
+            "samples": 8,
+            "min": 1922,
+            "mean": 1922,
+            "p50": 1922,
+            "p95": 1922,
+            "max": 1922
+          },
+          "recoveryResponseBytes": {
+            "samples": 8,
+            "min": 1922,
+            "mean": 1922,
+            "p50": 1922,
+            "p95": 1922,
+            "max": 1922
+          },
+          "quoteLatencyMs": {
+            "samples": 8,
+            "min": 4.992,
+            "mean": 6.377,
+            "p50": 6.319,
+            "p95": 7.313,
+            "max": 7.313
+          },
+          "resultLatencyMs": {
+            "samples": 8,
+            "min": 6.025,
+            "mean": 7.173,
+            "p50": 6.449,
+            "p95": 8.675,
+            "max": 8.675
+          },
+          "recoveryLatencyMs": {
+            "samples": 8,
+            "min": 4.722,
+            "mean": 5.395,
+            "p50": 5.057,
+            "p95": 6.457,
+            "max": 6.457
+          }
+        },
+        "near-byte-limit": {
+          "jobs": 8,
+          "jobLatencyMs": {
+            "samples": 8,
+            "min": 20.473,
+            "mean": 24.298,
+            "p50": 22.549,
+            "p95": 29.135,
+            "max": 29.135
+          },
+          "requestBodyBytes": {
+            "samples": 8,
+            "min": 64443,
+            "mean": 64443,
+            "p50": 64443,
+            "p95": 64443,
+            "max": 64443
+          },
+          "responseBodyBytes": {
+            "samples": 8,
+            "min": 132855,
+            "mean": 132855,
+            "p50": 132855,
+            "p95": 132855,
+            "max": 132855
+          },
+          "quoteResponseBytes": {
+            "samples": 8,
+            "min": 1371,
+            "mean": 1371,
+            "p50": 1371,
+            "p95": 1371,
+            "max": 1371
+          },
+          "resultResponseBytes": {
+            "samples": 8,
+            "min": 65742,
+            "mean": 65742,
+            "p50": 65742,
+            "p95": 65742,
+            "max": 65742
+          },
+          "recoveryResponseBytes": {
+            "samples": 8,
+            "min": 65742,
+            "mean": 65742,
+            "p50": 65742,
+            "p95": 65742,
+            "max": 65742
+          },
+          "quoteLatencyMs": {
+            "samples": 8,
+            "min": 6.584,
+            "mean": 7.86,
+            "p50": 7.37,
+            "p95": 9.589,
+            "max": 9.589
+          },
+          "resultLatencyMs": {
+            "samples": 8,
+            "min": 7.54,
+            "mean": 9.448,
+            "p50": 8.905,
+            "p95": 12.011,
+            "max": 12.011
+          },
+          "recoveryLatencyMs": {
+            "samples": 8,
+            "min": 5.988,
+            "mean": 6.73,
+            "p50": 6.151,
+            "p95": 7.933,
+            "max": 7.933
+          }
+        }
+      }
+    },
+    {
+      "concurrency": 4,
+      "durationMs": 448.247,
+      "jobsPerSecond": 53.542,
+      "requestsPerJob": 3,
+      "baselineRssBytes": 168853504,
+      "endRssBytes": 176488448,
+      "overall": {
+        "jobs": 24,
+        "jobLatencyMs": {
+          "samples": 24,
+          "min": 42.509,
+          "mean": 72.525,
+          "p50": 72.492,
+          "p95": 85.569,
+          "max": 110.083
+        },
+        "requestBodyBytes": {
+          "samples": 24,
+          "min": 488,
+          "mean": 21832.333,
+          "p50": 566,
+          "p95": 64443,
+          "max": 64443
+        },
+        "responseBodyBytes": {
+          "samples": 24,
+          "min": 4953,
+          "mean": 47673,
+          "p50": 5211,
+          "p95": 132855,
+          "max": 132855
+        },
+        "quoteResponseBytes": {
+          "samples": 24,
+          "min": 1367,
+          "mean": 1368.333,
+          "p50": 1367,
+          "p95": 1371,
+          "max": 1371
+        },
+        "resultResponseBytes": {
+          "samples": 24,
+          "min": 1793,
+          "mean": 23152.333,
+          "p50": 1922,
+          "p95": 65742,
+          "max": 65742
+        },
+        "recoveryResponseBytes": {
+          "samples": 24,
+          "min": 1793,
+          "mean": 23152.333,
+          "p50": 1922,
+          "p95": 65742,
+          "max": 65742
+        },
+        "quoteLatencyMs": {
+          "samples": 24,
+          "min": 5.781,
+          "mean": 22.75,
+          "p50": 23.943,
+          "p95": 32.762,
+          "max": 36.319
+        },
+        "resultLatencyMs": {
+          "samples": 24,
+          "min": 12.828,
+          "mean": 26.331,
+          "p50": 25.692,
+          "p95": 36.721,
+          "max": 42.34
+        },
+        "recoveryLatencyMs": {
+          "samples": 24,
+          "min": 5.894,
+          "mean": 23.32,
+          "p50": 23.532,
+          "p95": 29.214,
+          "max": 31.361
+        }
+      },
+      "workloads": {
+        "small-valid": {
+          "jobs": 8,
+          "jobLatencyMs": {
+            "samples": 8,
+            "min": 52.543,
+            "mean": 75.092,
+            "p50": 72.492,
+            "p95": 110.083,
+            "max": 110.083
+          },
+          "requestBodyBytes": {
+            "samples": 8,
+            "min": 566,
+            "mean": 566,
+            "p50": 566,
+            "p95": 566,
+            "max": 566
+          },
+          "responseBodyBytes": {
+            "samples": 8,
+            "min": 4953,
+            "mean": 4953,
+            "p50": 4953,
+            "p95": 4953,
+            "max": 4953
+          },
+          "quoteResponseBytes": {
+            "samples": 8,
+            "min": 1367,
+            "mean": 1367,
+            "p50": 1367,
+            "p95": 1367,
+            "max": 1367
+          },
+          "resultResponseBytes": {
+            "samples": 8,
+            "min": 1793,
+            "mean": 1793,
+            "p50": 1793,
+            "p95": 1793,
+            "max": 1793
+          },
+          "recoveryResponseBytes": {
+            "samples": 8,
+            "min": 1793,
+            "mean": 1793,
+            "p50": 1793,
+            "p95": 1793,
+            "max": 1793
+          },
+          "quoteLatencyMs": {
+            "samples": 8,
+            "min": 5.781,
+            "mean": 21.107,
+            "p50": 17.355,
+            "p95": 36.319,
+            "max": 36.319
+          },
+          "resultLatencyMs": {
+            "samples": 8,
+            "min": 20.112,
+            "mean": 28.597,
+            "p50": 27.057,
+            "p95": 42.34,
+            "max": 42.34
+          },
+          "recoveryLatencyMs": {
+            "samples": 8,
+            "min": 16.358,
+            "mean": 25.322,
+            "p50": 23.575,
+            "p95": 31.361,
+            "max": 31.361
+          }
+        },
+        "small-invalid": {
+          "jobs": 8,
+          "jobLatencyMs": {
+            "samples": 8,
+            "min": 56.744,
+            "mean": 71.222,
+            "p50": 71.505,
+            "p95": 85.494,
+            "max": 85.494
+          },
+          "requestBodyBytes": {
+            "samples": 8,
+            "min": 488,
+            "mean": 488,
+            "p50": 488,
+            "p95": 488,
+            "max": 488
+          },
+          "responseBodyBytes": {
+            "samples": 8,
+            "min": 5211,
+            "mean": 5211,
+            "p50": 5211,
+            "p95": 5211,
+            "max": 5211
+          },
+          "quoteResponseBytes": {
+            "samples": 8,
+            "min": 1367,
+            "mean": 1367,
+            "p50": 1367,
+            "p95": 1367,
+            "max": 1367
+          },
+          "resultResponseBytes": {
+            "samples": 8,
+            "min": 1922,
+            "mean": 1922,
+            "p50": 1922,
+            "p95": 1922,
+            "max": 1922
+          },
+          "recoveryResponseBytes": {
+            "samples": 8,
+            "min": 1922,
+            "mean": 1922,
+            "p50": 1922,
+            "p95": 1922,
+            "max": 1922
+          },
+          "quoteLatencyMs": {
+            "samples": 8,
+            "min": 11.503,
+            "mean": 21.592,
+            "p50": 21.117,
+            "p95": 27.952,
+            "max": 27.952
+          },
+          "resultLatencyMs": {
+            "samples": 8,
+            "min": 17.117,
+            "mean": 25.062,
+            "p50": 24.698,
+            "p95": 30.835,
+            "max": 30.835
+          },
+          "recoveryLatencyMs": {
+            "samples": 8,
+            "min": 15.48,
+            "mean": 24.501,
+            "p50": 23.311,
+            "p95": 29.186,
+            "max": 29.186
+          }
+        },
+        "near-byte-limit": {
+          "jobs": 8,
+          "jobLatencyMs": {
+            "samples": 8,
+            "min": 42.509,
+            "mean": 71.26,
+            "p50": 68.59,
+            "p95": 85.569,
+            "max": 85.569
+          },
+          "requestBodyBytes": {
+            "samples": 8,
+            "min": 64443,
+            "mean": 64443,
+            "p50": 64443,
+            "p95": 64443,
+            "max": 64443
+          },
+          "responseBodyBytes": {
+            "samples": 8,
+            "min": 132855,
+            "mean": 132855,
+            "p50": 132855,
+            "p95": 132855,
+            "max": 132855
+          },
+          "quoteResponseBytes": {
+            "samples": 8,
+            "min": 1371,
+            "mean": 1371,
+            "p50": 1371,
+            "p95": 1371,
+            "max": 1371
+          },
+          "resultResponseBytes": {
+            "samples": 8,
+            "min": 65742,
+            "mean": 65742,
+            "p50": 65742,
+            "p95": 65742,
+            "max": 65742
+          },
+          "recoveryResponseBytes": {
+            "samples": 8,
+            "min": 65742,
+            "mean": 65742,
+            "p50": 65742,
+            "p95": 65742,
+            "max": 65742
+          },
+          "quoteLatencyMs": {
+            "samples": 8,
+            "min": 17.002,
+            "mean": 25.551,
+            "p50": 25.563,
+            "p95": 32.762,
+            "max": 32.762
+          },
+          "resultLatencyMs": {
+            "samples": 8,
+            "min": 12.828,
+            "mean": 25.333,
+            "p50": 24.59,
+            "p95": 36.721,
+            "max": 36.721
+          },
+          "recoveryLatencyMs": {
+            "samples": 8,
+            "min": 5.894,
+            "mean": 20.136,
+            "p50": 20.648,
+            "p95": 25.662,
+            "max": 25.662
+          }
+        }
+      }
+    }
+  ],
+  "freeAudit": [
+    {
+      "concurrency": 1,
+      "workload": "small-valid",
+      "requests": 10,
+      "durationMs": 5.454,
+      "requestsPerSecond": 1833.601,
+      "latencyMs": {
+        "samples": 10,
+        "min": 0.409,
+        "mean": 0.533,
+        "p50": 0.527,
+        "p95": 0.752,
+        "max": 0.752
+      },
+      "requestBodyBytes": {
+        "samples": 10,
+        "min": 290,
+        "mean": 290,
+        "p50": 290,
+        "p95": 290,
+        "max": 290
+      },
+      "responseBodyBytes": {
+        "samples": 10,
+        "min": 795,
+        "mean": 795,
+        "p50": 795,
+        "p95": 795,
+        "max": 795
+      }
+    },
+    {
+      "concurrency": 1,
+      "workload": "small-invalid",
+      "requests": 10,
+      "durationMs": 4.453,
+      "requestsPerSecond": 2245.593,
+      "latencyMs": {
+        "samples": 10,
+        "min": 0.4,
+        "mean": 0.436,
+        "p50": 0.422,
+        "p95": 0.487,
+        "max": 0.487
+      },
+      "requestBodyBytes": {
+        "samples": 10,
+        "min": 212,
+        "mean": 212,
+        "p50": 212,
+        "p95": 212,
+        "max": 212
+      },
+      "responseBodyBytes": {
+        "samples": 10,
+        "min": 924,
+        "mean": 924,
+        "p50": 924,
+        "p95": 924,
+        "max": 924
+      }
+    },
+    {
+      "concurrency": 1,
+      "workload": "near-byte-limit",
+      "requests": 10,
+      "durationMs": 12.952,
+      "requestsPerSecond": 772.082,
+      "latencyMs": {
+        "samples": 10,
+        "min": 1.042,
+        "mean": 1.193,
+        "p50": 1.116,
+        "p95": 1.696,
+        "max": 1.696
+      },
+      "requestBodyBytes": {
+        "samples": 10,
+        "min": 64167,
+        "mean": 64167,
+        "p50": 64167,
+        "p95": 64167,
+        "max": 64167
+      },
+      "responseBodyBytes": {
+        "samples": 10,
+        "min": 64742,
+        "mean": 64742,
+        "p50": 64742,
+        "p95": 64742,
+        "max": 64742
+      }
+    },
+    {
+      "concurrency": 4,
+      "workload": "small-valid",
+      "requests": 10,
+      "durationMs": 4.131,
+      "requestsPerSecond": 2420.99,
+      "latencyMs": {
+        "samples": 10,
+        "min": 1.083,
+        "mean": 1.517,
+        "p50": 1.576,
+        "p95": 1.945,
+        "max": 1.945
+      },
+      "requestBodyBytes": {
+        "samples": 10,
+        "min": 290,
+        "mean": 290,
+        "p50": 290,
+        "p95": 290,
+        "max": 290
+      },
+      "responseBodyBytes": {
+        "samples": 10,
+        "min": 795,
+        "mean": 795,
+        "p50": 795,
+        "p95": 795,
+        "max": 795
+      }
+    },
+    {
+      "concurrency": 4,
+      "workload": "small-invalid",
+      "requests": 10,
+      "durationMs": 3.623,
+      "requestsPerSecond": 2760.239,
+      "latencyMs": {
+        "samples": 10,
+        "min": 0.999,
+        "mean": 1.311,
+        "p50": 1.2,
+        "p95": 1.854,
+        "max": 1.854
+      },
+      "requestBodyBytes": {
+        "samples": 10,
+        "min": 212,
+        "mean": 212,
+        "p50": 212,
+        "p95": 212,
+        "max": 212
+      },
+      "responseBodyBytes": {
+        "samples": 10,
+        "min": 924,
+        "mean": 924,
+        "p50": 924,
+        "p95": 924,
+        "max": 924
+      }
+    },
+    {
+      "concurrency": 4,
+      "workload": "near-byte-limit",
+      "requests": 10,
+      "durationMs": 10.074,
+      "requestsPerSecond": 992.695,
+      "latencyMs": {
+        "samples": 10,
+        "min": 2.534,
+        "mean": 3.686,
+        "p50": 3.764,
+        "p95": 4.831,
+        "max": 4.831
+      },
+      "requestBodyBytes": {
+        "samples": 10,
+        "min": 64167,
+        "mean": 64167,
+        "p50": 64167,
+        "p95": 64167,
+        "max": 64167
+      },
+      "responseBodyBytes": {
+        "samples": 10,
+        "min": 64742,
+        "mean": 64742,
+        "p50": 64742,
+        "p95": 64742,
+        "max": 64742
+      }
+    }
+  ],
+  "memory": {
+    "baselineRssBytes": 90570752,
+    "sampledPeakRssBytes": 181354496,
+    "processLifetimeMaxRssBytes": 181551104,
+    "sampleIntervalMs": 2,
+    "caveat": "Samples can miss brief peaks; lifetime max includes module startup. RSS includes this load driver and is not a Render measurement."
+  },
+  "fiveDecimalGbResponseBodyOnly": {
+    "bytes": 5000000000,
+    "estimates": {
+      "small-valid": {
+        "responseBodyBytesPerQuoteResultAndGetRecovery": 4953,
+        "jobsWithOneCachedManifestForEntireBudget": 1009488,
+        "jobsIfManifestFetchedForEveryJob": 576302
+      },
+      "small-invalid": {
+        "responseBodyBytesPerQuoteResultAndGetRecovery": 5211,
+        "jobsWithOneCachedManifestForEntireBudget": 959508,
+        "jobsIfManifestFetchedForEveryJob": 559659
+      },
+      "near-byte-limit": {
+        "responseBodyBytesPerQuoteResultAndGetRecovery": 132855,
+        "jobsWithOneCachedManifestForEntireBudget": 37634,
+        "jobsIfManifestFetchedForEveryJob": 36609
+      }
+    },
+    "excluded": [
+      "HTTP request/response headers",
+      "TLS/TCP framing and retransmissions",
+      "provider metering/compression rules",
+      "RPC/provider traffic and rate limits",
+      "blockchain inclusion/finality wait",
+      "client transaction fees",
+      "other endpoints and downloads"
+    ],
+    "interpretation": "Arithmetic response-body ceilings only, not actual monthly jobs, guaranteed throughput, a hosting quote or a spending cap."
+  },
+  "operationalLimits": {
+    "quotes": 1000,
+    "attempts": 4000,
+    "quotesPerPayer": 20,
+    "cumulativeAcrossDatabaseLifetime": true,
+    "automaticRetentionOrResetImplemented": false,
+    "note": "The quote admission cap can stop new paid-path work long before a bandwidth ceiling. Existing orders remain recoverable; this benchmark does not authorize resets."
+  },
+  "limitations": [
+    "No public deployment, external users, payments or token demand were measured.",
+    "Local CPU, shared load generation and unrestricted memory differ from a 0.5-CPU/512-MiB host.",
+    "Real finalized proof verification performs network reads absent from this mock-proof benchmark; paid-path throughput cannot be projected to public operation.",
+    "Small finite samples do not establish sustained capacity, availability, rate-limit behavior, disk endurance or monthly cost."
+  ],
+  "sourceHashes": {
+    "scripts/benchmark-testnet.mjs": "1c3e29b06367a4f2dd201dd13d2f6fd81bf799753a827597cd75d8ad4b2becd1",
+    "src/testnet-service.mjs": "2571bed2826941877b7ad6b7ee47aca8bec6c26ba137e7268eee632a5879b49f",
+    "src/testnet-store.mjs": "3f948a3b88f006d1344da9ca7c1ef415a1b912f12779931fdd24297db1df44e7",
+    "src/testnet-http.mjs": "4b46603a163da66828f3539faa3fdc245e277b078cf96e155abccc1d9d378f08",
+    "src/public.mjs": "f0a70bbab09611716e5c6953accaceb3d821a1929e1bc467422c6b7b5eaddc8f",
+    "src/json.mjs": "45d2718a6164f189524c0337982d238b3c7f2d49c73d4804d18f97dab251a033"
+  }
+}

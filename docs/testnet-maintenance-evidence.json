@@ -1,0 +1,27 @@
+{
+  "scope": "controlled local maintenance tests; no chain/network actions",
+  "observedTestCommand": "node --test test/testnet-maintenance.test.mjs",
+  "observedRuntime": "v25.4.0",
+  "tests": 18,
+  "passed": 18,
+  "failed": 0,
+  "skipped": 0,
+  "targetNode": "24.22.2",
+  "targetRuntimeVerification": "Parent integration run reports 246/246 tests passed on Node 24.22.2; focused observed Node25 evidence above remains unchanged.",
+  "renderBlueprintParsed": true,
+  "renderResourceAndSecretBoundsChecked": true,
+  "renderSchemaApiCalled": false,
+  "hostingProvisioned": false,
+  "keysCreated": false,
+  "publicTransactionsSubmitted": false,
+  "filesSha256": {
+    "scripts/testnet-maintenance.mjs": "c827eb3cfcaf5540e6faa79d977eaa511fde4bfad89096d68096fba9b011dfdd",
+    "test/testnet-maintenance.test.mjs": "1e4c9005f48854793b72fa95c7d26821bf52e203e916b78c568a524a0604460a",
+    "docs/TESTNET-RECOVERY.md": "785a8182e7ae70937d430026b04c5c6826e79a821eb19042684d34b87c861ca5",
+    "render-pilot.yaml": "64a958257c26885814f35273b8d2949d9653ef546da7c820b86bd830dcdec897",
+    "docs/PILOT-RENDER.md": "cf8a7110d906b5b3c11f2710a9ac0c36820a40dd4bc3fab1cef4cf64e74cf60c"
+  },
+  "evidenceNote": "The concurrency test title was clarified after the observed pass: it uses a worker thread with a separate SQLite connection, not a separate OS process. Test behavior is unchanged. Parent full regression will include the final title.",
+  "firstInstallRunbook": "docs/PILOT-RENDER.md",
+  "setupAndRuntimeEntrypointDocumentationChecked": true
+}

@@ -1,0 +1,39 @@
+{
+  "name": "mote-local-prototype",
+  "version": "0.5.0-sepolia.1",
+  "private": true,
+  "type": "module",
+  "description": "Unlaunched Ethereum Sepolia wallet-payment candidate with enforced type-2 fees and durable recovery",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "compile": "node scripts/compile.mjs",
+    "test": "node --test --test-concurrency=1 test/*.test.mjs",
+    "demo": "node scripts/demo.mjs",
+    "demo:durable": "node scripts/demo-durable.mjs",
+    "start": "node scripts/start.mjs",
+    "mcp": "node scripts/mcp.mjs",
+    "public": "node scripts/public.mjs",
+    "evaluate:public": "node scripts/evaluate-public.mjs",
+    "testnet": "node scripts/testnet.mjs",
+    "mcp:public": "node scripts/mcp-public.mjs",
+    "pilot": "node scripts/testnet-server.mjs",
+    "pilot:admin": "node scripts/testnet-admin.mjs",
+    "demo:testnet": "node scripts/demo-testnet.mjs",
+    "pilot:setup": "node scripts/testnet-setup.mjs",
+    "demo:sepolia": "node scripts/demo-sepolia.mjs"
+  },
+  "dependencies": {
+    "@cfworker/json-schema": "4.1.1",
+    "@modelcontextprotocol/server": "2.4.0",
+    "@openzeppelin/contracts": "5.4.0",
+    "ethers": "6.17.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "2.4.0",
+    "ganache": "7.9.2",
+    "solc": "0.8.38"
+  }
+}

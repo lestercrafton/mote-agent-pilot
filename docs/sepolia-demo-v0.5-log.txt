@@ -1,0 +1,43 @@
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- <development-dependencies>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <development-dependencies>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+{
+  "demonstration": "mote-ethereum-sepolia-wallet-path-local-evm",
+  "passed": true,
+  "nodeVersion": "v24.22.2",
+  "localOnly": true,
+  "controlledTest": true,
+  "chainId": 11155111,
+  "localEvmFork": "shanghai",
+  "publicSepoliaTransaction": false,
+  "publicCurrentForkExecutionTested": false,
+  "realMoney": false,
+  "credentialsCreated": false,
+  "discovery": true,
+  "sameStandardClientAndFeeChecks": true,
+  "feeBoundaryOverridden": false,
+  "durableIntentBeforeEverySend": true,
+  "exactApproval": true,
+  "automaticPolicyAuthorizedPayment": true,
+  "signedNativeFeeCeiling": "gasLimit * maxFeePerGas",
+  "approvalMaximumWei": "500000000000000",
+  "paymentMaximumWei": "1000000000000000",
+  "actualTotalFeeWei": "218827003207942",
+  "fixtureApprovalTransaction": "0x6402cade7c32e207a1c1f1cb4c40aba6c8b661e924b7da76d9dd00832135a650",
+  "fixturePaymentTransaction": "0x5926fbbbc92e61ffc6c3d8e63e4c142433a9ed8524991727943bfb32ee6eb9b8",
+  "tokenUnitsPaidOnce": "3610",
+  "signerTransactionCalls": 2,
+  "droppedResponseRecoveredAfterJournalReopen": true,
+  "repeatedRecoveryIdentical": true,
+  "recoverySignerCalls": 0,
+  "outOfPolicyRejectedBeforeReservationAndSigner": true,
+  "resultHash": "0x6738fe2766cfd9806c9324a804cbd424392a24278c96b1d53f858a32a44950b0",
+  "finalityNote": "Local simulator reports immediate finality; real Ethereum waits are tested separately with delayed evidence and remain subject to network availability."
+}

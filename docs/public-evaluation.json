@@ -1,0 +1,19 @@
+{
+  "kind": "controlled scripted evaluation, not external adoption",
+  "root": "https://mote-agent-utility.sunlightisfree.chatgpt.site",
+  "at": "2026-10-30T04:10:05.637Z",
+  "requests": 7,
+  "discoveryMs": 328,
+  "totalMs": 758,
+  "checksPassed": 5,
+  "successRate": 1,
+  "freeUtility": true,
+  "tokenSettlementTested": false,
+  "checks": [
+    "root discovery",
+    "canonical bytes and digest",
+    "exact schema errors",
+    "duplicate key rejection",
+    "instruction-like strings remain data"
+  ]
+}

@@ -1,0 +1,19 @@
+✔ pilot HTTP requires configured HTTPS origin and ignores untrusted proxy headers (18.263417ms)
+✔ pilot actions require exact fields and public-synthetic declaration (9.453875ms)
+✔ pilot rejects malformed, duplicate and oversized requests before service calls (2.678625ms)
+✔ recovery-only readiness remains usable without implying new quote permission (1.75125ms)
+✔ unavailable durable state and pending proof fail without exposing internal error detail (1.878375ms)
+✔ free audit stays available, unchanged and uncharged; no remote MCP route (4.4725ms)
+✔ restricted offline signer signs only exact Base quote domain and bounded public test envelopes (10.699292ms)
+✔ restricted signer can attest finalized delivery without extending expired payment authority (2.334334ms)
+✔ runtime refuses absent key/config, fixture mode and transaction-key aliases without exposing values (75.470459ms)
+✔ admin exposes explicit initialization and read-only reconciliation, with no send or credential options (302.704667ms)
+✔ temporary provider setup is maintenance-only and exposes no initialization or signing endpoint (17.737875ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 573.72625

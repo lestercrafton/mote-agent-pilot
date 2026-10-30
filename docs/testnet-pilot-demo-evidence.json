@@ -1,0 +1,23 @@
+{
+  "demonstration": "mote-testnet-pilot-local-evm",
+  "passed": true,
+  "controlledTest": true,
+  "chainId": 84532,
+  "localEvmOnly": true,
+  "publicBaseTransaction": false,
+  "realMoney": false,
+  "discovery": true,
+  "signedExactQuote": true,
+  "fixturePaymentTransaction": "0xca106a0a7c769af73ce0fd925ce902ec3acd905cd857219e0981399ebe5153a5",
+  "tokenAmount": "3580",
+  "merchantIncreaseExactlyOnce": true,
+  "duplicatePaymentRejected": true,
+  "droppedResponseRecovered": true,
+  "identicalReceiptAfterRestart": true,
+  "missingPostBackupRowReconstructed": true,
+  "restoredStateStillRecoveryOnly": true,
+  "publicStandardTransactionGuard": "BASE_TOTAL_FEE_CAP_UNENFORCEABLE",
+  "baseFeeBehaviorSimulated": false,
+  "resultHash": "0x7fdfcad524b158ecadd7b34230c0fca0976248c45bda379c7c480e86f411a40e",
+  "sourceConfigHash": "0x183fbdf604268fa034039e0a00532186b8900f2104bdbce288696607dfbc1956"
+}

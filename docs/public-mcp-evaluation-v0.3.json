@@ -1,0 +1,97 @@
+{
+  "evaluation": "mote-public-stdio-official-client-v1",
+  "startedAt": "2026-10-30T10:44:03.982Z",
+  "finishedAt": "2026-10-30T10:44:05.661Z",
+  "passed": true,
+  "controlledTraffic": true,
+  "externalAdoptionClaim": false,
+  "destination": "https://mote-agent-utility.sunlightisfree.chatgpt.site",
+  "fixtureMode": false,
+  "sdk": {
+    "client": "@modelcontextprotocol/client@2.4.0",
+    "server": "@modelcontextprotocol/server@2.4.0"
+  },
+  "nodeVersion": "v25.4.0",
+  "negotiatedProtocol": "2026-07-28",
+  "server": {
+    "name": "mote-public-free",
+    "version": "0.1.0"
+  },
+  "methods": [
+    "server/discover",
+    "tools/list",
+    "tools/call",
+    "tools/call",
+    "tools/call"
+  ],
+  "tools": [
+    "mote_public_audit",
+    "mote_public_discover"
+  ],
+  "checks": [
+    {
+      "name": "official client negotiated modern stdio",
+      "passed": true
+    },
+    {
+      "name": "only discovery and audit tools",
+      "passed": true
+    },
+    {
+      "name": "anonymous free discovery and health",
+      "passed": true
+    },
+    {
+      "name": "synthetic valid audit",
+      "passed": true
+    },
+    {
+      "name": "synthetic invalid audit reports count type",
+      "passed": true
+    }
+  ],
+  "validSummary": {
+    "valid": true,
+    "sha256": "0xb0beaf5a3dbe82ae841ac88bdc3b1174d7e4dec57454b6539e556e58eaadc600",
+    "receipt": {
+      "protocol": "mote-free-v1",
+      "service": "json.audit",
+      "requestHash": "0x2191e09011fd2b576e696353be7f0d9e3e4a696bbd70959abe7b37b921f0ce88",
+      "resultHash": "0xbce6ae9682111e548b422c38c0daf2489cffe1b8715aa27965349968fd4caa47",
+      "digestAlgorithm": "sha-256",
+      "amount": "0",
+      "asset": null,
+      "settlement": "none",
+      "signature": null,
+      "note": "Content hashes provide integrity comparison, not signed attestation or blockchain settlement."
+    }
+  },
+  "invalidSummary": {
+    "valid": false,
+    "errors": [
+      {
+        "instancePath": "/count",
+        "keyword": "type",
+        "message": "Instance type \"string\" is invalid. Expected \"integer\".",
+        "expected": "integer",
+        "observedType": "string"
+      }
+    ],
+    "receipt": {
+      "protocol": "mote-free-v1",
+      "service": "json.audit",
+      "requestHash": "0x4a96eed19947475e11f4af81f23a78645ce4b8b34a687627105361fd3ebaef7c",
+      "resultHash": "0x8ac55aed65fad79695d6f9b0e213f482407a187b28d25469092ad70a1d291d8e",
+      "digestAlgorithm": "sha-256",
+      "amount": "0",
+      "asset": null,
+      "settlement": "none",
+      "signature": null,
+      "note": "Content hashes provide integrity comparison, not signed attestation or blockchain settlement."
+    }
+  },
+  "expectedHttpRequestsOnSuccess": 4,
+  "hostedMcpRouteUsed": false,
+  "credentialsUsed": false,
+  "paymentPerformed": false
+}

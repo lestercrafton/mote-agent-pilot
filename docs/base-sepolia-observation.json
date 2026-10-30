@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "status": "observed-partial",
+  "readOnly": true,
+  "chainId": 84532,
+  "endpoint": "https://sepolia.base.org",
+  "observedAt": "2026-10-30T10:38:57.204Z",
+  "genesis": {
+    "status": "unavailable",
+    "reason": "pruned-history",
+    "requestedBlock": "0",
+    "earliestAvailableBlock": "46500000"
+  },
+  "heads": {
+    "finalized": {
+      "number": "52168507",
+      "numberHex": "0x31c073b",
+      "hash": "0xa70d3b1f57bb0564035f5e5fb021c6ce67074e2d6bc5e300fd166c6d0099469f",
+      "parentHash": "0x43f07887e763ec87f8f3146b38a24e8c9686dcd593d5febae645b9a80c321bc8",
+      "timestamp": "1793355570"
+    },
+    "safe": {
+      "number": "52173599",
+      "numberHex": "0x31c1b1f",
+      "hash": "0x7822b74520aca84db21a8c99d78c47b7e6f3b08af9907ef67f01245488395fc8",
+      "parentHash": "0x393f5ee2286db4c5cae7f2f4c5012e78f74bb3640b5b0f7d2944f28b6cbbebbf",
+      "timestamp": "1793356588"
+    },
+    "latest": {
+      "number": "52174341",
+      "numberHex": "0x31c1e05",
+      "hash": "0x31b2d4b42c297d0ae5ef0457390f7c734be3a09820b2dcf7d3869d1b90a3ccc1",
+      "parentHash": "0x0e7e9df645714d8ef9b14a88ff12f3576444dbc5e14115585f646a3f3ca1b05e",
+      "timestamp": "1793356737"
+    }
+  },
+  "finality": {
+    "tagsSupported": true,
+    "canonicalHeadHashesChecked": true,
+    "numericConfirmationFallback": false,
+    "trust": "Single fixed RPC endpoint report; not independent consensus verification"
+  },
+  "gasPriceOracle": {
+    "address": "0x420000000000000000000000000000000000000F",
+    "codeHash": "0xfa8c9db6c6cab7108dea276f4cd09d575674eb0852c0fa3187e59e98ef977998",
+    "codeBytes": 2059,
+    "atBlockNumber": "52168507",
+    "atBlockHash": "0xa70d3b1f57bb0564035f5e5fb021c6ce67074e2d6bc5e300fd166c6d0099469f",
+    "methodsVerified": false
+  },
+  "fees": {
+    "status": "not-estimated",
+    "requiredComponents": [
+      "L2 execution",
+      "L1 data",
+      "operator fee when configured"
+    ],
+    "totalSpendCapProvided": false
+  },
+  "chainIdentityPinned": false,
+  "readiness": false,
+  "deploymentVerified": false,
+  "broadcastEnabled": false
+}
