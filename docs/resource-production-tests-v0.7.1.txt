@@ -1,0 +1,37 @@
+✔ Ethereum exact type-2 bound covers all network fees and separately enforces the policy maximum (5.602917ms)
+✔ fee assertion recomputes transaction, encoding, every fee component and reservation rather than trusting flags (2.746625ms)
+✔ ordinary profile rejects alternate networks, blobs, authorization/access lists, native value and unsafe integer shapes (0.204292ms)
+✔ pre-Prague, Prague and Amsterdam inclusion/calldata reservations use their reviewed rules (5.012959ms)
+✔ preparation refuses delegated/code-bearing payers, missing state, underpriced fees and reorged observations (3.93775ms)
+✔ chain mismatch at the beginning or end of a fee observation never falls back to mainnet or Base (1.193917ms)
+✔ finalized receipt fees include the full scalar gasUsed charge for success and revert (6.437625ms)
+✔ ECDSA signature, serialized hash and recovered payer are independently checked (4.529583ms)
+✔ ECDSA RPC integer scalars with leading zeroes omitted retain their exact signature value (5.54925ms)
+✔ exact intent and receipt/block/index binding reject conflicting proof fields (10.61925ms)
+✔ separate OP/deposit/blob receipt evidence is rejected rather than silently undercounted (3.861042ms)
+✔ pending receipt and unfinalized receipt have distinct retryable read-only statuses (5.993375ms)
+✔ parent and inclusion reorgs, late finalized-anchor changes and coded historical payers retain reservations (15.195042ms)
+✔ completion rechecks finalized tag regression, same-height contradiction and advanced canonical binding (8.999292ms)
+✔ receipt price/gas invariants enforce the cap without imposing obsolete 21000 receipt floor (14.33525ms)
+✔ uint256 overflow is refused and caller mutation cannot alter an in-flight intent (0.973708ms)
+✔ pilot HTTP requires configured HTTPS origin and ignores untrusted proxy headers (19.231541ms)
+✔ pilot actions require exact fields and public-synthetic declaration (12.206917ms)
+✔ pilot rejects malformed, duplicate and oversized requests before service calls (3.223541ms)
+✔ recovery-only readiness remains usable without implying new quote permission (2.342333ms)
+✔ unavailable durable state and pending proof fail without exposing internal error detail (1.982833ms)
+✔ free audit stays available, unchanged and uncharged; no remote MCP route (4.678084ms)
+✔ Ethereum Sepolia discovery advertises only its enforced type-2 policy and matching protocol (2.103333ms)
+✔ restricted offline signer signs only exact Base quote domain and bounded public test envelopes (11.801583ms)
+✔ restricted signer can attest finalized delivery without extending expired payment authority (2.678666ms)
+✔ runtime refuses absent key/config, fixture mode and transaction-key aliases without exposing values (96.1465ms)
+✔ admin exposes explicit initialization and read-only reconciliation, with no send or credential options (343.89775ms)
+✔ temporary provider setup is maintenance-only and exposes no initialization or signing endpoint (19.410042ms)
+✔ Ethereum runtime selects only its dedicated quote key and rejects cross-network key aliases (6.745125ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 975.282417

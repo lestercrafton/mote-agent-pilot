@@ -8,7 +8,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { Worker } from 'node:worker_threads';
 import { backupTestnetStore, restoreTestnetStore } from '../scripts/testnet-maintenance.mjs';
-import { initializeTestnetStore, initializeRestoredTestnetLock, inspectTestnetStoreSnapshot, normalizeTestnetStoreIdentity, TestnetStore } from '../src/testnet-store.mjs';
+import { decodeTestnetStoreRow, initializeTestnetStore, initializeRestoredTestnetLock, inspectTestnetStoreSnapshot, normalizeTestnetStoreIdentity, TestnetStore } from '../src/testnet-store.mjs';
 import { hashJson, prepareAudit } from '../src/json.mjs';
 
 const hex = n => `0x${n.toString(16).padStart(64, '0')}`;
@@ -40,7 +40,8 @@ function addOrder(store, n, { settled = false, state = 'pending', long = false }
 function inspect(path) {
   const db = new DatabaseSync(path, { readOnly: true });
   try {
-    return { summary: inspectTestnetStoreSnapshot(db, expectedIdentity), rows: db.prepare('SELECT data FROM quotes ORDER BY id').all().map(row => JSON.parse(row.data)), attempts: db.prepare('SELECT * FROM attempts ORDER BY idem').all().map(row => ({ ...row })) };
+    const rawRows = db.prepare('SELECT * FROM quotes ORDER BY id').all();
+    return { summary: inspectTestnetStoreSnapshot(db, expectedIdentity), rows: rawRows.map(row => decodeTestnetStoreRow(row, expectedIdentity)), rawRows: rawRows.map(row => ({ ...row })), attempts: db.prepare('SELECT * FROM attempts ORDER BY idem').all().map(row => ({ ...row })) };
   } finally { db.close(); }
 }
 const backup = (f, extra = {}) => backupTestnetStore({ source: f.source, destination: f.snapshot, expectedIdentity, ...extra });
@@ -67,6 +68,7 @@ test('live WAL backup retains orders and unknown/finalized states; restore is pe
   assert.equal(recovered.manifest.restoreLock.sha256, digest(f.restored + '.lock.sqlite'));
   assert.equal(recovered.manifest.restoredFromSha256, saved.manifest.sha256);
   assert.deepEqual(inspect(f.restored).rows, inspect(f.snapshot).rows);
+  assert.deepEqual(inspect(f.restored).rawRows, inspect(f.snapshot).rawRows);
   assert.deepEqual(inspect(f.restored).attempts, inspect(f.snapshot).attempts);
   assert.deepEqual(inspect(f.restored).summary.attemptStates, { pending: 1, finalized: 1, reorg: 1 });
   assert.equal(inspect(f.restored).rows[0].transactionHash, null);

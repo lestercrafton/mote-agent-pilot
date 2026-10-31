@@ -1,6 +1,6 @@
 # Exact testnet bootstrap proposal — not executed
 
-This supersedes the earlier six-transaction proposal and v0.6's smaller gas figures. It prepares a no-value Ethereum Sepolia pilot, chain **11155111**. No proposed identity exists yet. No address, Render service ID, approval, faucet result or deployment proof is invented here.
+This supersedes the earlier six-transaction proposal and v0.6's smaller gas figures. It prepares a no-value Ethereum Sepolia pilot, chain **11155111**. No proposed identity exists yet. No wallet address, faucet result or deployment proof is invented here. The real maintenance destination is Render service `srv-dbijuvou01pc73d59c30`, canonical origin `https://mote-testnet-pilot.onrender.com`.
 
 ## Roles and custody
 
@@ -39,7 +39,7 @@ Proposed gas source: [OpenFaucet Ethereum Sepolia](https://openfaucet.org/ethere
 
 ## Execution gates
 
-Render creation remains denied/pending exact renewed authorization. Once the real destination exists, review the exact source, resource qualification, service ID/origin and custody sink. Specific approval must cover A/Q provisioning, P's controlled test signer, their storage/use, bounded faucet computation and the eight public testnet actions. Source flags are not consent.
+Render maintenance hosting is approved and exists at the destination above. Before activation, review the exact source, passing resource qualification, service ID/origin and custody sink. Specific approval must cover A/Q provisioning, P's controlled test signer, their storage/use, bounded faucet computation and the eight public testnet actions. Source flags are not consent.
 
 Native compilation and fake-memory tests are complete; real ACL compatibility is deliberately untested. A failed or timed-out create/handoff may have an uncertain outcome: inspect the exact approved target before retry. Never create replacement authority or broaden ACLs to restore availability. Journals store exact unsigned intents and signed transaction hashes, not private keys or raw signed bytes. Restart reconciles; it never resubmits. Unknown signing/submission may block indefinitely.
 

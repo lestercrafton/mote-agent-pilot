@@ -1,10 +1,10 @@
-# v0.7.0-onboarding.2 packaging handoff
+# v0.7.1-resource.1 handoff
 
-This revision restores the optional/dev metadata for the exact pinned Ganache fsevents dependency and adds a clean Linux container qualification. No application, contract, policy or test source changed. Do not deploy the old v0.5 Render draft: its lockfile contains the same malformed entry. The original v0.7.0-onboarding.1 archive and existing public versions remain immutable. Real Linux qualification must pass before deployment; npm platform flags on macOS are not equivalent evidence. See [LINUX-QUALIFICATION.md](LINUX-QUALIFICATION.md) and the separate packaging verification record.
+See [RESOURCE-CORRECTION.md](RESOURCE-CORRECTION.md) for the storage format, compatibility, test evidence and actual-host acceptance status. Do not claim host capacity until the unchanged constrained full gate passes. Existing service: `srv-dbijuvou01pc73d59c30`, https://mote-testnet-pilot.onrender.com, Mote workspace, Oregon, one 512 MiB / 0.5 CPU instance and 1 GB disk at `/var/data`. Base price is $7.25/month within the authorized $20/month budget; that budget is not a provider-enforced cap. Maintenance start command stays `node scripts/testnet-setup.mjs`; no quote key or live order database is configured.
 
-## Preserved application handoff
+## Preserved settlement and custody boundaries
 
-This is a separate unlaunched candidate. Preserve public v0.5 commit `b50301b5d76ff4cefa1354d4d3f728c9853ae359`, its downloads and the live free Sites utility. No v0.7 source has replaced them. Public testnet settlement is not live.
+Previous source archives remain immutable. The public repository has reviewed v0.7.0-onboarding.2 commit `b55cc04faf2ca83f8dffa66f4f04f857338b2019`; the existing Render service runs that version in maintenance mode. Public testnet settlement is not live.
 
 The local path starts with a payer having zero native gas and MOTE, executes five bounded bootstrap transactions, exposes verified dispenser discovery, then lets the payer claim→approve→pay under a durable policy. A lost result is recovered after journal reopening without signer calls. See `onboarding-verification-v0.7.json`, `onboarding-demo-v0.7.json` and the full regression log. Controlled testing is not organic adoption or a security audit.
 
@@ -18,4 +18,3 @@ Native custody is documented in `scripts/keychain/README.md`. Only compilation a
 
 Before public action, review the exact proposal, configuration and source hashes, operator nonce, fresh public estimates and custody target. Test the actual 512-MB Linux service and 1-GB disk using the existing resource qualification gate; Mac measurements are not production qualification. Retain SQLite-consistent backups, restored-state recovery quarantine and all fee/finality/journal guards.
 
-The stopped action is Render dashboard **Deploy web service** for `mote-testnet-pilot`, workspace Mote, Oregon: one $7/month 512-MB service plus one $0.25/month 1-GB disk at `/var/data`, within the stated $20/month budget (not a provider cap). Automatic review rejected it before execution because exact authorization was not recognized. Renewed approval is pending with the parent. No service/disk was created, retried or substituted. Key provisioning, faucet use and public transactions are separate pending actions.

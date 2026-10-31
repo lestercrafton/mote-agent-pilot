@@ -19,7 +19,7 @@ export function testnetManifest(config, readiness, dispenser = null) {
   const network = getTestnetNetwork(config.chainId);
   const origin = testnetOrigin(config.origin);
   return {
-    manifestVersion: 'mote-testnet-pilot-v1', name: 'Mote', workingName: true, version: '0.7.0-onboarding.1',
+    manifestVersion: 'mote-testnet-pilot-v1', name: 'Mote', workingName: true, version: '0.7.1-resource.1',
     launchStatus: 'unlaunched-candidate', environment: `${network.slug}-public-synthetic-test`, testOnly: true,
     baseUrl: origin, openapi: `${origin}/openapi.json`, health: `${origin}/health`, readiness: `${origin}/ready`,
     description: 'Experimental exact-price token settlement for public synthetic JSON preflight. New-token necessity and demand are unproven.',
@@ -52,7 +52,7 @@ export function testnetOpenapi(config, dispenser = null) {
   const origin = testnetOrigin(config.origin);
   const specification = publicOpenapi(origin);
   delete specification.paths['/mcp'];
-  specification.info = { title: `Mote public-synthetic ${network.slug} pilot`, version: '0.7.0-onboarding.1', description: 'Unlaunched test-only candidate. No real-value claim. Input and results are public synthetic data. Discovery never grants spending authority.' };
+  specification.info = { title: `Mote public-synthetic ${network.slug} pilot`, version: '0.7.1-resource.1', description: 'Unlaunched test-only candidate. No real-value claim. Input and results are public synthetic data. Discovery never grants spending authority.' };
   const key = { name: 'Idempotency-Key', in: 'header', required: true, schema: { type: 'string', pattern: '^[A-Za-z0-9._:-]{8,128}$' } };
   const result = description => ({ description, content: { 'application/json': { schema: { type: 'object' } } } });
   const operation = (id, properties, description) => ({ post: { operationId: id, description, parameters: [key], requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: false, required: Object.keys(properties), properties } } } }, responses: { 200: result('Signed offer or verified result; no transaction submitted by this API'), 202: result('Payment pending finality; retry same proof, never pay again'), 400: result('Input rejected'), 409: result('Conflicting or quarantined state'), 413: result('Input too large'), 503: result('Evidence or durable state unavailable') } } });

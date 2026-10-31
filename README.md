@@ -1,10 +1,12 @@
-# Mote v0.7.0-onboarding.2 — packaging correction candidate
+# Mote v0.7.1-resource.1 — bounded storage correction
 
-This unpublished packaging-only revision corrects Ganache's imported optional Darwin dependency metadata for clean Linux npm installs. Application, contract, policy and test sources remain byte-identical to v0.7.0-onboarding.1; the service still advertises that application version. The earlier source archive remains immutable. Fresh macOS installs passed 402 application tests, 29 production-only tests and both local demos. Actual Linux execution remains pending. See [Linux qualification](docs/LINUX-QUALIFICATION.md) and [packaging evidence](docs/portable-verification-v0.7.2.json) for installation checks and unperformed Linux/container gates. The earlier 402-test record below describes v0.7.0-onboarding.1; new clean-install evidence is separate.
+This candidate removes repeated canonical-document bytes from durable testnet orders while retaining exact expanded responses, commitments and legacy reading. It changes no token contract, fee policy, payment authority, admission cap or public free utility behavior. The production host remains one 512 MiB / 0.5 CPU server with a 1 GB disk. The 448 MiB memory acceptance threshold is unchanged.
 
-## Preserved application v0.7.0-onboarding.1
+The previous full actual-host fixture failed the memory gate. See [resource correction](docs/RESOURCE-CORRECTION.md) for the diagnosis, validation evidence and explicit limits. Public token settlement is not live.
 
-An agent can discover a verified test-token dispenser, claim test MOTE, obtain an exact quote, pay for JSON preflight, and recover a lost result under a preauthorized durable spending policy. This candidate demonstrates the complete flow on one **local EVM**. It has not been deployed to a public chain. The existing public free utility and reviewed v0.5 source remain unchanged.
+## Local agent rehearsal
+
+An agent can discover a verified test-token dispenser, claim test MOTE, obtain an exact quote, pay for JSON preflight, and recover a lost result under a preauthorized durable spending policy. This candidate demonstrates the complete flow on one **local EVM**. It has not been deployed to a public chain. The existing public free utility remains unchanged; the separate Render instance is maintenance-only.
 
 The service checks bounded JSON and a documented JSON Schema subset, returns exact-path errors, canonical bytes and a SHA-256 digest. Neither new-token necessity nor outside demand has been established. No token price, redemption, peg, return, public adoption or real-value settlement is claimed.
 
@@ -41,4 +43,4 @@ The proposed eight-transaction envelope is **0.0445 test ETH**, conservatively i
 
 Unresolved submissions may retain reservations and block indefinitely. Full journal rollback, copied authority, raw-signer use elsewhere, compromised hosts, malicious custody adapters and independently proving RPC consensus are outside this prototype. Known receipt recovery works automatically; completing every interrupted workflow is not guaranteed.
 
-No persistent real keys, native Keychain items, public faucet claims, public signatures/broadcasts or new hosting resources were created for this candidate. Render creation remains pending renewed exact authorization after automatic approval-review rejection. Signer provisioning needs an exact approved destination and reviewed nonlogging handoff. Source flags are not authorization.
+No persistent real keys, native Keychain items, public faucet claims or public signatures/broadcasts were created. The authorized Render service exists at https://mote-testnet-pilot.onrender.com and runs only maintenance readiness. Signer provisioning and public testnet transactions remain separate gates; source flags are not authorization.

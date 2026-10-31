@@ -7,6 +7,7 @@ import { canonicalStringify, hashJson, hashText, MoteError, prepareAudit } from 
 import { getTestnetNetwork } from './testnet-networks.mjs';
 
 export const TESTNET_STORE_VERSION = 1;
+export const TESTNET_STORE_ROW_ENCODING = 'mote-order-elision-v1';
 export const TESTNET_STORE_LIMITS = Object.freeze({ quotes: 1000, attempts: 4000, quotesPerPayer: 20 });
 export const TESTNET_STORE_SCHEMA = Object.freeze({
   meta: 'CREATE TABLE meta (id INTEGER PRIMARY KEY CHECK(id=1), version INTEGER NOT NULL, identity TEXT NOT NULL, identity_hash TEXT NOT NULL, recovery_required INTEGER NOT NULL CHECK(recovery_required IN (0,1)))',
@@ -16,6 +17,7 @@ export const TESTNET_STORE_SCHEMA = Object.freeze({
 export const TESTNET_LOCK_SCHEMA = 'CREATE TABLE meta (id INTEGER PRIMARY KEY CHECK(id=1), identity TEXT NOT NULL)';
 const HEX = /^0x[0-9a-fA-F]{64}$/;
 const ROW_FIELDS = ['id', 'key', 'fingerprint', 'payer', 'input', 'result', 'draft', 'offer', 'response', 'transactionHash'];
+const ROW_BYTES = 524288;
 const shape = value => value.replace(/\s+/g, ' ').trim().replace(/;$/, '');
 const fail = (code, message, status = 503) => { throw new MoteError(code, message, status); };
 const check = (condition, code, message, status) => { if (!condition) fail(code, message, status); };
@@ -75,10 +77,7 @@ function integrity(db) {
   const rows = db.prepare('PRAGMA integrity_check').all();
   check(rows.length === 1 && rows[0].integrity_check === 'ok' && db.prepare('PRAGMA foreign_key_check').all().length === 0, 'STORE_CORRUPT', 'Store integrity check failed.');
 }
-export function decodeTestnetStoreRow(raw, expectedIdentity) {
-  if (!raw) return null;
-  check(typeof raw.data === 'string' && Buffer.byteLength(raw.data) <= 524288 && hashText(raw.data) === raw.data_hash, 'STORE_CORRUPT', 'Order checksum failed.');
-  let row; try { row = JSON.parse(raw.data); } catch { fail('STORE_CORRUPT', 'Invalid stored order.'); }
+function validateRow(row, raw, expectedIdentity) {
   check(row && Object.keys(row).sort().join() === ROW_FIELDS.slice().sort().join() && row.id === raw.id && row.key === raw.idem && row.fingerprint === raw.fingerprint && row.payer === raw.payer && row.transactionHash === raw.transaction_hash && HEX.test(row.id) && HEX.test(row.fingerprint) && (row.transactionHash === null || HEX.test(row.transactionHash)) && row.draft?.publicSynthetic === true && row.draft?.testOnly === true && row.draft?.quote?.quoteId === row.id, 'STORE_CORRUPT', 'Order structure or indexing disagrees.');
   check((row.response === null && row.transactionHash === null) || (row.response && row.offer && row.transactionHash && row.response.receipt?.transactionHash === row.transactionHash), 'STORE_CORRUPT', 'Order settlement state is inconsistent.');
   try {
@@ -94,6 +93,50 @@ export function decodeTestnetStoreRow(raw, expectedIdentity) {
     if (row.response) check(canonicalStringify(row.response.result) === canonicalStringify(row.result) && row.response.receipt.resultHash === prepared.resultHash && row.response.receipt.quoteId === row.id && row.response.receipt.requestHash === prepared.requestHash && row.response.receipt.protocol === network.protocol && ['chainId', 'origin', 'token', 'router', 'recipient', 'quoteSigner', 'configHash'].every(key => row.response.receipt[key] === row.draft[key]), 'STORE_CORRUPT', 'Stored delivery differs from the signed result commitment or pinned network.');
   } catch (error) { if (error.code === 'STORE_CORRUPT') throw error; fail('STORE_CORRUPT', 'Stored public synthetic input is invalid.'); }
   return row;
+}
+
+function expandRow(stored) {
+  // Direct rows are the original on-disk representation. Reading one does not
+  // rewrite it. Older binaries fail closed on this explicitly marked envelope.
+  if (!stored || (!Object.hasOwn(stored, 'encoding') && !Object.hasOwn(stored, 'row'))) return stored;
+  check(Object.keys(stored).sort().join() === 'encoding,row' && stored.encoding === TESTNET_STORE_ROW_ENCODING, 'STORE_CORRUPT', 'Unsupported order encoding.');
+  const row = stored.row;
+  check(row && !Array.isArray(row) && row.result && !Array.isArray(row.result) && Object.hasOwn(row.result, 'canonicalJson') && row.result.canonicalJson === null && (row.response === null || (row.response && !Array.isArray(row.response) && Object.hasOwn(row.response, 'result') && row.response.result === null)), 'STORE_CORRUPT', 'Invalid compact order placeholders.');
+  try {
+    // Only duplicated bytes are reconstructed. Validation metadata, signed
+    // commitments, offers and receipts remain stored exactly as supplied.
+    row.result.canonicalJson = canonicalStringify(row.input.document);
+    if (row.response) row.response.result = clone(row.result);
+    check(Buffer.byteLength(JSON.stringify(row)) <= ROW_BYTES, 'STORE_CORRUPT', 'Expanded order exceeds the durable record limit.');
+  } catch (error) { if (error.code === 'STORE_CORRUPT') throw error; fail('STORE_CORRUPT', 'Invalid compact order input.'); }
+  return row;
+}
+
+/** Serializes a fully validated order without repeating its document. Both
+ * encoded and expanded records retain the original admission bound. The full
+ * result is checked before elision, so encoding cannot repair a mismatched
+ * canonical result or response. No compression or cross-order references. */
+export function encodeTestnetStoreRow(row, expectedIdentity) {
+  let expanded;
+  try { expanded = JSON.stringify(row); } catch { fail('STORE_CORRUPT', 'Invalid prepared order.'); }
+  check(typeof expanded === 'string' && Buffer.byteLength(expanded) <= ROW_BYTES, 'STORE_LIMIT', 'Prepared order exceeds the durable record limit.');
+  const checked = validateRow(JSON.parse(expanded), { id: row.id, idem: row.key, fingerprint: row.fingerprint, payer: row.payer, transaction_hash: row.transactionHash }, expectedIdentity);
+  const compact = clone(checked);
+  compact.result.canonicalJson = null;
+  if (compact.response) compact.response.result = null;
+  const data = JSON.stringify({ encoding: TESTNET_STORE_ROW_ENCODING, row: compact });
+  check(Buffer.byteLength(data) <= ROW_BYTES, 'STORE_LIMIT', 'Encoded order exceeds the durable record limit.');
+  // A legacy response can have a semantically equal result with a different key
+  // order. Preserve its exact serialization instead of normalizing that order.
+  if (JSON.stringify(expandRow(JSON.parse(data))) !== expanded) return expanded;
+  return data;
+}
+
+export function decodeTestnetStoreRow(raw, expectedIdentity) {
+  if (!raw) return null;
+  check(typeof raw.data === 'string' && Buffer.byteLength(raw.data) <= ROW_BYTES && hashText(raw.data) === raw.data_hash, 'STORE_CORRUPT', 'Order checksum failed.');
+  let stored; try { stored = JSON.parse(raw.data); } catch { fail('STORE_CORRUPT', 'Invalid stored order.'); }
+  return validateRow(expandRow(stored), raw, expectedIdentity);
 }
 /** Read-only inspection, also usable inside the maintenance tool's explicit read
  * transaction. Never clears quarantine or starts a service. */
@@ -217,8 +260,7 @@ export class TestnetStore {
   }
   decode(raw) { return decodeTestnetStoreRow(raw, this.identity); }
   write(row) {
-    const data = JSON.stringify(row);
-    check(Buffer.byteLength(data) <= 524288, 'STORE_LIMIT', 'Prepared order exceeds the durable record limit.');
+    const data = encodeTestnetStoreRow(row, this.identity);
     this.db.prepare('UPDATE quotes SET data=?,data_hash=?,transaction_hash=? WHERE id=?').run(data, hashText(data), row.transactionHash, row.id);
   }
   byKey(key) { this.guard(); return clone(this.decode(this.db.prepare('SELECT * FROM quotes WHERE idem=?').get(key))); }
@@ -230,8 +272,7 @@ export class TestnetStore {
       if (previous) { check(previous.fingerprint === fingerprint, 'IDEMPOTENCY_CONFLICT', 'Idempotency key belongs to another payer, input or declaration.', 409); return previous; }
       check(this.db.prepare('SELECT count(*) AS n FROM quotes').get().n < this.limits.quotes && this.db.prepare('SELECT count(*) AS n FROM quotes WHERE payer=?').get(payer).n < this.limits.quotesPerPayer, 'CAPACITY', 'Pilot admission capacity reached; existing orders remain recoverable.', 503);
       const row = { id, key, fingerprint, payer, input, result, draft, offer: null, response: null, transactionHash: null };
-      const data = JSON.stringify(row);
-      check(Buffer.byteLength(data) <= 524288, 'STORE_LIMIT', 'Prepared order exceeds the durable record limit.');
+      const data = encodeTestnetStoreRow(row, this.identity);
       this.db.prepare('INSERT INTO quotes VALUES (?,?,?,?,?,?,NULL)').run(id, key, fingerprint, payer, data, hashText(data));
       return row;
     });
@@ -281,8 +322,7 @@ export class TestnetStore {
       check(this.db.prepare('SELECT count(*) AS n FROM quotes').get().n < this.limits.quotes, 'CAPACITY', 'Recovery record capacity reached; preserve the original offer, input and proof.', 503);
       check(attempt || this.db.prepare('SELECT count(*) AS n FROM attempts').get().n < this.limits.attempts, 'CAPACITY', 'Recovery proof-key capacity reached; preserve the original offer, input and proof.', 503);
       const row = { id, key, fingerprint, payer, input, result, draft, offer, transactionHash, response };
-      const data = JSON.stringify(row);
-      check(Buffer.byteLength(data) <= 524288, 'STORE_LIMIT', 'Recovered order exceeds the durable record limit.');
+      const data = encodeTestnetStoreRow(row, this.identity);
       this.db.prepare('INSERT INTO quotes VALUES (?,?,?,?,?,?,?)').run(id, key, fingerprint, payer, data, hashText(data), transactionHash);
       this.db.prepare('INSERT INTO attempts VALUES (?,?,?,?) ON CONFLICT(idem) DO UPDATE SET state=excluded.state').run(key, id, transactionHash, 'finalized');
       return response;

@@ -9,7 +9,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { BrowserProvider, Contract, HDNodeWallet, id, verifyMessage } from 'ethers';
 import ganache from 'ganache';
 import { createTestnetService } from '../src/testnet-service.mjs';
-import { initializeTestnetStore, initializeRestoredTestnetLock, inspectTestnetStoreSnapshot, normalizeTestnetStoreIdentity, TestnetStore } from '../src/testnet-store.mjs';
+import { decodeTestnetStoreRow, initializeTestnetStore, initializeRestoredTestnetLock, inspectTestnetStoreSnapshot, normalizeTestnetStoreIdentity, TestnetStore } from '../src/testnet-store.mjs';
 import { canonicalStringify, MoteError, hashText } from '../src/json.mjs';
 import { createTestnetPlan, verifyTestnetDeployment } from '../src/testnet-plan.mjs';
 import { createVerificationBundle } from '../src/verification-bundle.mjs';
@@ -83,7 +83,7 @@ test('snapshot checks reject mismatched network and protocol in stored offers or
   const db = new DatabaseSync(f.database); const original = JSON.parse(db.prepare('SELECT data FROM quotes').get().data);
   const changes = [row => { row.response.receipt.chainId = 11155111; }, row => { row.response.receipt.protocol = getTestnetNetwork(11155111).protocol; }, row => { row.draft.protocol = getTestnetNetwork(11155111).protocol; }, row => { row.draft.domain.chainId = 11155111; }, row => { row.draft.chainId = 1; }];
   for (const change of changes) {
-    const row = structuredClone(original); change(row); const data = JSON.stringify(row);
+    const stored = structuredClone(original); change(stored.row ?? stored); const data = JSON.stringify(stored);
     db.prepare('UPDATE quotes SET data=?,data_hash=?').run(data, hashText(data));
     assert.throws(() => inspectTestnetStoreSnapshot(db, identity), { code: 'STORE_CORRUPT' });
   }
@@ -114,7 +114,7 @@ test('unsigned input/result/draft commit precedes signer call and a crash retrie
   const f = fixture(t); let storedId;
   const first = await f.open({ hooks: { beforeQuoteSigning(row) {
     const db = new DatabaseSync(f.database, { readOnly: true });
-    const stored = JSON.parse(db.prepare('SELECT data FROM quotes').get().data); db.close();
+    const stored = decodeTestnetStoreRow(db.prepare('SELECT * FROM quotes').get(), identity); db.close();
     assert.equal(stored.id, row.id); assert.deepEqual(stored.input, input); assert.equal(stored.offer, null);
     storedId = stored.id; throw new Error('controlled crash before signing');
   } } });
@@ -195,7 +195,7 @@ test('completed recovery validates the saved historical finality anchor and neve
   stale = true;
   await assert.rejects(service.order(offer.quote.quoteId), { code: 'SETTLEMENT_REORG' });
   await assert.rejects(settle(service, offer), { code: 'SETTLEMENT_REORG' });
-  const db = new DatabaseSync(f.database, { readOnly: true }); const stored = JSON.parse(db.prepare('SELECT data FROM quotes').get().data).response; db.close();
+  const db = new DatabaseSync(f.database, { readOnly: true }); const stored = decodeTestnetStoreRow(db.prepare('SELECT * FROM quotes').get(), identity).response; db.close();
   assert.deepEqual(stored, response);
 });
 
@@ -254,7 +254,7 @@ test('snapshot inspection detects recomputed-checksum semantic damage and quaran
   const recovery = await f.open({ recoveryOnly: true }); assert.equal((await recovery.readiness()).ready, true); assert.equal((await recovery.readiness()).mode, 'recovery-only'); assert.equal((await recovery.readiness()).newQuotesAllowed, false);
   await assert.rejects(recovery.quote(request, 'quarantine-known-01'), { code: 'RECOVERY_ONLY' });
   f.proofs.set(id('fixture-transaction'), proofFor(offer)); const response = await settle(recovery, offer); assert.equal(response.receipt.transactionHash, id('fixture-transaction')); recovery.close();
-  const db = new DatabaseSync(f.database); const raw = db.prepare('SELECT data FROM quotes').get().data; const row = JSON.parse(raw); row.input.document.z = 99; const changed = JSON.stringify(row); db.prepare('UPDATE quotes SET data=?,data_hash=?').run(changed, hashText(changed));
+  const db = new DatabaseSync(f.database); const raw = db.prepare('SELECT data FROM quotes').get().data; const stored = JSON.parse(raw); (stored.row ?? stored).input.document.z = 99; const changed = JSON.stringify(stored); db.prepare('UPDATE quotes SET data=?,data_hash=?').run(changed, hashText(changed));
   assert.throws(() => inspectTestnetStoreSnapshot(db, identity), { code: 'STORE_CORRUPT' }); db.close();
 });
 
@@ -303,7 +303,7 @@ test('SIGKILL after committed delivery releases process gate; restart returns th
   const child = spawn(process.execPath, ['--input-type=module', '-e', code, JSON.stringify({ identity, database: f.database, offer, proof })], { cwd: new URL('../', import.meta.url), stdio: ['ignore', 'pipe', 'pipe'] });
   let stderr = ''; child.stderr.on('data', value => { stderr += value; });
   const [status, signal] = await once(child, 'exit'); assert.equal(status, null, stderr); assert.equal(signal, 'SIGKILL', stderr);
-  const db = new DatabaseSync(f.database, { readOnly: true }); const stored = JSON.parse(db.prepare('SELECT data FROM quotes').get().data).response; db.close(); assert.ok(stored);
+  const db = new DatabaseSync(f.database, { readOnly: true }); const stored = decodeTestnetStoreRow(db.prepare('SELECT * FROM quotes').get(), identity).response; db.close(); assert.ok(stored);
   f.proofs.set(tx, proof); const recovered = await f.open(); assert.deepEqual(await recovered.order(offer.quote.quoteId), stored);
 });
 

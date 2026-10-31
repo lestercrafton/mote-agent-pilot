@@ -1,3 +1,7 @@
+# Current actual-host resource correction
+
+This isolated candidate corrects the v0.7.0-onboarding.2 512MiB host capacity failure. Diagnose Node RSS/heap, SQLite cache, kernel file cache and concurrent maintenance work. Preserve 448MiB cgroup headroom threshold, 512MiB/.5CPU/1GB host, existing $20/month budget, 1,000-order/4,000-attempt limits and all recovery/integrity/spend protections. Do not weaken tests or silently change caps to pass. No actual keys, credentials, live-order initialization, public cryptocurrency transactions or extra resources. Only tested, independently reviewable corrections may be published to the existing repository and same maintenance-only Render service under standing user authority. Prior source archives remain immutable. Parent owns signer approval.
+
 # Current packaging-only candidate
 
 This is v0.7.0-onboarding.2, isolated from immutable v0.7.0-onboarding.1. Fix reproducible Linux npm installation/platform metadata and prepare a clean container qualification without changing application/contracts/policy behavior. No --force dependency bypass, public publishing/deployment, new credentials/keys, native Keychain calls, faucet claims, paid resources or public transactions. Prior denied Render and Sites actions remain stopped. Preserve previous artifacts.

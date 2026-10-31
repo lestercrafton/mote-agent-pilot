@@ -1,6 +1,6 @@
 {
   "schema": "mote-source-manifest-v1",
-  "version": "0.7.0-onboarding.2",
+  "version": "0.7.1-resource.1",
   "files": [
     {
       "path": ".dockerignore",
@@ -19,8 +19,8 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 5160,
-      "sha256": "29f568c9dbb81f7553b466fc1411291aefe2d7b87b8da85938c22ee8e2cd82e3"
+      "bytes": 5951,
+      "sha256": "35c1ffff0fdd84be480923404e9c7f0d434981630f5639e8f2edf05a9fce68e4"
     },
     {
       "path": "Dockerfile",
@@ -44,8 +44,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 5859,
-      "sha256": "2f29230b475a1922f377aa70e54ea4dedaf46d548bf9be3a5426095784f2077d"
+      "bytes": 5673,
+      "sha256": "d99b7a798f1d2186bd9a4c4d8c66a9cd6a6ef1ad9f35f00b3224db2ca22a9990"
     },
     {
       "path": "artifacts/MotePayments.json",
@@ -129,8 +129,8 @@
     },
     {
       "path": "docs/BOOTSTRAP-PROPOSAL-v0.7.md",
-      "bytes": 7143,
-      "sha256": "3a9a6e133675a89c76686c9133d14a147a5d099f97848acd6fae6ef0d62106dc"
+      "bytes": 7261,
+      "sha256": "eb72009ca0e495a00dc8c0aad7e20667a0f996c14ae46e1b6f74e4d6f2c33ee6"
     },
     {
       "path": "docs/BOOTSTRAP-RUNNER.md",
@@ -169,8 +169,8 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "bytes": 4286,
-      "sha256": "4cebbecd1dba76daaba9ff77da05560b24c52ce0d6814bf533cc5104273751a8"
+      "bytes": 3816,
+      "sha256": "cbf2837c6bf8984669ff2a53b9974360016f9e4ccf8657579d876cc65550489f"
     },
     {
       "path": "docs/HOSTING.md",
@@ -189,8 +189,8 @@
     },
     {
       "path": "docs/PILOT-RENDER.md",
-      "bytes": 10483,
-      "sha256": "ec9fa5248b8129271da52dfe3cc749eaf7c98ba2cb0f28378f59a2a4c532a1b8"
+      "bytes": 10406,
+      "sha256": "91f0a12e682559138dc9874816491bb3861f17aba02d66bce99ba1d111b60212"
     },
     {
       "path": "docs/PILOT-SETUP.md",
@@ -213,9 +213,14 @@
       "sha256": "eaaafbfa4481a6bdd7585a6cca12f04469dc1795422f8e79f92c25166278ad33"
     },
     {
+      "path": "docs/RESOURCE-CORRECTION.md",
+      "bytes": 5745,
+      "sha256": "09fede40fa57a5b8fcc4676d38d48f8b008c5d027a54866f29ef5d53f57b300d"
+    },
+    {
       "path": "docs/RESOURCE-VERIFICATION.md",
-      "bytes": 9765,
-      "sha256": "d7c3c8abc69a257a5c679033b5d223d3c33041332fdba2c02b666485874a0b11"
+      "bytes": 10007,
+      "sha256": "bca999a04c7ab9aa9f25107ef8a172f8620edaf1dc15bc6519cbb6aabb513cc0"
     },
     {
       "path": "docs/TESTNET-CLIENT.md",
@@ -453,6 +458,56 @@
       "sha256": "2ad63623c15e4c59dd4d7ba022a260d867dd167756fa6b589bd80fc0cba86812"
     },
     {
+      "path": "docs/resource-entropy-local-v0.7.1.json",
+      "bytes": 16580,
+      "sha256": "2702b84118fb509afc8be47598bf35a8d19ef07e27b004b27f8674b403406658"
+    },
+    {
+      "path": "docs/resource-full-tests-v0.7.1.txt",
+      "bytes": 51661,
+      "sha256": "93ffa3adfec6b29a5dd0e7b0de32ddce6800d4c2803b4bade9b5dd335baad677"
+    },
+    {
+      "path": "docs/resource-independent-review-v0.7.1.json",
+      "bytes": 619,
+      "sha256": "1ea34e241d2f262798a8836483b1aa3f91a5b98b66ad45b0bd4b4fd4e6731d70"
+    },
+    {
+      "path": "docs/resource-old-host-memory-diagnostic.json",
+      "bytes": 18979,
+      "sha256": "67e57f5bb311080e3dcc793bf3bc41562b2c4e9c99a0dbcc5290906f7629556f"
+    },
+    {
+      "path": "docs/resource-onboarding-v0.7.1.json",
+      "bytes": 3268,
+      "sha256": "a498c51ca9847a7193762b0bc294d0e733b54cfcadf884c7710c9db189ff49d9"
+    },
+    {
+      "path": "docs/resource-onboarding-v0.7.1.txt",
+      "bytes": 3805,
+      "sha256": "13e3ec1f7ac4cb6b1c65994d2aa9906ea900d19822a107f4535757d20cac0a15"
+    },
+    {
+      "path": "docs/resource-original-demo-v0.7.1.txt",
+      "bytes": 2711,
+      "sha256": "a8a48b688062822e374adeea9df1148a920397629542b9f89f4e79e9c5b50d80"
+    },
+    {
+      "path": "docs/resource-production-install-v0.7.1.txt",
+      "bytes": 28,
+      "sha256": "7e8c3648902afdfd16ff7dd7ef96ae78a391248a749f3c85239f0b6703134679"
+    },
+    {
+      "path": "docs/resource-production-smoke-v0.7.1.json",
+      "bytes": 16406,
+      "sha256": "8744c85806cfa984f732665c146a0e20e6034243b283f3ea3f01b4e3e15b37f7"
+    },
+    {
+      "path": "docs/resource-production-tests-v0.7.1.txt",
+      "bytes": 3249,
+      "sha256": "e022c75393b09e983ee0234f65a392d6e075f85254740ad82b8f5e46298fc665"
+    },
+    {
       "path": "docs/resource-smoke-base-v0.5.json",
       "bytes": 5845,
       "sha256": "077298a805c2f7540cf056661c7dd643ee0cdcb1182746ee467bef31b7b2bf79"
@@ -524,13 +579,13 @@
     },
     {
       "path": "package-lock.json",
-      "bytes": 170841,
-      "sha256": "f5387b2923531d10fd0790d1791db5346d6b9336ea08cec901c7f5b5f0c0bf47"
+      "bytes": 170837,
+      "sha256": "0e872a707ecccd4b643e5e4ac500e21fbcafadaa8bb2fa9770d9c16cec1d6b57"
     },
     {
       "path": "package.json",
-      "bytes": 1553,
-      "sha256": "942f1413b468c82a3d94b936b9be31ad8191b578f15e980242eb9b2dcc8093ff"
+      "bytes": 1520,
+      "sha256": "96b60d2181fa91bf83857de7b92c0a198d655b5b2f451f76bd616ab2bb164742"
     },
     {
       "path": "render-pilot.yaml",
@@ -649,8 +704,8 @@
     },
     {
       "path": "scripts/resource-check.mjs",
-      "bytes": 17759,
-      "sha256": "bb278dc7eb8d8ae29cfc26c563c79331818fbebd7b72ceb63254747aa4116717"
+      "bytes": 23919,
+      "sha256": "60961cc1a8aadf8ac3deb4a99f6a497055dced4e4024de08954d9f439c4f701c"
     },
     {
       "path": "scripts/start.mjs",
@@ -804,8 +859,8 @@
     },
     {
       "path": "src/testnet-http.mjs",
-      "bytes": 14459,
-      "sha256": "cb3a7baea7aec7d1a950f791ff918b7e51d988445a79606929669b2eb0d6f520"
+      "bytes": 14455,
+      "sha256": "69c62e9bf69161c17fe4e2ded2b6d6b8116a103ea5e8c0f2e2716650cd739036"
     },
     {
       "path": "src/testnet-journal.mjs",
@@ -839,8 +894,8 @@
     },
     {
       "path": "src/testnet-store.mjs",
-      "bytes": 25255,
-      "sha256": "0c36f40e2343273360019d70437ed1c87a3baa71fed2cd16cacfa01021d5e53c"
+      "bytes": 28031,
+      "sha256": "4984d73ff8d9203fe5d72e264d80a692b379be13ba25a569d108df06e28f4823"
     },
     {
       "path": "src/verification-bundle.mjs",
@@ -1054,8 +1109,8 @@
     },
     {
       "path": "test/testnet-maintenance.test.mjs",
-      "bytes": 19355,
-      "sha256": "1b5ace49f4a413323ed8aea82545911fad1f65e565ce9b0ec5b5b9064459eb3c"
+      "bytes": 19549,
+      "sha256": "44b8aeb724ddb32ba5661d7e561a58fd22578a94fcdfebfd42af4cc6dfa0ae29"
     },
     {
       "path": "test/testnet-plan.test.mjs",
@@ -1074,8 +1129,13 @@
     },
     {
       "path": "test/testnet-service.test.mjs",
-      "bytes": 34020,
-      "sha256": "2cc429f812e732bf84ed316ac874e11ad3688e6802494f676be102d621749eac"
+      "bytes": 34130,
+      "sha256": "a02707d569cd05e9b869a247cf90ee554896a046aaa95e6432b3557728c08711"
+    },
+    {
+      "path": "test/testnet-store-codec.test.mjs",
+      "bytes": 9369,
+      "sha256": "375d2acaa0ef1f2de1fac627114da5d5ec46c3f4bee18530c6e74e826ef3479a"
     }
   ]
 }

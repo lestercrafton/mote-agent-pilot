@@ -1,0 +1,679 @@
+{
+  "purpose": "old-source diagnosis; historical cgroup peak remains; same existing maintenance service",
+  "start": {
+    "at": "2026-10-31T01:25:41.795Z",
+    "current": 62717952,
+    "stat": {
+      "anon": 44937216,
+      "file": 3239936,
+      "kernel": 14200832,
+      "kernel_stack": 245760,
+      "pagetables": 1994752,
+      "sec_pagetables": 0,
+      "percpu": 1728,
+      "sock": 0,
+      "vmalloc": 0,
+      "shmem": 0,
+      "zswap": 0,
+      "zswapped": 0,
+      "file_mapped": 2568192,
+      "file_dirty": 0,
+      "file_writeback": 0,
+      "swapcached": 0,
+      "anon_thp": 0,
+      "file_thp": 0,
+      "shmem_thp": 0,
+      "inactive_anon": 233472,
+      "active_anon": 44613632,
+      "inactive_file": 2600960,
+      "active_file": 638976,
+      "unevictable": 0,
+      "slab_reclaimable": 11262632,
+      "slab_unreclaimable": 424568,
+      "slab": 11687200,
+      "workingset_refault_anon": 0,
+      "workingset_refault_file": 304447,
+      "workingset_activate_anon": 0,
+      "workingset_activate_file": 289329,
+      "workingset_restore_anon": 0,
+      "workingset_restore_file": 69202,
+      "workingset_nodereclaim": 0,
+      "pgscan": 355966,
+      "pgsteal": 355655,
+      "pgscan_kswapd": 0,
+      "pgscan_direct": 355966,
+      "pgscan_khugepaged": 0,
+      "pgsteal_kswapd": 0,
+      "pgsteal_direct": 355655,
+      "pgsteal_khugepaged": 0,
+      "pgfault": 817986,
+      "pgmajfault": 115,
+      "pgrefill": 343357,
+      "pgactivate": 458,
+      "pgdeactivate": 0,
+      "pglazyfree": 0,
+      "pglazyfreed": 0,
+      "zswpin": 0,
+      "zswpout": 0,
+      "zswpwb": 0,
+      "thp_fault_alloc": 0,
+      "thp_collapse_alloc": 0,
+      "thp_swpout": 0,
+      "thp_swpout_fallback": 0
+    },
+    "parent": {
+      "rss": 76546048,
+      "heapTotal": 16703488,
+      "heapUsed": 13821352,
+      "external": 4567669,
+      "arrayBuffers": 512370
+    },
+    "processes": [
+      {
+        "pid": 1,
+        "rssKiB": 3312
+      },
+      {
+        "pid": 52,
+        "rssKiB": 64396
+      },
+      {
+        "pid": 83,
+        "rssKiB": 3820
+      },
+      {
+        "pid": 245,
+        "rssKiB": 3772
+      },
+      {
+        "pid": 292,
+        "rssKiB": 4032
+      },
+      {
+        "pid": 339,
+        "rssKiB": 75576
+      }
+    ]
+  },
+  "peak": {
+    "at": "2026-10-31T01:26:17.019Z",
+    "current": 536870912,
+    "stat": {
+      "anon": 139296768,
+      "file": 378548224,
+      "kernel": 18644992,
+      "kernel_stack": 425984,
+      "pagetables": 4419584,
+      "sec_pagetables": 0,
+      "percpu": 2016,
+      "sock": 4096,
+      "vmalloc": 0,
+      "shmem": 0,
+      "zswap": 0,
+      "zswapped": 0,
+      "file_mapped": 3526656,
+      "file_dirty": 40960,
+      "file_writeback": 0,
+      "swapcached": 0,
+      "anon_thp": 0,
+      "file_thp": 0,
+      "shmem_thp": 0,
+      "inactive_anon": 233472,
+      "active_anon": 139051008,
+      "inactive_file": 176275456,
+      "active_file": 202153984,
+      "unevictable": 0,
+      "slab_reclaimable": 12719216,
+      "slab_unreclaimable": 700888,
+      "slab": 13420104,
+      "workingset_refault_anon": 0,
+      "workingset_refault_file": 314445,
+      "workingset_activate_anon": 0,
+      "workingset_activate_file": 299280,
+      "workingset_restore_anon": 0,
+      "workingset_restore_file": 69202,
+      "workingset_nodereclaim": 0,
+      "pgscan": 371682,
+      "pgsteal": 371081,
+      "pgscan_kswapd": 0,
+      "pgscan_direct": 371682,
+      "pgscan_khugepaged": 0,
+      "pgsteal_kswapd": 0,
+      "pgsteal_direct": 371081,
+      "pgsteal_khugepaged": 0,
+      "pgfault": 1047901,
+      "pgmajfault": 123,
+      "pgrefill": 392016,
+      "pgactivate": 1055,
+      "pgdeactivate": 0,
+      "pglazyfree": 0,
+      "pglazyfreed": 0,
+      "zswpin": 0,
+      "zswpout": 0,
+      "zswpwb": 0,
+      "thp_fault_alloc": 0,
+      "thp_collapse_alloc": 0,
+      "thp_swpout": 0,
+      "thp_swpout_fallback": 0
+    },
+    "parent": {
+      "rss": 122757120,
+      "heapTotal": 31567872,
+      "heapUsed": 25072064,
+      "external": 5735291,
+      "arrayBuffers": 1444498
+    },
+    "processes": [
+      {
+        "pid": 1,
+        "rssKiB": 3312
+      },
+      {
+        "pid": 52,
+        "rssKiB": 64396
+      },
+      {
+        "pid": 83,
+        "rssKiB": 3820
+      },
+      {
+        "pid": 245,
+        "rssKiB": 3772
+      },
+      {
+        "pid": 292,
+        "rssKiB": 4032
+      },
+      {
+        "pid": 339,
+        "rssKiB": 121432
+      },
+      {
+        "pid": 347,
+        "rssKiB": 104976
+      }
+    ]
+  },
+  "peakAnon": {
+    "at": "2026-10-31T01:26:14.318Z",
+    "current": 510992384,
+    "stat": {
+      "anon": 141058048,
+      "file": 350601216,
+      "kernel": 19079168,
+      "kernel_stack": 425984,
+      "pagetables": 4501504,
+      "sec_pagetables": 0,
+      "percpu": 2016,
+      "sock": 0,
+      "vmalloc": 0,
+      "shmem": 0,
+      "zswap": 0,
+      "zswapped": 0,
+      "file_mapped": 3493888,
+      "file_dirty": 4096,
+      "file_writeback": 0,
+      "swapcached": 0,
+      "anon_thp": 0,
+      "file_thp": 0,
+      "shmem_thp": 0,
+      "inactive_anon": 233472,
+      "active_anon": 140812288,
+      "inactive_file": 148447232,
+      "active_file": 202153984,
+      "unevictable": 0,
+      "slab_reclaimable": 13063352,
+      "slab_unreclaimable": 706736,
+      "slab": 13770088,
+      "workingset_refault_anon": 0,
+      "workingset_refault_file": 304494,
+      "workingset_activate_anon": 0,
+      "workingset_activate_file": 289329,
+      "workingset_restore_anon": 0,
+      "workingset_restore_file": 69202,
+      "workingset_nodereclaim": 0,
+      "pgscan": 368546,
+      "pgsteal": 367945,
+      "pgscan_kswapd": 0,
+      "pgscan_direct": 368546,
+      "pgscan_khugepaged": 0,
+      "pgsteal_kswapd": 0,
+      "pgsteal_direct": 367945,
+      "pgsteal_khugepaged": 0,
+      "pgfault": 1032988,
+      "pgmajfault": 123,
+      "pgrefill": 392016,
+      "pgactivate": 1055,
+      "pgdeactivate": 0,
+      "pglazyfree": 0,
+      "pglazyfreed": 0,
+      "zswpin": 0,
+      "zswpout": 0,
+      "zswpwb": 0,
+      "thp_fault_alloc": 0,
+      "thp_collapse_alloc": 0,
+      "thp_swpout": 0,
+      "thp_swpout_fallback": 0
+    },
+    "parent": {
+      "rss": 122494976,
+      "heapTotal": 31305728,
+      "heapUsed": 24139256,
+      "external": 5735939,
+      "arrayBuffers": 1445146
+    },
+    "processes": [
+      {
+        "pid": 1,
+        "rssKiB": 3312
+      },
+      {
+        "pid": 52,
+        "rssKiB": 64396
+      },
+      {
+        "pid": 83,
+        "rssKiB": 3820
+      },
+      {
+        "pid": 245,
+        "rssKiB": 3772
+      },
+      {
+        "pid": 292,
+        "rssKiB": 4032
+      },
+      {
+        "pid": 339,
+        "rssKiB": 121300
+      },
+      {
+        "pid": 347,
+        "rssKiB": 106764
+      }
+    ]
+  },
+  "peakFile": {
+    "at": "2026-10-31T01:26:41.898Z",
+    "current": 536608768,
+    "stat": {
+      "anon": 116436992,
+      "file": 405409792,
+      "kernel": 14671872,
+      "kernel_stack": 425984,
+      "pagetables": 3678208,
+      "sec_pagetables": 0,
+      "percpu": 2016,
+      "sock": 0,
+      "vmalloc": 0,
+      "shmem": 0,
+      "zswap": 0,
+      "zswapped": 0,
+      "file_mapped": 3428352,
+      "file_dirty": 57663488,
+      "file_writeback": 4227072,
+      "swapcached": 0,
+      "anon_thp": 0,
+      "file_thp": 0,
+      "shmem_thp": 0,
+      "inactive_anon": 68968448,
+      "active_anon": 47427584,
+      "inactive_file": 404905984,
+      "active_file": 294912,
+      "unevictable": 0,
+      "slab_reclaimable": 9522432,
+      "slab_unreclaimable": 655368,
+      "slab": 10177800,
+      "workingset_refault_anon": 0,
+      "workingset_refault_file": 391100,
+      "workingset_activate_anon": 0,
+      "workingset_activate_file": 362503,
+      "workingset_restore_anon": 0,
+      "workingset_restore_file": 80918,
+      "workingset_nodereclaim": 0,
+      "pgscan": 456868,
+      "pgsteal": 456266,
+      "pgscan_kswapd": 0,
+      "pgscan_direct": 456868,
+      "pgscan_khugepaged": 0,
+      "pgsteal_kswapd": 0,
+      "pgsteal_direct": 456266,
+      "pgsteal_khugepaged": 0,
+      "pgfault": 1211654,
+      "pgmajfault": 123,
+      "pgrefill": 501948,
+      "pgactivate": 1055,
+      "pgdeactivate": 0,
+      "pglazyfree": 0,
+      "pglazyfreed": 0,
+      "zswpin": 0,
+      "zswpout": 0,
+      "zswpwb": 0,
+      "thp_fault_alloc": 0,
+      "thp_collapse_alloc": 0,
+      "thp_swpout": 0,
+      "thp_swpout_fallback": 0
+    },
+    "parent": {
+      "rss": 109223936,
+      "heapTotal": 20418560,
+      "heapUsed": 16828768,
+      "external": 4687526,
+      "arrayBuffers": 398109
+    },
+    "processes": [
+      {
+        "pid": 1,
+        "rssKiB": 3312
+      },
+      {
+        "pid": 52,
+        "rssKiB": 64408
+      },
+      {
+        "pid": 83,
+        "rssKiB": 3820
+      },
+      {
+        "pid": 245,
+        "rssKiB": 3772
+      },
+      {
+        "pid": 292,
+        "rssKiB": 4032
+      },
+      {
+        "pid": 339,
+        "rssKiB": 107652
+      },
+      {
+        "pid": 359,
+        "rssKiB": 96332
+      }
+    ]
+  },
+  "end": {
+    "at": "2026-10-31T01:27:24.800Z",
+    "current": 100020224,
+    "stat": {
+      "anon": 89374720,
+      "file": 2830336,
+      "kernel": 7802880,
+      "kernel_stack": 245760,
+      "pagetables": 2785280,
+      "sec_pagetables": 0,
+      "percpu": 1728,
+      "sock": 8192,
+      "vmalloc": 0,
+      "shmem": 0,
+      "zswap": 0,
+      "zswapped": 0,
+      "file_mapped": 2936832,
+      "file_dirty": 8192,
+      "file_writeback": 0,
+      "swapcached": 0,
+      "anon_thp": 0,
+      "file_thp": 0,
+      "shmem_thp": 0,
+      "inactive_anon": 3907584,
+      "active_anon": 85450752,
+      "inactive_file": 2564096,
+      "active_file": 266240,
+      "unevictable": 0,
+      "slab_reclaimable": 4029696,
+      "slab_unreclaimable": 469760,
+      "slab": 4499456,
+      "workingset_refault_anon": 0,
+      "workingset_refault_file": 518346,
+      "workingset_activate_anon": 0,
+      "workingset_activate_file": 468297,
+      "workingset_restore_anon": 0,
+      "workingset_restore_file": 106110,
+      "workingset_nodereclaim": 0,
+      "pgscan": 619610,
+      "pgsteal": 618608,
+      "pgscan_kswapd": 0,
+      "pgscan_direct": 619610,
+      "pgscan_khugepaged": 0,
+      "pgsteal_kswapd": 0,
+      "pgsteal_direct": 618608,
+      "pgsteal_khugepaged": 0,
+      "pgfault": 1514141,
+      "pgmajfault": 125,
+      "pgrefill": 729047,
+      "pgactivate": 1424,
+      "pgdeactivate": 0,
+      "pglazyfree": 0,
+      "pglazyfreed": 0,
+      "zswpin": 0,
+      "zswpout": 0,
+      "zswpwb": 0,
+      "thp_fault_alloc": 0,
+      "thp_collapse_alloc": 0,
+      "thp_swpout": 0,
+      "thp_swpout_fallback": 0
+    },
+    "parent": {
+      "rss": 125243392,
+      "heapTotal": 26263552,
+      "heapUsed": 21442728,
+      "external": 5564051,
+      "arrayBuffers": 1274634
+    },
+    "processes": [
+      {
+        "pid": 1,
+        "rssKiB": 3312
+      },
+      {
+        "pid": 52,
+        "rssKiB": 64864
+      },
+      {
+        "pid": 83,
+        "rssKiB": 3820
+      },
+      {
+        "pid": 245,
+        "rssKiB": 3772
+      },
+      {
+        "pid": 292,
+        "rssKiB": 4032
+      },
+      {
+        "pid": 339,
+        "rssKiB": 123176
+      }
+    ]
+  },
+  "result": {
+    "schema": "mote-resource-check-v1",
+    "status": "failed-thresholds",
+    "profile": "full",
+    "chainId": 11155111,
+    "functionalChecksPassed": true,
+    "acceptanceEligible": true,
+    "acceptancePassed": false,
+    "environment": {
+      "node": "v24.22.2",
+      "platform": "linux",
+      "architecture": "x64",
+      "memoryMaxBytes": 536870912,
+      "swapMaxBytes": 0,
+      "cpuQuotaCores": 0.5,
+      "memoryEvents": {
+        "low": 0,
+        "high": 0,
+        "max": 5237,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "cpuStat": {
+        "usage_usec": 52234442,
+        "user_usec": 42814572,
+        "system_usec": 9419869,
+        "core_sched.force_idle_usec": 0,
+        "nr_periods": 1470,
+        "nr_throttled": 991,
+        "throttled_usec": 115742410,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "developmentPackagesPresent": []
+    },
+    "finalEnvironment": {
+      "node": "v24.22.2",
+      "platform": "linux",
+      "architecture": "x64",
+      "memoryMaxBytes": 536870912,
+      "swapMaxBytes": 0,
+      "cpuQuotaCores": 0.5,
+      "memoryEvents": {
+        "low": 0,
+        "high": 0,
+        "max": 8691,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "cpuStat": {
+        "usage_usec": 100893993,
+        "user_usec": 83617735,
+        "system_usec": 17276258,
+        "core_sched.force_idle_usec": 0,
+        "nr_periods": 2498,
+        "nr_throttled": 1931,
+        "throttled_usec": 229570615,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "developmentPackagesPresent": []
+    },
+    "workload": {
+      "rows": 1000,
+      "attempts": 4000,
+      "inputBytes": 64167,
+      "concurrency": 4,
+      "proofs": "synthetic adapter, no chain settlement",
+      "http": "loopback only, no TLS",
+      "serverAndDriverShareProcess": true,
+      "maintenanceInSeparateProcess": true
+    },
+    "phases": {
+      "seedMs": 9861.247295000001,
+      "startupMs": 6406.912014000001,
+      "backupMs": 32530.075576000003,
+      "restoreMs": 44524.187855000004,
+      "recoveryStartupMs": 6879.273191999993
+    },
+    "latencies": {
+      "ready": {
+        "samples": 40,
+        "p50": 76.01115899999786,
+        "p95": 101.60964500000046,
+        "max": 195.27266499999678
+      },
+      "free": {
+        "samples": 40,
+        "p50": 85.89730899999995,
+        "p95": 164.7560139999987,
+        "max": 293.3658780000005
+      },
+      "recovery": {
+        "samples": 40,
+        "p50": 76.52842099999907,
+        "p95": 164.84719699999914,
+        "max": 183.92910100000154
+      },
+      "readyDuringBackup": {
+        "samples": 713,
+        "p50": 1.67001899999741,
+        "p95": 60.02734700000292,
+        "max": 76.14885200000572
+      }
+    },
+    "usage": {
+      "sampledProcessRssBytes": 125243392,
+      "processPeakRssBytes": 129880064,
+      "sampledCgroupBytes": 536870912,
+      "cgroupPeakBytes": 536875008,
+      "diskBytes": 596147316
+    },
+    "thresholds": {
+      "processPeakRssBytes": 402653184,
+      "cgroupPeakBytes": 469762048,
+      "diskBytes": 891289600,
+      "startupMs": 30000,
+      "backupMs": 60000,
+      "restoreMs": 90000,
+      "readyP95Ms": 250,
+      "freeP95Ms": 1000,
+      "recoveryP95Ms": 2000
+    },
+    "checks": {
+      "sourceStable": true,
+      "rss": true,
+      "cgroup": false,
+      "disk": true,
+      "startup": true,
+      "backup": true,
+      "restore": true,
+      "ready": true,
+      "free": true,
+      "recovery": true,
+      "noOom": false
+    },
+    "publicRpcCalls": 0,
+    "transactionsSubmitted": 0,
+    "persistentKeysCreated": 0,
+    "hostedStartupVerified": false,
+    "sourceHashes": {
+      "package-lock.json": "f5387b2923531d10fd0790d1791db5346d6b9336ea08cec901c7f5b5f0c0bf47",
+      "scripts/resource-check.mjs": "bb278dc7eb8d8ae29cfc26c563c79331818fbebd7b72ceb63254747aa4116717",
+      "scripts/testnet-maintenance.mjs": "c827eb3cfcaf5540e6faa79d977eaa511fde4bfad89096d68096fba9b011dfdd",
+      "src/base-fees.mjs": "aa7c9b7de12f81cc1ec54b5a0938e9fc09f826559b0ce6ebdb09faaf3733e3a2",
+      "src/bootstrap-plan.mjs": "a41e2a0a8e36b52eac2a6cd598484f844a3c27b1451d896a49ea9289ccd995e9",
+      "src/bootstrap-runner.mjs": "188d3757efafbd110fe63e6e688cd17f0e832b35239eef59cc80130c6f28890f",
+      "src/bootstrap-verifier.mjs": "00fb2d7a97d95e8a6bca7310309e9afdfcfe9f658568b0fcfa43b8e8713628ba",
+      "src/chain.mjs": "e4ee325496ce0910eb7ff713d0605e89bd63faa61e7b264ebe40ced8fdab75b1",
+      "src/claim-client.mjs": "7ad2f2013f0efe1fb602ab9c83ef3a71f914ef645170b2e47f4a7d9bfc39635a",
+      "src/claim-journal.mjs": "d1eeebf6dd10ee40d59babe7fe81277c343fc0e0a7ff1e8d595be4bf8cd85d1e",
+      "src/client.mjs": "f5202e61347548723e9355c701706516dfe55cafee0cf5843dd560e594148cf6",
+      "src/discovery.mjs": "712fea61641c0b2899deb7d4c4d34801ec256d585495acb28973eb71fe1f5054",
+      "src/dispenser-chain.mjs": "def5ac15c08a1ffcced1da4a3d50938a1b433acbf0ff637d86a17a0149b7a120",
+      "src/dispenser-discovery.mjs": "226d461b02a99a76cbb92b9d8aa8bee3252c7ec8417f20e657e4bdda5791ce0b",
+      "src/dispenser-plan.mjs": "9ffd242c4415de62da7da558e12d36c03658d0c672d772ddbd75c3c1532ad6df",
+      "src/durable-client.mjs": "a43077f589f3421b9aa37735be664eadb8965508aad7d10a05f58f405dadfcda",
+      "src/ethereum-fees.mjs": "bc9455a35c8701655339d14469f9bd42b98361ae964d6a45e49572c96ac26873",
+      "src/http.mjs": "35d022c654dff6338fb82ff8f606fe7f3b7ec9a3615e90319d76ac03b7d74a78",
+      "src/journal.mjs": "95c27747dcaeb10be811ee6298c27cce33324f1eefa30298a60183808721b261",
+      "src/json.mjs": "45d2718a6164f189524c0337982d238b3c7f2d49c73d4804d18f97dab251a033",
+      "src/keychain-custody.mjs": "932f402905e9cc0c8fb0172a026179a3ec1b151a376339f9b916afce242deb79",
+      "src/public.mjs": "f0a70bbab09611716e5c6953accaceb3d821a1929e1bc467422c6b7b5eaddc8f",
+      "src/schema.mjs": "0c65a323760b65406fbce47c6b083a43f4eb1aacb17698a57f4e9ac33951bdb2",
+      "src/service.mjs": "132457ca77bcf86f40346f5774a99b5506bfed3fc53c55223e780dbc1b46a40c",
+      "src/store.mjs": "c984e55f14a5ef6a0aa44171da7e95b0cb53d9ec05bac652b77250b9aea52f39",
+      "src/testnet-chain.mjs": "5ec25b8e90627e0f6dffb489430f95e6f43f553548a26045d5fba52b6a86d978",
+      "src/testnet-client.mjs": "59dee3426d5384a4ea650fee8e37eb85814dd843565001164085bfdc5830a7c1",
+      "src/testnet-http.mjs": "cb3a7baea7aec7d1a950f791ff918b7e51d988445a79606929669b2eb0d6f520",
+      "src/testnet-journal.mjs": "1bb65b776999eefcc36ae5020af04ae42816baf75b660186b4653e1bdefffc2a",
+      "src/testnet-networks.mjs": "132ca7ac835ab5e07cf83b0c79cb96a486424c803c50ad61c633913841491cac",
+      "src/testnet-plan.mjs": "c95a72314310702b1215ae78cd3fbb66d9d0efc17c22069a687124b89cff8829",
+      "src/testnet-rpc.mjs": "712a06cd0805daae159e95c78ffe6d09e05a826ce504a4e78ba7dca89fadd46a",
+      "src/testnet-service.mjs": "3c1463efc0d786817028fa3fee2aed74bbbbf89375435bee17517aa33c5841da",
+      "src/testnet-signer.mjs": "a6989527ad3ec0bea48de223f96fc29a17e4dcf11a8db7791524c4a6b540ca3d",
+      "src/testnet-store.mjs": "0c36f40e2343273360019d70437ed1c87a3baa71fed2cd16cacfa01021d5e53c",
+      "src/verification-bundle.mjs": "e3a57714697d793f32c1ba12904acd5885b6d85b70066c6b7ab3cbf3b6c1db3a"
+    },
+    "sourceChangedDuringRun": [],
+    "limitations": [
+      "Synthetic proof adapter excludes real RPC latency/finality.",
+      "Fixture rehearsal does not invoke the externally provisioned production signer startup.",
+      "Linux cgroup limits qualify only when directly observed, not inferred from process RSS.",
+      "Process RSS covers the parent only; cgroup peak must include the separate maintenance child.",
+      "A near-body-limit string is not every adversarial supported schema or JSON shape."
+    ]
+  }
+}

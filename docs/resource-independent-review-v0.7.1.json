@@ -1,0 +1,15 @@
+{
+  "scope": "Independent narrow read-only storage/harness patch review; not a security audit",
+  "blockingFindings": [],
+  "independentlyRunCodecTests": 8,
+  "pass": 8,
+  "reviewedSha256": {
+    "src/testnet-store.mjs": "4984d73ff8d9203fe5d72e264d80a692b379be13ba25a569d108df06e28f4823",
+    "scripts/resource-check.mjs": "60961cc1a8aadf8ac3deb4a99f6a497055dced4e4024de08954d9f439c4f701c"
+  },
+  "limitations": [
+    "Legacy expanded records are not automatically compacted.",
+    "Old readers reject compact rows; no database rollback is authorized.",
+    "Actual host acceptance pending corrected deployment."
+  ]
+}

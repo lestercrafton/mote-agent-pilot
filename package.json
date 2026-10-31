@@ -1,9 +1,9 @@
 {
   "name": "mote-local-prototype",
-  "version": "0.7.0-onboarding.2",
+  "version": "0.7.1-resource.1",
   "private": true,
   "type": "module",
-  "description": "Unlaunched test-MOTE onboarding candidate with bounded local bootstrap, dispenser, durable claim/payment and inactive native custody preparation",
+  "description": "Experimental agent utility and testnet prototype with compact durable order storage; public host maintenance-only",
   "engines": {
     "node": ">=22.13.0"
   },

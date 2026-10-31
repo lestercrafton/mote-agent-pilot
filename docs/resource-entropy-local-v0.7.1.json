@@ -1,0 +1,513 @@
+{
+  "schema": "mote-resource-check-v1",
+  "status": "local-functional-only",
+  "profile": "full",
+  "chainId": 11155111,
+  "functionalChecksPassed": true,
+  "acceptanceEligible": false,
+  "acceptancePassed": false,
+  "environment": {
+    "node": "v24.22.2",
+    "platform": "darwin",
+    "architecture": "arm64",
+    "memoryMaxBytes": null,
+    "swapMaxBytes": null,
+    "cpuQuotaCores": null,
+    "memoryEvents": null,
+    "cpuStat": null,
+    "developmentPackagesPresent": [
+      "ganache",
+      "solc",
+      "@modelcontextprotocol/client"
+    ]
+  },
+  "finalEnvironment": {
+    "node": "v24.22.2",
+    "platform": "darwin",
+    "architecture": "arm64",
+    "memoryMaxBytes": null,
+    "swapMaxBytes": null,
+    "cpuQuotaCores": null,
+    "memoryEvents": null,
+    "cpuStat": null,
+    "developmentPackagesPresent": [
+      "ganache",
+      "solc",
+      "@modelcontextprotocol/client"
+    ]
+  },
+  "workload": {
+    "rows": 1000,
+    "attempts": 4000,
+    "inputBytes": 64167,
+    "payloadProfile": "entropy",
+    "payloadAlgorithm": "deterministic-sha256-base64url-v1",
+    "concurrency": 4,
+    "proofs": "synthetic adapter, no chain settlement",
+    "http": "loopback only, no TLS",
+    "serverAndDriverShareProcess": true,
+    "maintenanceInSeparateProcess": true
+  },
+  "phases": {
+    "seedMs": 2399.438666,
+    "startupMs": 662.7653330000003,
+    "workloadMs": 358.78995799999984,
+    "backupMs": 2928.6856669999997,
+    "restoreMs": 4228.322792,
+    "recoveryStartupMs": 659.8045840000013
+  },
+  "latencies": {
+    "ready": {
+      "samples": 40,
+      "p50": 9.508249999999862,
+      "p95": 17.099125000000186,
+      "max": 19.411957999999686
+    },
+    "free": {
+      "samples": 40,
+      "p50": 13.067749999999705,
+      "p95": 17.141583999999966,
+      "max": 24.931916999999885
+    },
+    "recovery": {
+      "samples": 40,
+      "p50": 10.000499999999647,
+      "p95": 18.023583000000144,
+      "max": 23.247584000000188
+    },
+    "readyDuringBackup": {
+      "samples": 111,
+      "p50": 0.8365830000002461,
+      "p95": 1.0680419999998776,
+      "max": 2.009291000000303
+    }
+  },
+  "usage": {
+    "sampledProcessRssBytes": 328663040,
+    "processPeakRssBytes": 333643776,
+    "sampledCgroupBytes": null,
+    "cgroupPeakBytes": null,
+    "diskBytes": 212171890
+  },
+  "memoryTelemetry": {
+    "schema": "mote-resource-memory-v1",
+    "aggregateSampleIntervalMs": 10,
+    "compositionSampleIntervalMs": 100,
+    "samples": 114,
+    "phaseSnapshots": {
+      "seedMs": {
+        "before": {
+          "atMs": 5.2935409999999905,
+          "phase": "seedMs",
+          "parentPid": 20375,
+          "parent": {
+            "rss": 96124928,
+            "heapTotal": 31965184,
+            "heapUsed": 22279008,
+            "external": 4626121,
+            "arrayBuffers": 584533
+          },
+          "cgroupBytes": null,
+          "memoryStatBytes": null,
+          "cgroupProcesses": null
+        },
+        "after": {
+          "atMs": 2404.85025,
+          "phase": "seedMs",
+          "parentPid": 20375,
+          "parent": {
+            "rss": 273727488,
+            "heapTotal": 171474944,
+            "heapUsed": 85318896,
+            "external": 4515667,
+            "arrayBuffers": 474079
+          },
+          "cgroupBytes": null,
+          "memoryStatBytes": null,
+          "cgroupProcesses": null
+        }
+      },
+      "startupMs": {
+        "before": {
+          "atMs": 2404.881833,
+          "phase": "startupMs",
+          "parentPid": 20375,
+          "parent": {
+            "rss": 273727488,
+            "heapTotal": 171474944,
+            "heapUsed": 85325576,
+            "external": 4515667,
+            "arrayBuffers": 474079
+          },
+          "cgroupBytes": null,
+          "memoryStatBytes": null,
+          "cgroupProcesses": null
+        },
+        "after": {
+          "atMs": 3067.718583,
+          "phase": "startupMs",
+          "parentPid": 20375,
+          "parent": {
+            "rss": 271040512,
+            "heapTotal": 165216256,
+            "heapUsed": 48077168,
+            "external": 4364232,
+            "arrayBuffers": 291421
+          },
+          "cgroupBytes": null,
+          "memoryStatBytes": null,
+          "cgroupProcesses": null
+        }
+      },
+      "workloadMs": {
+        "before": {
+          "atMs": 3088.251708,
+          "phase": "workloadMs",
+          "parentPid": 20375,
+          "parent": {
+            "rss": 273776640,
+            "heapTotal": 166215680,
+            "heapUsed": 59065968,
+            "external": 4856080,
+            "arrayBuffers": 620725
+          },
+          "cgroupBytes": null,
+          "memoryStatBytes": null,
+          "cgroupProcesses": null
+        },
+        "after": {
+          "atMs": 3447.0992499999998,
+          "phase": "workloadMs",
+          "parentPid": 20375,
+          "parent": {
+            "rss": 313769984,
+            "heapTotal": 182796288,
+            "heapUsed": 59438312,
+            "external": 10932326,
+            "arrayBuffers": 6649735
+          },
+          "cgroupBytes": null,
+          "memoryStatBytes": null,
+          "cgroupProcesses": null
+        }
+      },
+      "backupMs": {
+        "before": {
+          "atMs": 3449.395833,
+          "phase": "backupMs",
+          "parentPid": 20375,
+          "parent": {
+            "rss": 313786368,
+            "heapTotal": 182796288,
+            "heapUsed": 59799400,
+            "external": 10934781,
+            "arrayBuffers": 6652190
+          },
+          "cgroupBytes": null,
+          "memoryStatBytes": null,
+          "cgroupProcesses": null
+        },
+        "after": {
+          "atMs": 6378.119083,
+          "phase": "backupMs",
+          "parentPid": 20375,
+          "parent": {
+            "rss": 315244544,
+            "heapTotal": 183205888,
+            "heapUsed": 72104576,
+            "external": 11077168,
+            "arrayBuffers": 6794577
+          },
+          "cgroupBytes": null,
+          "memoryStatBytes": null,
+          "cgroupProcesses": null
+        }
+      },
+      "restoreMs": {
+        "before": {
+          "atMs": 6391.068083,
+          "phase": "restoreMs",
+          "parentPid": 20375,
+          "parent": {
+            "rss": 315523072,
+            "heapTotal": 183418880,
+            "heapUsed": 81071184,
+            "external": 11286258,
+            "arrayBuffers": 7003667
+          },
+          "cgroupBytes": null,
+          "memoryStatBytes": null,
+          "cgroupProcesses": null
+        },
+        "after": {
+          "atMs": 10619.43825,
+          "phase": "restoreMs",
+          "parentPid": 20375,
+          "parent": {
+            "rss": 315555840,
+            "heapTotal": 183418880,
+            "heapUsed": 82228192,
+            "external": 11287933,
+            "arrayBuffers": 7005342
+          },
+          "cgroupBytes": null,
+          "memoryStatBytes": null,
+          "cgroupProcesses": null
+        }
+      },
+      "recoveryStartupMs": {
+        "before": {
+          "atMs": 10620.552625,
+          "phase": "recoveryStartupMs",
+          "parentPid": 20375,
+          "parent": {
+            "rss": 315572224,
+            "heapTotal": 183418880,
+            "heapUsed": 82334696,
+            "external": 11288797,
+            "arrayBuffers": 7006206
+          },
+          "cgroupBytes": null,
+          "memoryStatBytes": null,
+          "cgroupProcesses": null
+        },
+        "after": {
+          "atMs": 11280.420041,
+          "phase": "recoveryStartupMs",
+          "parentPid": 20375,
+          "parent": {
+            "rss": 328351744,
+            "heapTotal": 183894016,
+            "heapUsed": 55371256,
+            "external": 10000852,
+            "arrayBuffers": 5718261
+          },
+          "cgroupBytes": null,
+          "memoryStatBytes": null,
+          "cgroupProcesses": null
+        }
+      }
+    },
+    "sampledPeaks": {
+      "parent": {
+        "rss": 328663040,
+        "heapTotal": 186957824,
+        "heapUsed": 110252064,
+        "external": 11288797,
+        "arrayBuffers": 7006206
+      },
+      "memoryStatBytes": {},
+      "cgroupBytes": null,
+      "readableProcessRssSumBytes": null,
+      "observedProcessCount": null
+    },
+    "peakCompositions": {
+      "cgroup": null,
+      "parentRss": {
+        "atMs": 11289.370166,
+        "phase": "complete",
+        "parentPid": 20375,
+        "parent": {
+          "rss": 328663040,
+          "heapTotal": 184369152,
+          "heapUsed": 64797040,
+          "external": 10211217,
+          "arrayBuffers": 5928626
+        },
+        "cgroupBytes": null,
+        "memoryStatBytes": null,
+        "cgroupProcesses": null
+      },
+      "readableProcessRssSum": null
+    },
+    "maintenanceChildren": [
+      {
+        "operation": "backup",
+        "pid": 20377,
+        "startedMs": 3450.5355,
+        "start": {
+          "atMs": 3450.5497499999997,
+          "phase": "backupMs",
+          "parentPid": 20375,
+          "parent": {
+            "rss": 313868288,
+            "heapTotal": 182796288,
+            "heapUsed": 59877384,
+            "external": 10934781,
+            "arrayBuffers": 6652190
+          },
+          "cgroupBytes": null,
+          "memoryStatBytes": null,
+          "cgroupProcesses": null
+        },
+        "endedMs": 6378.0209159999995,
+        "exitCode": 0,
+        "signal": null,
+        "end": {
+          "atMs": 6378.040375,
+          "phase": "backupMs",
+          "parentPid": 20375,
+          "parent": {
+            "rss": 315244544,
+            "heapTotal": 183205888,
+            "heapUsed": 72089112,
+            "external": 11077168,
+            "arrayBuffers": 6794577
+          },
+          "cgroupBytes": null,
+          "memoryStatBytes": null,
+          "cgroupProcesses": null
+        }
+      },
+      {
+        "operation": "restore",
+        "pid": 20380,
+        "startedMs": 6391.4863749999995,
+        "start": {
+          "atMs": 6391.4945,
+          "phase": "restoreMs",
+          "parentPid": 20375,
+          "parent": {
+            "rss": 315523072,
+            "heapTotal": 183418880,
+            "heapUsed": 81092264,
+            "external": 11286258,
+            "arrayBuffers": 7003667
+          },
+          "cgroupBytes": null,
+          "memoryStatBytes": null,
+          "cgroupProcesses": null
+        },
+        "endedMs": 10619.319833,
+        "exitCode": 0,
+        "signal": null,
+        "end": {
+          "atMs": 10619.366458,
+          "phase": "restoreMs",
+          "parentPid": 20375,
+          "parent": {
+            "rss": 315555840,
+            "heapTotal": 183418880,
+            "heapUsed": 82218360,
+            "external": 11287933,
+            "arrayBuffers": 7005342
+          },
+          "cgroupBytes": null,
+          "memoryStatBytes": null,
+          "cgroupProcesses": null
+        }
+      }
+    ],
+    "processes": [],
+    "initial": {
+      "atMs": 0.17141599999999357,
+      "phase": "setup",
+      "parentPid": 20375,
+      "parent": {
+        "rss": 94404608,
+        "heapTotal": 31965184,
+        "heapUsed": 22076848,
+        "external": 4625321,
+        "arrayBuffers": 583733
+      },
+      "cgroupBytes": null,
+      "memoryStatBytes": null,
+      "cgroupProcesses": null
+    },
+    "final": {
+      "atMs": 11289.370166,
+      "phase": "complete",
+      "parentPid": 20375,
+      "parent": {
+        "rss": 328663040,
+        "heapTotal": 184369152,
+        "heapUsed": 64797040,
+        "external": 10211217,
+        "arrayBuffers": 5928626
+      },
+      "cgroupBytes": null,
+      "memoryStatBytes": null,
+      "cgroupProcesses": null
+    },
+    "notes": [
+      "Composition snapshots are sampled and non-atomic; they may miss the exact kernel peak.",
+      "Per-process RSS includes shared mappings and must not be subtracted from cgroup totals as an exact cache estimate.",
+      "Process status is limited to 256 PIDs per sample; unreadable or exited PIDs have null RSS.",
+      "Other cgroup processes may include the separately running maintenance HTTP server."
+    ]
+  },
+  "thresholds": {
+    "processPeakRssBytes": 402653184,
+    "cgroupPeakBytes": 469762048,
+    "diskBytes": 891289600,
+    "startupMs": 30000,
+    "backupMs": 60000,
+    "restoreMs": 90000,
+    "readyP95Ms": 250,
+    "freeP95Ms": 1000,
+    "recoveryP95Ms": 2000
+  },
+  "checks": {
+    "sourceStable": true,
+    "rss": true,
+    "cgroup": false,
+    "disk": true,
+    "startup": true,
+    "backup": true,
+    "restore": true,
+    "ready": true,
+    "free": true,
+    "recovery": true,
+    "noOom": false
+  },
+  "publicRpcCalls": 0,
+  "transactionsSubmitted": 0,
+  "persistentKeysCreated": 0,
+  "hostedStartupVerified": false,
+  "sourceHashes": {
+    "package-lock.json": "0e872a707ecccd4b643e5e4ac500e21fbcafadaa8bb2fa9770d9c16cec1d6b57",
+    "scripts/resource-check.mjs": "60961cc1a8aadf8ac3deb4a99f6a497055dced4e4024de08954d9f439c4f701c",
+    "scripts/testnet-maintenance.mjs": "c827eb3cfcaf5540e6faa79d977eaa511fde4bfad89096d68096fba9b011dfdd",
+    "src/base-fees.mjs": "aa7c9b7de12f81cc1ec54b5a0938e9fc09f826559b0ce6ebdb09faaf3733e3a2",
+    "src/bootstrap-plan.mjs": "a41e2a0a8e36b52eac2a6cd598484f844a3c27b1451d896a49ea9289ccd995e9",
+    "src/bootstrap-runner.mjs": "188d3757efafbd110fe63e6e688cd17f0e832b35239eef59cc80130c6f28890f",
+    "src/bootstrap-verifier.mjs": "00fb2d7a97d95e8a6bca7310309e9afdfcfe9f658568b0fcfa43b8e8713628ba",
+    "src/chain.mjs": "e4ee325496ce0910eb7ff713d0605e89bd63faa61e7b264ebe40ced8fdab75b1",
+    "src/claim-client.mjs": "7ad2f2013f0efe1fb602ab9c83ef3a71f914ef645170b2e47f4a7d9bfc39635a",
+    "src/claim-journal.mjs": "d1eeebf6dd10ee40d59babe7fe81277c343fc0e0a7ff1e8d595be4bf8cd85d1e",
+    "src/client.mjs": "f5202e61347548723e9355c701706516dfe55cafee0cf5843dd560e594148cf6",
+    "src/discovery.mjs": "712fea61641c0b2899deb7d4c4d34801ec256d585495acb28973eb71fe1f5054",
+    "src/dispenser-chain.mjs": "def5ac15c08a1ffcced1da4a3d50938a1b433acbf0ff637d86a17a0149b7a120",
+    "src/dispenser-discovery.mjs": "226d461b02a99a76cbb92b9d8aa8bee3252c7ec8417f20e657e4bdda5791ce0b",
+    "src/dispenser-plan.mjs": "9ffd242c4415de62da7da558e12d36c03658d0c672d772ddbd75c3c1532ad6df",
+    "src/durable-client.mjs": "a43077f589f3421b9aa37735be664eadb8965508aad7d10a05f58f405dadfcda",
+    "src/ethereum-fees.mjs": "bc9455a35c8701655339d14469f9bd42b98361ae964d6a45e49572c96ac26873",
+    "src/http.mjs": "35d022c654dff6338fb82ff8f606fe7f3b7ec9a3615e90319d76ac03b7d74a78",
+    "src/journal.mjs": "95c27747dcaeb10be811ee6298c27cce33324f1eefa30298a60183808721b261",
+    "src/json.mjs": "45d2718a6164f189524c0337982d238b3c7f2d49c73d4804d18f97dab251a033",
+    "src/keychain-custody.mjs": "932f402905e9cc0c8fb0172a026179a3ec1b151a376339f9b916afce242deb79",
+    "src/public.mjs": "f0a70bbab09611716e5c6953accaceb3d821a1929e1bc467422c6b7b5eaddc8f",
+    "src/schema.mjs": "0c65a323760b65406fbce47c6b083a43f4eb1aacb17698a57f4e9ac33951bdb2",
+    "src/service.mjs": "132457ca77bcf86f40346f5774a99b5506bfed3fc53c55223e780dbc1b46a40c",
+    "src/store.mjs": "c984e55f14a5ef6a0aa44171da7e95b0cb53d9ec05bac652b77250b9aea52f39",
+    "src/testnet-chain.mjs": "5ec25b8e90627e0f6dffb489430f95e6f43f553548a26045d5fba52b6a86d978",
+    "src/testnet-client.mjs": "59dee3426d5384a4ea650fee8e37eb85814dd843565001164085bfdc5830a7c1",
+    "src/testnet-http.mjs": "69c62e9bf69161c17fe4e2ded2b6d6b8116a103ea5e8c0f2e2716650cd739036",
+    "src/testnet-journal.mjs": "1bb65b776999eefcc36ae5020af04ae42816baf75b660186b4653e1bdefffc2a",
+    "src/testnet-networks.mjs": "132ca7ac835ab5e07cf83b0c79cb96a486424c803c50ad61c633913841491cac",
+    "src/testnet-plan.mjs": "c95a72314310702b1215ae78cd3fbb66d9d0efc17c22069a687124b89cff8829",
+    "src/testnet-rpc.mjs": "712a06cd0805daae159e95c78ffe6d09e05a826ce504a4e78ba7dca89fadd46a",
+    "src/testnet-service.mjs": "3c1463efc0d786817028fa3fee2aed74bbbbf89375435bee17517aa33c5841da",
+    "src/testnet-signer.mjs": "a6989527ad3ec0bea48de223f96fc29a17e4dcf11a8db7791524c4a6b540ca3d",
+    "src/testnet-store.mjs": "4984d73ff8d9203fe5d72e264d80a692b379be13ba25a569d108df06e28f4823",
+    "src/verification-bundle.mjs": "e3a57714697d793f32c1ba12904acd5885b6d85b70066c6b7ab3cbf3b6c1db3a"
+  },
+  "sourceChangedDuringRun": [],
+  "limitations": [
+    "Synthetic proof adapter excludes real RPC latency/finality.",
+    "Fixture rehearsal does not invoke the externally provisioned production signer startup.",
+    "Linux cgroup limits qualify only when directly observed, not inferred from process RSS.",
+    "Process RSS covers the parent only; cgroup peak must include the separate maintenance child.",
+    "A near-body-limit string is not every adversarial supported schema or JSON shape."
+  ]
+}
