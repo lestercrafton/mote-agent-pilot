@@ -5,6 +5,7 @@ import { LIMITS, SCHEMA_KEYWORDS, MoteError, parseJson } from './json.mjs';
 import { publicFetch, publicOpenapi } from './public.mjs';
 import { getTestnetNetwork } from './testnet-networks.mjs';
 import { dispenserMetadata } from './dispenser-discovery.mjs';
+import packageInfo from '../package.json' with { type: 'json' };
 
 export function testnetOrigin(value) {
   const url = new URL(value);
@@ -19,8 +20,8 @@ export function testnetManifest(config, readiness, dispenser = null) {
   const network = getTestnetNetwork(config.chainId);
   const origin = testnetOrigin(config.origin);
   return {
-    manifestVersion: 'mote-testnet-pilot-v1', name: 'Mote', workingName: true, version: '0.7.1-resource.1',
-    launchStatus: 'unlaunched-candidate', environment: `${network.slug}-public-synthetic-test`, testOnly: true,
+    manifestVersion: 'mote-testnet-pilot-v1', name: 'Mote', workingName: true, version: packageInfo.version,
+    launchStatus: 'testnet-prototype', environment: `${network.slug}-public-synthetic-test`, testOnly: true,
     baseUrl: origin, openapi: `${origin}/openapi.json`, health: `${origin}/health`, readiness: `${origin}/ready`,
     description: 'Experimental exact-price token settlement for public synthetic JSON preflight. New-token necessity and demand are unproven.',
     publicSyntheticOnly: true, confidentiality: 'none; inputs, prepared results, offers and receipts are public test data',
@@ -52,7 +53,7 @@ export function testnetOpenapi(config, dispenser = null) {
   const origin = testnetOrigin(config.origin);
   const specification = publicOpenapi(origin);
   delete specification.paths['/mcp'];
-  specification.info = { title: `Mote public-synthetic ${network.slug} pilot`, version: '0.7.1-resource.1', description: 'Unlaunched test-only candidate. No real-value claim. Input and results are public synthetic data. Discovery never grants spending authority.' };
+  specification.info = { title: `Mote public-synthetic ${network.slug} pilot`, version: packageInfo.version, description: 'Experimental testnet prototype. Deployment is not established by this metadata. Input and results are public synthetic data. Inspect /ready for current service state. No production or real-value claim; discovery never grants spending authority.' };
   const key = { name: 'Idempotency-Key', in: 'header', required: true, schema: { type: 'string', pattern: '^[A-Za-z0-9._:-]{8,128}$' } };
   const result = description => ({ description, content: { 'application/json': { schema: { type: 'object' } } } });
   const operation = (id, properties, description) => ({ post: { operationId: id, description, parameters: [key], requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: false, required: Object.keys(properties), properties } } } }, responses: { 200: result('Signed offer or verified result; no transaction submitted by this API'), 202: result('Payment pending finality; retry same proof, never pay again'), 400: result('Input rejected'), 409: result('Conflicting or quarantined state'), 413: result('Input too large'), 503: result('Evidence or durable state unavailable') } } });
@@ -113,7 +114,7 @@ export async function startTestnetHttp({ service, origin = service.config.origin
       const url = new URL(incoming.url, origin);
       if (url.origin !== origin) throw new MoteError('BAD_TARGET', 'Unexpected target origin.');
       const readiness = await service.readiness();
-      if (incoming.method === 'GET' && url.pathname === '/health') return send(200, { service: 'mote-testnet-pilot', launchStatus: 'unlaunched-candidate', testOnly: true, serviceReady: readiness.ready === true });
+      if (incoming.method === 'GET' && url.pathname === '/health') return send(200, { service: 'mote-testnet-pilot', version: packageInfo.version, launchStatus: 'testnet-prototype', testOnly: true, serviceReady: readiness.ready === true, serviceReadiness: readiness });
       if (incoming.method === 'GET' && url.pathname === '/ready') return send(readiness.ready === true ? 200 : 503, { ...readiness, testOnly: true });
       if (incoming.method === 'GET' && ['/', '/.well-known/mote.json'].includes(url.pathname)) return send(200, testnetManifest(service.config, readiness, dispenser));
       if (incoming.method === 'GET' && url.pathname === '/openapi.json') return send(200, testnetOpenapi(service.config,dispenser));

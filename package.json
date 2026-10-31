@@ -1,9 +1,9 @@
 {
   "name": "mote-local-prototype",
-  "version": "0.7.1-resource.1",
+  "version": "0.7.2-custody.2",
   "private": true,
   "type": "module",
-  "description": "Experimental agent utility and testnet prototype with compact durable order storage; public host maintenance-only",
+  "description": "Inactive encrypted quote-key handoff preparation for a bounded Ethereum Sepolia pilot",
   "engines": {
     "node": ">=22.13.0"
   },
@@ -25,7 +25,8 @@
     "demo:sepolia": "node scripts/demo-sepolia.mjs",
     "compile:dispenser": "node scripts/compile-dispenser.mjs",
     "plan:dispenser": "node scripts/prepare-dispenser.mjs",
-    "demo:onboarding": "node scripts/demo-onboarding.mjs"
+    "demo:onboarding": "node scripts/demo-onboarding.mjs",
+    "pilot:file": "node scripts/testnet-file-server.mjs"
   },
   "dependencies": {
     "@cfworker/json-schema": "4.1.1",

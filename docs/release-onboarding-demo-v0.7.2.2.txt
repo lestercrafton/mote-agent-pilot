@@ -1,0 +1,101 @@
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- <workspace>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <workspace>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+{
+  "demonstration": "mote-eight-transaction-onboarding-local-evm",
+  "passed": true,
+  "nodeVersion": "v24.22.2",
+  "controlledTest": true,
+  "localOnly": true,
+  "chainId": 11155111,
+  "evmFork": "shanghai",
+  "publicCurrentForkExecutionTested": false,
+  "publicTransactions": 0,
+  "persistentKeysCreated": 0,
+  "keychainOperations": 0,
+  "realMoney": false,
+  "fixtureKeys": "Already-public BIP39 test vector, never usable for real custody",
+  "operatorTransactions": [
+    {
+      "index": 0,
+      "transactionHash": "0x78d97374c327846de6b0cebad2f3a59fcd16919d456a555ea778a4aebbc1d241",
+      "feeWei": "1033931250000000"
+    },
+    {
+      "index": 1,
+      "transactionHash": "0x874edd67f0d0e138c9d0845b74666d0f8e866223f0823a2009a5b55e875d0fee",
+      "feeWei": "1357442237557080"
+    },
+    {
+      "index": 2,
+      "transactionHash": "0x4d65f9387108c98f34152f4d61e5b74f245ed6b904bdeedab47cfa563b36118f",
+      "feeWei": "869992950591997"
+    },
+    {
+      "index": 3,
+      "transactionHash": "0xded1c4fc7c54c2273e9ba5bc5a20cbba95929e82949161978754c68b5a49c40a",
+      "feeWei": "82361589892609"
+    },
+    {
+      "index": 4,
+      "transactionHash": "0xa1a6796adb9135d5955322e377891e6dc23cfa9cc0bf5b08a3200852b476486c",
+      "feeWei": "31965984162000"
+    }
+  ],
+  "operatorSignerCalls": 5,
+  "payerSignerCalls": 3,
+  "payerTransactions": [
+    "0xb5afb8ccc40a936a4555654ae7b81a8ff4101d0d9f545efc854470e588299b81",
+    "0x8ef1d3e8c7fa890595250a24ae36b0df4b973fcd0187249037907bce1cc1389a",
+    "0x2fd3aadaf7d92d841258e2152003777fb35c8ad804ba8ef6f1f7c8f7ecfc3bd1"
+  ],
+  "payerStartedWithZeroNativeAndMote": true,
+  "payerNativeAllocationWei": "7000000000000000",
+  "dispenserReserveBaseUnits": "10000000000",
+  "claimBaseUnits": "10000000",
+  "paidOnceBaseUnits": "3520",
+  "manifestDispenserDiscovery": true,
+  "automaticClaimApprovalAndPayment": true,
+  "droppedResponseRecoveredAfterJournalReopen": true,
+  "repeatedRecoveryIdentical": true,
+  "recoverySignerCalls": 0,
+  "payerFeesWei": "317521971902364",
+  "payerJournalReservationLimitWei": "3000000000000000",
+  "proposedEightTransactionMaximum": {
+    "maxTotalNativeWei": "50000000000000000",
+    "maxFeePerGas": "2000000000",
+    "maxPriorityFeePerGas": "1000000000",
+    "operatorFeeCapWei": "35000000000000000",
+    "payerFeeCapWei": "2500000000000000",
+    "nativeAllocationWei": "7000000000000000",
+    "combinedMaximumWei": "44500000000000000",
+    "gasLimits": [
+      "5000000",
+      "7000000",
+      "5000000",
+      "250000",
+      "250000",
+      "500000",
+      "250000",
+      "500000"
+    ]
+  },
+  "actualFinalBudget": {
+    "claimReservedWei": "0",
+    "claimSpentWei": "156214504326240",
+    "paymentReservedWei": "0",
+    "paymentSpentWei": "161307467576124",
+    "totalReservedWei": "0",
+    "totalSpentWei": "317521971902364",
+    "maximumAuthorizedWei": "3000000000000000"
+  },
+  "resultHash": "0x6032930ce101e403bd7bc07fbb2d25b3c785bb57b03c2fb73d23bc60187ec87f",
+  "limits": "Local simulator reports immediate finality. Current Sepolia gas estimation and real native Keychain ACL behavior remain untested; no public bootstrap was run. All writers must share trusted journals. Unknown submissions can block indefinitely; rollback and duplicated authority are unsupported."
+}

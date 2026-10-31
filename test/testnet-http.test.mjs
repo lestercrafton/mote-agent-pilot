@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { MoteError } from '../src/json.mjs';
-import { startTestnetHttp, testnetOrigin } from '../src/testnet-http.mjs';
+import { startTestnetHttp, testnetOrigin, testnetManifest } from '../src/testnet-http.mjs';
+import packageInfo from '../package.json' with { type: 'json' };
 
 const origin = 'https://mote-pilot.example';
 const quoteId = `0x${'11'.repeat(32)}`;
@@ -24,13 +25,20 @@ test('pilot HTTP requires configured HTTPS origin and ignores untrusted proxy he
   const manifest = await (await fetch(f.url + '/', { headers: { host: 'evil.invalid', 'x-forwarded-host': 'evil.invalid', 'x-forwarded-proto': 'http' } })).json();
   assert.equal(manifest.baseUrl, origin);
   assert.equal(manifest.testOnly, true);
-  assert.equal(manifest.launchStatus, 'unlaunched-candidate');
+  assert.equal(manifest.launchStatus, 'testnet-prototype');
+  assert.equal(manifest.version, packageInfo.version);
   assert.equal(manifest.settlement.chainId, 84532);
   assert.equal(manifest.settlement.publiclyDeployedByThisArtifact, false);
   assert.equal(manifest.permissions.discoveryAuthorizesSpending, false);
   assert.equal(manifest.remoteMcp.implemented, false);
   const spec = await (await fetch(f.url + '/openapi.json')).json();
   assert(spec.paths['/v1/recover']); assert(!spec.paths['/mcp']);
+  assert.equal(spec.info.version, packageInfo.version);
+  assert(!spec.info.description.includes('Unlaunched'));
+  const health = await (await fetch(f.url + '/health')).json();
+  assert.equal(health.version, manifest.version);
+  assert.equal(health.launchStatus, manifest.launchStatus);
+  assert.deepEqual(health.serviceReadiness, manifest.serviceReadiness);
   assert.equal(spec.paths['/v1/quotes'].post.requestBody.content['application/json'].schema.properties.publicSynthetic.const, true);
 });
 test('pilot actions require exact fields and public-synthetic declaration', async t => {
@@ -95,4 +103,34 @@ test('Ethereum Sepolia discovery advertises only its enforced type-2 policy and 
   assert.equal(spec['x-mote-protocol'], manifest.protocol);
   f.service.config.chainId = 1;
   assert.equal((await fetch(f.url + '/')).status, 503);
+});
+
+// Runtime service identity does not retain the chain-config local/public mode.
+// Neither chainId nor readiness can safely establish public launch provenance.
+test('deployment claims remain neutral for fixture and public-shaped configuration', () => {
+  const config = { origin, chainId: 11155111, token: `0x${'11'.repeat(20)}`, router: `0x${'22'.repeat(20)}`, recipient: `0x${'33'.repeat(20)}`, quoteSigner: `0x${'44'.repeat(20)}`, configHash: `0x${'55'.repeat(32)}` };
+  for (const mode of [undefined, 'local-fixture', 'ethereum-sepolia']) {
+    const manifest = testnetManifest({ ...config, mode }, { ready: true, mode: 'normal', newQuotesAllowed: true });
+    assert.equal(manifest.launchStatus, 'testnet-prototype');
+    assert.equal(manifest.settlement.publiclyDeployedByThisArtifact, false);
+    assert.equal(manifest.testOnly, true);
+    assert.equal(manifest.settlement.realMoney, false);
+    assert.equal(manifest.permissions.discoveryAuthorizesSpending, false);
+  }
+});
+test('manifest and health expose normal, recovery-only and unavailable service state consistently', async t => {
+  let state = { ready: true, mode: 'normal', newQuotesAllowed: true, publicSyntheticOnly: true };
+  const f = await fixture(t, { readiness: () => state });
+  for (const next of [state, { ready: true, mode: 'recovery-only', newQuotesAllowed: false, publicSyntheticOnly: true }, { ready: false }]) {
+    state = next;
+    const manifest = await (await fetch(f.url + '/.well-known/mote.json')).json();
+    const health = await (await fetch(f.url + '/health')).json();
+    assert.deepEqual(manifest.serviceReadiness, state);
+    assert.deepEqual(health.serviceReadiness, state);
+    assert.equal(health.serviceReady, state.ready === true);
+    assert.equal(health.launchStatus, 'testnet-prototype');
+    assert.equal(manifest.settlement.publiclyDeployedByThisArtifact, false);
+    assert.equal((await fetch(f.url + '/ready')).status, state.ready ? 200 : 503);
+  }
+  assert.equal(f.calls.length, 0);
 });

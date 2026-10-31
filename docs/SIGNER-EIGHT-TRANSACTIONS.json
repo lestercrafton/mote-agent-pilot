@@ -1,0 +1,270 @@
+{
+  "schema": "mote-proposed-eight-transaction-approval-v1",
+  "status": "unsigned symbolic authorization proposal; not a signable transaction manifest",
+  "authorized": false,
+  "publicTransactionsExecuted": 0,
+  "realMoney": false,
+  "network": {
+    "name": "Ethereum Sepolia",
+    "chainId": 11155111,
+    "rpc": "https://ethereum-sepolia-rpc.publicnode.com",
+    "genesisHash": "0x25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9"
+  },
+  "bindings": {
+    "A": "new dedicated bootstrap Keychain address; initialHolder=merchant=A",
+    "Q": "new distinct unfunded quote Keychain address",
+    "P": "new distinct memory-only controlled payer",
+    "A0": "fresh A pending/latest nonce verified before exact plan; require 0 for this proposal",
+    "P0": "fresh P nonce verified before claim; require 0 for this proposal",
+    "T": "CREATE(A,A0)",
+    "R": "CREATE(A,A0+1)",
+    "D": "CREATE(A,A0+2)"
+  },
+  "contracts": {
+    "MoteToken": {
+      "creationBytecodeKeccak256": "0xc8873c6f95b53203782d8f6fea8492f51ab2d082da0bc1cff79bb6d89ca6e710",
+      "runtimeTemplateKeccak256": "0xe419e8dcfbd6868ce8df0befa6ceb67c02bdd9b589b4cddd1ad0f02c897d651f",
+      "compiler": "0.8.38+commit.1835d247.Emscripten.clang"
+    },
+    "MotePayments": {
+      "creationBytecodeKeccak256": "0xec824da25b3f78a15e4bc035d461b21bed7a80048162b90a744e43501ddc5229",
+      "runtimeTemplateKeccak256": "0x166bb5aaa723a07c2baface91aa7f00b16c5093278e470d5b86a6229d132e9dd",
+      "compiler": "0.8.38+commit.1835d247.Emscripten.clang"
+    },
+    "MoteTestDispenser": {
+      "creationBytecodeKeccak256": "0xc2dfafb69211474f1bf812d8ea0ce3a3557f7165eb59b1326af439ba8883ceef",
+      "runtimeTemplateKeccak256": "0xfb09c81dba71c19005e7504df513099433594b36b6840115cb0b059eb8df85aa",
+      "compiler": "0.8.38+commit.1835d247.Emscripten.clang"
+    }
+  },
+  "transactions": [
+    {
+      "step": 1,
+      "signer": "A",
+      "nonce": "A0",
+      "to": null,
+      "operation": "create MoteToken",
+      "constructor": [
+        "A"
+      ],
+      "valueWei": "0",
+      "artifact": "MoteToken",
+      "chainId": 11155111,
+      "type": 2,
+      "accessList": [],
+      "gasLimit": "5000000",
+      "maxFeePerGasWei": "2000000000",
+      "maxPriorityFeePerGasWei": "1000000000",
+      "maximumFeeWei": "10000000000000000"
+    },
+    {
+      "step": 2,
+      "signer": "A",
+      "nonce": "A0+1",
+      "to": null,
+      "operation": "create MotePayments",
+      "constructor": [
+        "T",
+        "A",
+        "Q"
+      ],
+      "valueWei": "0",
+      "artifact": "MotePayments",
+      "chainId": 11155111,
+      "type": 2,
+      "accessList": [],
+      "gasLimit": "7000000",
+      "maxFeePerGasWei": "2000000000",
+      "maxPriorityFeePerGasWei": "1000000000",
+      "maximumFeeWei": "14000000000000000"
+    },
+    {
+      "step": 3,
+      "signer": "A",
+      "nonce": "A0+2",
+      "to": null,
+      "operation": "create MoteTestDispenser",
+      "constructor": [
+        "T",
+        "10000000",
+        "10000000000"
+      ],
+      "valueWei": "0",
+      "artifact": "MoteTestDispenser",
+      "chainId": 11155111,
+      "type": 2,
+      "accessList": [],
+      "gasLimit": "5000000",
+      "maxFeePerGasWei": "2000000000",
+      "maxPriorityFeePerGasWei": "1000000000",
+      "maximumFeeWei": "10000000000000000"
+    },
+    {
+      "step": 4,
+      "signer": "A",
+      "nonce": "A0+3",
+      "to": "T",
+      "operation": "transfer(address,uint256)",
+      "arguments": [
+        "D",
+        "10000000000"
+      ],
+      "valueWei": "0",
+      "chainId": 11155111,
+      "type": 2,
+      "accessList": [],
+      "gasLimit": "250000",
+      "maxFeePerGasWei": "2000000000",
+      "maxPriorityFeePerGasWei": "1000000000",
+      "maximumFeeWei": "500000000000000",
+      "selector": "0xa9059cbb"
+    },
+    {
+      "step": 5,
+      "signer": "A",
+      "nonce": "A0+4",
+      "to": "P",
+      "operation": "native transfer",
+      "data": "0x",
+      "valueWei": "7000000000000000",
+      "chainId": 11155111,
+      "type": 2,
+      "accessList": [],
+      "gasLimit": "250000",
+      "maxFeePerGasWei": "2000000000",
+      "maxPriorityFeePerGasWei": "1000000000",
+      "maximumFeeWei": "500000000000000"
+    },
+    {
+      "step": 6,
+      "signer": "P",
+      "nonce": "P0",
+      "to": "D",
+      "operation": "claim()",
+      "arguments": [],
+      "valueWei": "0",
+      "chainId": 11155111,
+      "type": 2,
+      "accessList": [],
+      "gasLimit": "500000",
+      "maxFeePerGasWei": "2000000000",
+      "maxPriorityFeePerGasWei": "1000000000",
+      "maximumFeeWei": "1000000000000000",
+      "selector": "0x4e71d92d"
+    },
+    {
+      "step": 7,
+      "signer": "P",
+      "nonce": "P0+1",
+      "to": "T",
+      "operation": "approve(address,uint256)",
+      "arguments": [
+        "R",
+        "4200"
+      ],
+      "valueWei": "0",
+      "chainId": 11155111,
+      "type": 2,
+      "accessList": [],
+      "gasLimit": "250000",
+      "maxFeePerGasWei": "2000000000",
+      "maxPriorityFeePerGasWei": "1000000000",
+      "maximumFeeWei": "500000000000000",
+      "selector": "0x095ea7b3"
+    },
+    {
+      "step": 8,
+      "signer": "P",
+      "nonce": "P0+2",
+      "to": "R",
+      "operation": "pay((bytes32,bytes32,address,uint256,uint256),bytes)",
+      "arguments": [
+        "the single authenticated quote for the pinned request/payer/4200 base units",
+        "that quote original signature"
+      ],
+      "valueWei": "0",
+      "chainId": 11155111,
+      "type": 2,
+      "accessList": [],
+      "gasLimit": "500000",
+      "maxFeePerGasWei": "2000000000",
+      "maxPriorityFeePerGasWei": "1000000000",
+      "maximumFeeWei": "1000000000000000",
+      "selector": "0x28d82191"
+    }
+  ],
+  "publicSyntheticJob": {
+    "input": {
+      "document": {
+        "tool": "sum",
+        "arguments": {
+          "a": 2,
+          "b": 3
+        }
+      },
+      "schema": {
+        "type": "object",
+        "required": [
+          "tool",
+          "arguments"
+        ],
+        "properties": {
+          "tool": {
+            "const": "sum"
+          },
+          "arguments": {
+            "type": "object",
+            "required": [
+              "a",
+              "b"
+            ],
+            "properties": {
+              "a": {
+                "type": "integer"
+              },
+              "b": {
+                "type": "integer"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "requestHash": "0x9545c044cebfb772bb7c90b2d82afef9e6fd07e1bbbd57dce09456f5efa71b56",
+    "resultHash": "0x5ce47ea8f8ec74846fe0155083ed8b2e5a7e83f88fdcf01a16ec27ded0f66751",
+    "expectedCanonicalJson": "{\"arguments\":{\"a\":2,\"b\":3},\"tool\":\"sum\"}",
+    "exactTokenPriceBaseUnits": "4200",
+    "tokenDecimals": 6,
+    "tokenPriceMote": "0.0042",
+    "inputBytes": 320,
+    "service": "JSON Schema validation/canonicalization only; does not execute sum"
+  },
+  "budget": {
+    "totalGasLimit": "18750000",
+    "maximumAllFeesWei": "37500000000000000",
+    "nativeAllocationWei": "7000000000000000",
+    "conservativeAllocationPlusAllFeesWei": "44500000000000000",
+    "overallCeilingWei": "50000000000000000",
+    "payerJournalMaximumWei": "3000000000000000",
+    "payerOutgoingTokenCeilingBaseUnits": "4200"
+  },
+  "fixedSupply": {
+    "baseUnits": "1000000000000",
+    "decimals": 6,
+    "mote": "1000000",
+    "dispenserAllocationBaseUnits": "10000000000",
+    "claimBaseUnits": "10000000",
+    "remainingAAfterAllocationBaseUnits": "990000000000",
+    "additionalDistributionAuthorized": false
+  },
+  "guards": [
+    "Actual role addresses and exact unsigned bytes/plan hash are generated and independently pinned after provisioning; symbols are not addresses.",
+    "Fresh chain/genesis/checkpoint/runtime identity, balance, pending/latest nonce and exact eth_estimateGas before signing and submission.",
+    "All writers share original trusted journals; uncertain outcomes retain reservations and never automatically resubmit/replace.",
+    "Require finalized evidence before later operations; expired quote stops, no automatic new approval/payment.",
+    "Only one original signed quote for this fixed requestHash and amount4200; no arbitrary jobs/swaps/bridges/topups/tips.",
+    "No mainnet, public sales, liquidity, pegging, redemption or token-value promise."
+  ]
+}

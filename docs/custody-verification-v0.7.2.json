@@ -1,0 +1,97 @@
+{
+  "schema": "mote-custody-candidate-verification-v1",
+  "candidate": "0.7.2-custody.1",
+  "status": "inactive; not published or deployed",
+  "node": "24.22.2",
+  "platform": "darwin-arm64",
+  "fullRegression": {
+    "passed": 459,
+    "failed": 0,
+    "skipped": 0,
+    "log": "docs/custody-full-regression-v0.7.2.txt",
+    "sha256": "71223d42a452f52bbdee6d92991d84824e058d71ca369317e27b52610cc51a24"
+  },
+  "focusedCustody": {
+    "passed": 60,
+    "failed": 0,
+    "independentlyRerun": true,
+    "sigkillCheckpoints": 6,
+    "twoProcessImportRace": true,
+    "mockCustodyToCiphertextToDiskToLoader": true,
+    "subprocessOutputLeakChecks": true,
+    "log": "docs/custody-focused-v0.7.2.txt",
+    "sha256": "410abee925b72b2bbbdb39d76774e9ac6199301f4c1bf704a7d45038476b82b4"
+  },
+  "demos": {
+    "existingLocalPaymentPassed": true,
+    "eightTransactionLocalOnboardingPassed": true,
+    "lostReceiptRecoveredWithoutNewPayment": true,
+    "publicTransactions": 0,
+    "evidence": "docs/custody-onboarding-demo-v0.7.2.json"
+  },
+  "selectedNativeHelper": {
+    "relativeWorkspacePath": "mote-sepolia-custody-v0.7.1/helper",
+    "sha256": "9096b3596f49220e35e661eed8018d87256ba80f709a251799c2c220a6235700",
+    "sourceSha256": "5706d5e78adc52f7691b2c2f5733fa7506d51d4af7c7d0e123e0fec8199934bd",
+    "binaryMode": "0o700",
+    "directoryMode": "0o700",
+    "previousMemoryOnlySelfTest": {
+      "ok": true,
+      "keychainCalls": 0
+    },
+    "hashReverifiedThisTurn": true,
+    "nativeAclCompatibilityVerified": false,
+    "historicalVerificationFile": "scripts/keychain/verification.json describes a previous binary/build; not the current selected helper"
+  },
+  "independentReview": {
+    "blockingDefectsRemaining": 0,
+    "fixedFinding": "impossible receipt-before-key state now fails closed; regression added",
+    "manifestRecomputed": true,
+    "nativeVsApplicationBoundaryWordingCorrected": true
+  },
+  "realOperationsExecuted": {
+    "keychain": 0,
+    "realKeysCreated": 0,
+    "renderTransportIdentities": 0,
+    "renderKeyImports": 0,
+    "faucetClaims": 0,
+    "publicTransactions": 0,
+    "candidatePublications": 0,
+    "candidateDeployments": 0
+  },
+  "unchangedLiveService": {
+    "serviceId": "srv-dbijuvou01pc73d59c30",
+    "origin": "https://mote-testnet-pilot.onrender.com",
+    "commit": "29ce556ee2c507dafe965f8069216ce057e04aec",
+    "deployment": "dep-dbikbtvlk1mc73evfdag",
+    "mode": "maintenance",
+    "priorCgroupPeakMiB": 343.90625,
+    "gateMiB": 448,
+    "priorOomEvents": 0,
+    "newHostTestRun": false
+  },
+  "limitations": [
+    "Actual native Keychain ACL/storage and provider disk compatibility remain untested.",
+    "Authenticated Dashboard challenge transfer is externally verified, not remote attestation.",
+    "Restricted-file custody exposes Q to the service/provider admins and retained disk snapshots.",
+    "No complete memory erasure guarantee, automatic migration/reimport, or signed-quote revocation.",
+    "Original trusted journals and exclusive wallet authority required; full rollback/duplicated authority unsupported.",
+    "Local EVM current public fork/finality not qualified.",
+    "Source commit binding intentionally blocks a later code upgrade absent reviewed custody migration."
+  ],
+  "sourceHashes": {
+    "src/quote-key-envelope.mjs": "2957ee4b0cb17d92486a664945664e81a147781d8347362982484d8e00d7d527",
+    "src/quote-key-file.mjs": "f5b66825a18745e4afefe76c9f3aad0de5a7345cc85b94eb240c17891996b3b5",
+    "src/keychain-custody.mjs": "5b8885833a386d8946997b0c979e44c7ecb3b921980ca574f6f5783eeced04a1",
+    "scripts/quote-key-import.mjs": "14322eed888f57a20c81b3540a69d0fda593aa74e05ba68f2b58e03c7b2bd63e",
+    "scripts/quote-key-seal.mjs": "aa2d699d4c135b108356c03bb28106ae0fb118cb3cd463b7dcf6949b9e38597c",
+    "scripts/testnet-file-server.mjs": "2e4eb4e2ed2ca88bb60624131e08abfbb17c21df2a3a392c3216feec99133329",
+    "scripts/keychain/mote-keychain.swift": "5706d5e78adc52f7691b2c2f5733fa7506d51d4af7c7d0e123e0fec8199934bd",
+    "test/quote-key-envelope.test.mjs": "a1248384e91849673223d23bb786955a33cefd18c97102e4cdb3f6b47181fc3f",
+    "test/quote-key-file.test.mjs": "f81024631d96683fed674b9a1467044a5e2d4e866ab804821f2ab0cc01bd0898",
+    "test/quote-key-import.test.mjs": "4da5f74cfcd5c4466be7c30a893ff4929f97f670a82ff715aaf49ec076c11ac5",
+    "test/quote-key-seal.test.mjs": "1307613054aa032f27497d75e8bf0871d1b150ab0b182efed1ba1d1fdd34566f",
+    "docs/SIGNER-EIGHT-TRANSACTIONS.json": "abf4d50c2e7a10067544cda16ab1c06c8d31faf25f95012a14788a3fa067df68",
+    "docs/SIGNER-PROPOSAL-v0.7.2.md": "a99b5c1833380709125324f28907f7aa0ba59e6d05161546a54e6f27f147638f"
+  }
+}

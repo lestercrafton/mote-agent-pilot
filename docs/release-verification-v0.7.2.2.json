@@ -1,0 +1,49 @@
+{
+  "artifact": "mote-v0.7.2-custody.2",
+  "status": "local release preparation; not evidence of public activation",
+  "node": "24.22.2",
+  "platform": "darwin-arm64",
+  "fullRegression": {
+    "command": "node --test --test-concurrency=1 test/*.test.mjs",
+    "passed": 461,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 162468.549209,
+    "evidence": "docs/release-full-regression-v0.7.2.2.txt"
+  },
+  "originalLocalDemo": {
+    "command": "node scripts/demo.mjs",
+    "exitCode": 0,
+    "chainId": 31337,
+    "actualLocalEvmSettlement": true,
+    "responseLossRecovered": true,
+    "chargedAgainOnRetry": false,
+    "outOfPolicyCallRejected": true,
+    "amountBaseUnits": "3520",
+    "evidence": "docs/release-local-demo-v0.7.2.2.txt"
+  },
+  "onboardingLocalDemo": {
+    "command": "node scripts/demo-onboarding.mjs --evidence docs/release-onboarding-demo-v0.7.2.2.json",
+    "exitCode": 0,
+    "controlledLocalOnly": true,
+    "chainId": 11155111,
+    "operatorFixtureTransactions": 5,
+    "payerFixtureTransactions": 3,
+    "amountBaseUnits": "3520",
+    "recoverySignerCalls": 0,
+    "evidence": "docs/release-onboarding-demo-v0.7.2.2.json"
+  },
+  "exactFinancialManifestSha256": "abf4d50c2e7a10067544cda16ab1c06c8d31faf25f95012a14788a3fa067df68",
+  "unchangedHelperSha256": "9096b3596f49220e35e661eed8018d87256ba80f709a251799c2c220a6235700",
+  "localPreparationPublicTransactions": 0,
+  "localPreparationNativeKeychainOperations": 0,
+  "localPreparationPersistentKeysCreated": 0,
+  "evidenceSanitization": "Only absolute workspace prefixes removed from new test logs; original outcomes retained.",
+  "limits": [
+    "Local simulator finality is not public-network execution.",
+    "The generic local demos use a 3520-unit fixture job; the unchanged authorized public manifest is a distinct fixed 4200-unit job. The sidecar verifies its fixed intent with mocks/offline fixtures.",
+    "This revision was not requalified on Linux or the actual host; metadata/version changes only, with prior host resource evidence retained as historical.",
+    "Native Keychain ACL compatibility, public publication/deployment, faucet and actual transactions remain root-owned and are not executed or attested by this preparation artifact.",
+    "No external demand or adoption is established."
+  ]
+}

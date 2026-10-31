@@ -3,6 +3,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import { lstat, readFile, realpath } from 'node:fs/promises';
 import { dirname, resolve, parse } from 'node:path';
 import { Wallet, Transaction, getAddress, getBytes, hexlify } from 'ethers';
+import { validateFileHandoffChallenge, sealQuoteKey, QUOTE_HANDOFF_ACTIVATION, QUOTE_HANDOFF_FIXTURE_ACK } from './quote-key-envelope.mjs';
 
 export const KEYCHAIN_ACTIVATION = 'MOTE_NATIVE_KEYCHAIN_V1_EXPLICITLY_AUTHORIZED';
 export const KEYCHAIN_CHAIN_ID = 11155111;
@@ -104,6 +105,27 @@ export async function handoffQuoteToRender(options, sink) {
   const boundSink = sink && Object.freeze({ destinationHash: sink.destinationHash, writeSecret: typeof sink.writeSecret === 'function' ? sink.writeSecret.bind(sink) : undefined });
   await trustedHelper(bound);
   return deliverQuote(() => nativeOperation(bound, 'read'), destination, approvedDestinationHash, boundSink);
+}
+
+// This separate proposed route returns an encrypted capsule only. It neither
+// writes a Render environment variable nor performs any network/browser action.
+// The challenge pin must come from the independently authenticated Dashboard
+// Shell and reviewed receiver source, never merely from the supplied challenge.
+async function sealQuoteImport(readSecret, challenge, options) {
+  const captured = Object.freeze({ ...options });
+  const bound = validateFileHandoffChallenge(challenge, captured);
+  const bytes = await readSecret();
+  try { return sealQuoteKey(bytes, bound, captured); }
+  finally { bytes.fill(0); }
+}
+export async function sealKeychainQuoteForImport(options) {
+  own(options, ['role','chainId','activation','helperPath','expectedHelperSha256','challenge','expectedDestinationHash','expectedChallengeHash']);
+  const bound = nativeBinding(options);
+  check(bound.role === 'quote-backup', 'CUSTODY_WRONG_ROLE_OR_CHAIN');
+  const transport = Object.freeze({ expectedDestinationHash: options.expectedDestinationHash, expectedChallengeHash: options.expectedChallengeHash, activation: QUOTE_HANDOFF_ACTIVATION });
+  const challenge = validateFileHandoffChallenge(options.challenge, transport);
+  await trustedHelper(bound);
+  return sealQuoteImport(() => nativeOperation(bound, 'read'), challenge, transport);
 }
 async function trustedHelper(options) {
   check(options.activation === KEYCHAIN_ACTIVATION, 'CUSTODY_NATIVE_ACTIVATION_REQUIRED');
@@ -211,6 +233,11 @@ export function createFixtureCustody({ acknowledgement, role = 'bootstrap', chai
     handoffQuoteToRender({ destination, approvedDestinationHash }, sink) {
       check(role === 'quote-backup', 'CUSTODY_WRONG_ROLE_OR_CHAIN');
       return deliverQuote(async () => { check(values.has(info.service), 'CUSTODY_ITEM_MISSING'); reads++; return Uint8Array.from(values.get(info.service)); }, destination, approvedDestinationHash, sink);
+    },
+    sealQuoteForImport({ challenge, expectedDestinationHash, expectedChallengeHash, now, keyPairFactory, randomBytesFactory }) {
+      check(role === 'quote-backup', 'CUSTODY_WRONG_ROLE_OR_CHAIN');
+      return sealQuoteImport(async () => { check(values.has(info.service), 'CUSTODY_ITEM_MISSING'); reads++; return Uint8Array.from(values.get(info.service)); }, challenge,
+        { expectedDestinationHash, expectedChallengeHash, now, keyPairFactory, randomBytesFactory, fixtureAcknowledgement: QUOTE_HANDOFF_FIXTURE_ACK });
     },
     get readCount() { return reads; },
     destroy() { for (const bytes of values.values()) bytes.fill(0); values.clear(); },

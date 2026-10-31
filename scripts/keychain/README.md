@@ -1,3 +1,7 @@
+> `verification.json` is historical v0.7 build evidence. Current selected helper digest and nonsecret preparation evidence are in `../../docs/custody-verification-v0.7.2.json`; a rebuild changes trusted executable identity and is not an automatic migration.
+
+> Current v0.7.2 proposal: the new encrypted file-handoff path in [SIGNER-PROPOSAL-v0.7.2.md](../../docs/SIGNER-PROPOSAL-v0.7.2.md) supersedes the persistent Render environment-secret destination described below. The older callback API remains a tested abstraction only. No real native access or transfer has occurred. `sealKeychainQuoteForImport` and `scripts/quote-key-seal.mjs` accept only a public receiver challenge and independent pins; the private key travels through the helper private pipe and emerges only as ciphertext. Actual activation remains separately gated.
+
 # Native Keychain custody preparation
 
 This is v0.7 preparation, not an activated credential workflow. No real Keychain item, real signing key, public signature/broadcast, hosted secret or account was created or read during development. Tests use the fixed public scalar `1` in an in-memory fake backend. The native helper compiled and its memory-only self-test ran; actual Keychain ACL/storage compatibility has **not** been exercised. The Node private-channel and intentional-stdio-alias self-test also ran without Security APIs. Native activation requires a separate, specific authorization and an approved key source/handoff.
