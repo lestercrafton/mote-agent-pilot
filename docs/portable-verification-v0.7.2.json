@@ -1,0 +1,91 @@
+{
+  "schema": "mote-packaging-verification-v1",
+  "version": "0.7.0-onboarding.2",
+  "verifiedAtUtc": "2026-10-30T14:20:46.664029+00:00",
+  "host": "darwin-arm64",
+  "node": "24.22.2",
+  "npm": "11.19.1",
+  "fix": {
+    "packageDescriptor": "node_modules/ganache/node_modules/fsevents",
+    "dev": true,
+    "optional": true,
+    "extraneousRemoved": true,
+    "changedPackageDescriptors": 1,
+    "changedDependencyVersions": 0,
+    "changedIntegrityPins": 0,
+    "matchesVerifiedPublishedGanacheShrinkwrap": true,
+    "packageLockSha256": "f5387b2923531d10fd0790d1791db5346d6b9336ea08cec901c7f5b5f0c0bf47",
+    "provenance": "ganache-lock-metadata-v0.7.2.json"
+  },
+  "cleanInstalls": {
+    "development": {
+      "passed": true,
+      "initialNodeModulesAbsent": true,
+      "lifecycleScriptsDisabled": true,
+      "offlinePublicPackageCache": true,
+      "lockUnchanged": true,
+      "log": "portable-clean-install-v0.7.2.txt"
+    },
+    "production": {
+      "passed": true,
+      "separateFreshDirectory": true,
+      "omitDev": true,
+      "lifecycleScriptsDisabled": true,
+      "offlinePublicPackageCache": true,
+      "ganacheSolcMcpClientAbsent": true,
+      "lockUnchanged": true,
+      "log": "portable-production-install-v0.7.2.txt"
+    }
+  },
+  "fullRegression": {
+    "passed": 402,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 157254.061416,
+    "log": "portable-full-tests-v0.7.2.txt",
+    "logSha256": "e4929a4ffea16805c246885d3c3c32cd7a29ba9baa4da3afd43eb268dcd33d4d"
+  },
+  "productionTests": {
+    "passed": 29,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 814.34125,
+    "log": "portable-production-tests-v0.7.2.txt",
+    "logSha256": "17cd0d27405187c9bde65b0a8f0c29f39940f96c52a2595fe8d1c621f9f17d1b"
+  },
+  "productionRuntimeImports": {
+    "passed": true,
+    "modules": 7,
+    "serverStarted": false,
+    "nativeCustodyActivated": false
+  },
+  "localDemos": {
+    "onboardingPassed": true,
+    "originalPassed": true,
+    "onboardingEvidence": "portable-onboarding-demo-v0.7.2.json"
+  },
+  "preservedSourceFiles": 121,
+  "preservedSourceRecord": "portable-preserved-source-v0.7.2.json",
+  "linuxQualification": {
+    "actualLinuxExecution": false,
+    "containerBuildExecuted": false,
+    "constrainedResourceGateExecuted": false,
+    "reason": "No Docker/Podman/Colima/Lima/QEMU/Orb/Tart/container engine CLI or associated local VM app was available.",
+    "artifact": "../scripts/qualify-linux.sh",
+    "syntaxPassed": true,
+    "helpPassed": true,
+    "missingEngineExitCode": 2,
+    "developmentAndProductionBuildsSeparate": true,
+    "testContainerNetworking": "none",
+    "optionalResourceGate": "512MiB, no swap, 0.5 CPU; synthetic service only",
+    "targetOsFlagsOnDarwinAreLinuxEvidence": false
+  },
+  "baselineV05RenderDraftAffected": true,
+  "mustNotDeployBaselineDraft": true,
+  "usesForceInstallBypass": false,
+  "newInstallHooks": false,
+  "publicPublication": false,
+  "hostingOperations": 0,
+  "operationalCredentialOrKeyActions": 0,
+  "publicTransactions": 0
+}

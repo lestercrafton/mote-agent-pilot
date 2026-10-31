@@ -1,9 +1,9 @@
 {
   "name": "mote-local-prototype",
-  "version": "0.5.0-sepolia.1",
+  "version": "0.7.0-onboarding.2",
   "private": true,
   "type": "module",
-  "description": "Unlaunched Ethereum Sepolia wallet-payment candidate with enforced type-2 fees and durable recovery",
+  "description": "Unlaunched test-MOTE onboarding candidate with bounded local bootstrap, dispenser, durable claim/payment and inactive native custody preparation",
   "engines": {
     "node": ">=22.13.0"
   },
@@ -22,7 +22,10 @@
     "pilot:admin": "node scripts/testnet-admin.mjs",
     "demo:testnet": "node scripts/demo-testnet.mjs",
     "pilot:setup": "node scripts/testnet-setup.mjs",
-    "demo:sepolia": "node scripts/demo-sepolia.mjs"
+    "demo:sepolia": "node scripts/demo-sepolia.mjs",
+    "compile:dispenser": "node scripts/compile-dispenser.mjs",
+    "plan:dispenser": "node scripts/prepare-dispenser.mjs",
+    "demo:onboarding": "node scripts/demo-onboarding.mjs"
   },
   "dependencies": {
     "@cfworker/json-schema": "4.1.1",

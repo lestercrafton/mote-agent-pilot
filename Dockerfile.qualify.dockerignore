@@ -1,0 +1,35 @@
+# Dedicated qualification context. The production .dockerignore stays unchanged.
+*
+!package.json
+!package-lock.json
+!Dockerfile.qualify
+!Dockerfile.qualify.dockerignore
+!src/
+!src/*.mjs
+!scripts/
+!scripts/*.mjs
+!scripts/qualify-linux.sh
+!scripts/keychain/
+!scripts/keychain/mote-keychain.swift
+!artifacts/
+!artifacts/*.json
+!contracts/
+!contracts/*.sol
+!test/
+!test/*.test.mjs
+!test/helpers/
+!test/helpers/*.mjs
+!test/fixtures/
+!test/fixtures/*.mjs
+!test/fixtures/*.sol
+# Only checked-in test/source inputs, never local dependency trees or credentials.
+**/node_modules
+**/.env
+**/.env.*
+**/*.sqlite
+**/*.sqlite-*
+**/*.lock.sqlite*
+**/*.pem
+**/*.key
+scripts/keychain/mote-keychain
+scripts/keychain/*.dSYM

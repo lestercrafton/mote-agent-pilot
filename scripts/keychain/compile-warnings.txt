@@ -1,0 +1,127 @@
+scripts/keychain/mote-keychain.swift:64:16: warning: 'SecTrustedApplicationCreateFromPath' was deprecated in macOS 10.10: SecKeychain is deprecated
+ 62 | func trustedSelf() throws -> SecTrustedApplication {
+ 63 |     var application: SecTrustedApplication?
+ 64 |     try status(SecTrustedApplicationCreateFromPath(nil, &application), "TRUSTED_HELPER_UNAVAILABLE")
+    |                `- warning: 'SecTrustedApplicationCreateFromPath' was deprecated in macOS 10.10: SecKeychain is deprecated
+ 65 |     guard let result = application else { throw CustodyFailure(code: "TRUSTED_HELPER_UNAVAILABLE") }
+ 66 |     return result
+
+scripts/keychain/mote-keychain.swift:70:16: warning: 'SecTrustedApplicationCopyData' was deprecated in macOS 10.10: SecKeychain is deprecated
+ 68 | func appData(_ application: SecTrustedApplication) throws -> Data {
+ 69 |     var data: CFData?
+ 70 |     try status(SecTrustedApplicationCopyData(application, &data), "ACCESS_UNVERIFIABLE")
+    |                `- warning: 'SecTrustedApplicationCopyData' was deprecated in macOS 10.10: SecKeychain is deprecated
+ 71 |     guard let result = data else { throw CustodyFailure(code: "ACCESS_UNVERIFIABLE") }
+ 72 |     return result as Data
+
+scripts/keychain/mote-keychain.swift:79:16: warning: 'SecAccessCopyACLList' was deprecated in macOS 10.10: SecKeychain is deprecated
+ 77 | func verifyAccess(_ access: SecAccess, trusted: SecTrustedApplication, label: String) throws {
+ 78 |     var list: CFArray?
+ 79 |     try status(SecAccessCopyACLList(access, &list), "ACCESS_UNVERIFIABLE")
+    |                `- warning: 'SecAccessCopyACLList' was deprecated in macOS 10.10: SecKeychain is deprecated
+ 80 |     guard let entries = list as? [SecACL], !entries.isEmpty else { throw CustodyFailure(code: "ACCESS_UNVERIFIABLE") }
+ 81 |     let expected = try appData(trusted)
+
+scripts/keychain/mote-keychain.swift:85:20: warning: 'SecACLCopyContents' was deprecated in macOS 10.10: SecKeychain is deprecated
+ 83 |         var applications: CFArray?, description: CFString?
+ 84 |         var prompt = SecKeychainPromptSelector(rawValue: 0)
+ 85 |         try status(SecACLCopyContents(acl, &applications, &description, &prompt), "ACCESS_UNVERIFIABLE")
+    |                    `- warning: 'SecACLCopyContents' was deprecated in macOS 10.10: SecKeychain is deprecated
+ 86 |         try require(prompt.rawValue == 0 && description as String? == label, "ACCESS_UNVERIFIABLE")
+ 87 |         guard let apps = applications as? [SecTrustedApplication], apps.count == 1 else { throw CustodyFailure(code: "OVERBROAD_ACCESS") }
+
+scripts/keychain/mote-keychain.swift:93:16: warning: 'SecAccessCreate' was deprecated in macOS 10.10: SecKeychain is deprecated
+ 91 | func restrictedAccess(_ request: Request, trusted: SecTrustedApplication) throws -> SecAccess {
+ 92 |     var access: SecAccess?
+ 93 |     try status(SecAccessCreate(request.service as CFString, [trusted] as CFArray, &access), "ACCESS_CREATION_FAILED")
+    |                `- warning: 'SecAccessCreate' was deprecated in macOS 10.10: SecKeychain is deprecated
+ 94 |     guard let result = access else { throw CustodyFailure(code: "ACCESS_CREATION_FAILED") }
+ 95 |     var list: CFArray?
+
+scripts/keychain/mote-keychain.swift:96:16: warning: 'SecAccessCopyACLList' was deprecated in macOS 10.10: SecKeychain is deprecated
+ 94 |     guard let result = access else { throw CustodyFailure(code: "ACCESS_CREATION_FAILED") }
+ 95 |     var list: CFArray?
+ 96 |     try status(SecAccessCopyACLList(result, &list), "ACCESS_CREATION_FAILED")
+    |                `- warning: 'SecAccessCopyACLList' was deprecated in macOS 10.10: SecKeychain is deprecated
+ 97 |     guard let entries = list as? [SecACL], !entries.isEmpty else { throw CustodyFailure(code: "ACCESS_CREATION_FAILED") }
+ 98 |     for acl in entries {
+
+scripts/keychain/mote-keychain.swift:99:20: warning: 'SecACLSetContents' was deprecated in macOS 10.10: SecKeychain is deprecated
+ 97 |     guard let entries = list as? [SecACL], !entries.isEmpty else { throw CustodyFailure(code: "ACCESS_CREATION_FAILED") }
+ 98 |     for acl in entries {
+ 99 |         try status(SecACLSetContents(acl, [trusted] as CFArray, request.service as CFString, SecKeychainPromptSelector(rawValue: 0)), "ACCESS_CREATION_FAILED")
+    |                    `- warning: 'SecACLSetContents' was deprecated in macOS 10.10: SecKeychain is deprecated
+100 |     }
+101 |     try verifyAccess(result, trusted: trusted, label: request.service)
+
+scripts/keychain/mote-keychain.swift:110:16: warning: 'SecKeychainOpen' was deprecated in macOS 10.10: SecKeychain is deprecated
+108 |     try require(lstat(location.path, &info) == 0 && (info.st_mode & mode_t(S_IFMT)) == mode_t(S_IFREG) && info.st_uid == getuid() && (info.st_mode & 0o077) == 0, "LOGIN_KEYCHAIN_UNAVAILABLE")
+109 |     var keychain: SecKeychain?
+110 |     try status(SecKeychainOpen(location.path, &keychain), "LOGIN_KEYCHAIN_UNAVAILABLE")
+    |                `- warning: 'SecKeychainOpen' was deprecated in macOS 10.10: SecKeychain is deprecated
+111 |     guard let selected = keychain else { throw CustodyFailure(code: "LOGIN_KEYCHAIN_UNAVAILABLE") }
+112 |     var state: SecKeychainStatus = 0
+
+scripts/keychain/mote-keychain.swift:113:16: warning: 'SecKeychainGetStatus' was deprecated in macOS 10.10: SecKeychain is deprecated
+111 |     guard let selected = keychain else { throw CustodyFailure(code: "LOGIN_KEYCHAIN_UNAVAILABLE") }
+112 |     var state: SecKeychainStatus = 0
+113 |     try status(SecKeychainGetStatus(selected, &state), "LOGIN_KEYCHAIN_UNAVAILABLE")
+    |                `- warning: 'SecKeychainGetStatus' was deprecated in macOS 10.10: SecKeychain is deprecated
+114 |     try require((state & kSecUnlockStateStatus) != 0, "LOGIN_KEYCHAIN_LOCKED")
+115 |     return selected
+
+scripts/keychain/mote-keychain.swift:122:48: warning: 'kSecUseAuthenticationUIFail' was deprecated in macOS 11.0: Instead of kSecUseAuthenticationUI, use kSecUseAuthenticationContext and set LAContext.interactionNotAllowed property
+120 |             kSecAttrService as String: request.service,
+121 |             kSecAttrAccount as String: request.account,
+122 |             kSecUseAuthenticationUI as String: kSecUseAuthenticationUIFail]
+    |                                                `- warning: 'kSecUseAuthenticationUIFail' was deprecated in macOS 11.0: Instead of kSecUseAuthenticationUI, use kSecUseAuthenticationContext and set LAContext.interactionNotAllowed property
+123 | }
+124 | func assertLabelAbsent(_ request: Request, keychain: SecKeychain) throws {
+
+scripts/keychain/mote-keychain.swift:130:70: warning: 'kSecUseAuthenticationUIFail' was deprecated in macOS 11.0: Instead of kSecUseAuthenticationUI, use kSecUseAuthenticationContext and set LAContext.interactionNotAllowed property
+128 |                                   attribute as String: request.service,
+129 |                                   kSecMatchLimit as String: kSecMatchLimitOne,
+130 |                                   kSecUseAuthenticationUI as String: kSecUseAuthenticationUIFail]
+    |                                                                      `- warning: 'kSecUseAuthenticationUIFail' was deprecated in macOS 11.0: Instead of kSecUseAuthenticationUI, use kSecUseAuthenticationContext and set LAContext.interactionNotAllowed property
+131 |         let result = SecItemCopyMatching(lookup as CFDictionary, nil)
+132 |         try require(result == errSecItemNotFound, result == errSecSuccess ? "ALREADY_EXISTS" : "EXISTENCE_UNVERIFIABLE")
+
+scripts/keychain/mote-keychain.swift:146:56: warning: 'SecKeychainItemGetTypeID()' was deprecated in macOS 10.10: SecKeychain is deprecated
+144 |     try require(fields[kSecAttrLabel as String] as? String == request.service && fields[kSecAttrGeneric as String] as? Data == request.metadata, "ITEM_IDENTITY_MISMATCH")
+145 |     try require((fields[kSecAttrSynchronizable as String] as? Bool ?? false) == false, "OVERBROAD_ACCESS")
+146 |     try require(CFGetTypeID(reference as CFTypeRef) == SecKeychainItemGetTypeID(), "ITEM_UNVERIFIABLE")
+    |                                                        `- warning: 'SecKeychainItemGetTypeID()' was deprecated in macOS 10.10: SecKeychain is deprecated
+147 |     let item = unsafeBitCast(reference as AnyObject, to: SecKeychainItem.self)
+148 |     var access: SecAccess?
+
+scripts/keychain/mote-keychain.swift:149:16: warning: 'SecKeychainItemCopyAccess' was deprecated in macOS 10.10: SecKeychain is deprecated
+147 |     let item = unsafeBitCast(reference as AnyObject, to: SecKeychainItem.self)
+148 |     var access: SecAccess?
+149 |     try status(SecKeychainItemCopyAccess(item, &access), "ACCESS_UNVERIFIABLE")
+    |                `- warning: 'SecKeychainItemCopyAccess' was deprecated in macOS 10.10: SecKeychain is deprecated
+150 |     guard let foundAccess = access else { throw CustodyFailure(code: "ACCESS_UNVERIFIABLE") }
+151 |     try verifyAccess(foundAccess, trusted: trusted, label: request.service)
+
+scripts/keychain/mote-keychain.swift:157:16: warning: 'SecKeychainSetUserInteractionAllowed' was deprecated in macOS 10.10: SecKeychain is deprecated
+155 |     // Private pipes are checked before ANY Security framework call. No UI fallback.
+156 |     try privateChannels()
+157 |     try status(SecKeychainSetUserInteractionAllowed(false), "NO_UI_UNAVAILABLE")
+    |                `- warning: 'SecKeychainSetUserInteractionAllowed' was deprecated in macOS 10.10: SecKeychain is deprecated
+158 |     let keychain = try existingLoginKeychain()
+159 |     let trusted = try trustedSelf()
+
+scripts/keychain/mote-keychain.swift:184:20: warning: 'SecKeychainItemCopyContent' was deprecated in macOS 10.10: SecKeychain is deprecated
+182 |         let item = try inspectItem(request, trusted: trusted, keychain: keychain)
+183 |         var length: UInt32 = 0, pointer: UnsafeMutableRawPointer?
+184 |         try status(SecKeychainItemCopyContent(item, nil, nil, &length, &pointer), "READ_FAILED")
+    |                    `- warning: 'SecKeychainItemCopyContent' was deprecated in macOS 10.10: SecKeychain is deprecated
+185 |         defer { if let raw = pointer { _ = memset_s(raw, Int(length), 0, Int(length)); SecKeychainItemFreeContent(nil, raw) } }
+186 |         guard length == 32, let raw = pointer else { throw CustodyFailure(code: "INVALID_KEY_MATERIAL") }
+
+scripts/keychain/mote-keychain.swift:185:88: warning: 'SecKeychainItemFreeContent' was deprecated in macOS 10.10: SecKeychain is deprecated
+183 |         var length: UInt32 = 0, pointer: UnsafeMutableRawPointer?
+184 |         try status(SecKeychainItemCopyContent(item, nil, nil, &length, &pointer), "READ_FAILED")
+185 |         defer { if let raw = pointer { _ = memset_s(raw, Int(length), 0, Int(length)); SecKeychainItemFreeContent(nil, raw) } }
+    |                                                                                        `- warning: 'SecKeychainItemFreeContent' was deprecated in macOS 10.10: SecKeychain is deprecated
+186 |         guard length == 32, let raw = pointer else { throw CustodyFailure(code: "INVALID_KEY_MATERIAL") }
+187 |         var key = Data(bytes: raw, count: Int(length))

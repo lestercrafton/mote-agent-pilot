@@ -1,0 +1,36 @@
+# Qualification images only; never publish these fixture-bearing images.
+# Immutable official Linux amd64 base recorded in docs/container-base-v0.5.json.
+FROM --platform=linux/amd64 node:24.22.2-bookworm-slim@sha256:a43f7fc3e52e87d12a905f46eea0275def84ca8f2981a5b53fed44d7fb398ee0 AS qualify-base
+WORKDIR /app
+ENV npm_config_update_notifier=false
+RUN node -e 'if(process.platform!=="linux"||process.arch!=="x64"||process.version!=="v24.22.2")process.exit(1)' \
+    && test "$(npm --version)" = "11.19.1"
+
+FROM qualify-base AS development
+COPY package.json package-lock.json ./
+RUN npm ci --ignore-scripts --no-audit --no-fund
+COPY src/ ./src/
+COPY scripts/ ./scripts/
+COPY artifacts/ ./artifacts/
+COPY contracts/ ./contracts/
+COPY test/ ./test/
+COPY Dockerfile.qualify Dockerfile.qualify.dockerignore ./
+RUN mkdir -p /evidence /var/data \
+    && chown -R node:node /app /evidence /var/data
+USER node
+CMD ["bash", "scripts/qualify-linux.sh", "--inside-development"]
+
+# A separate fresh install; no node_modules or npm cache comes from development.
+FROM qualify-base AS production
+ENV NODE_ENV=production
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund
+COPY src/ ./src/
+COPY scripts/ ./scripts/
+COPY artifacts/ ./artifacts/
+COPY test/ethereum-fees.test.mjs test/testnet-http.test.mjs test/testnet-runtime.test.mjs ./test/
+COPY Dockerfile.qualify Dockerfile.qualify.dockerignore ./
+RUN mkdir -p /evidence /var/data \
+    && chown -R node:node /app /evidence /var/data
+USER node
+CMD ["bash", "scripts/qualify-linux.sh", "--inside-production"]

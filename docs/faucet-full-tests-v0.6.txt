@@ -1,0 +1,460 @@
+✔ fee estimate includes execution, L1 and operator components but grants no total cap or submission (7.957417ms)
+✔ ordinary public submission is refused even with forged cap flags or arbitrary evidence (0.256542ms)
+✔ transaction intent rejects unknown fields, wrong network, unsafe numbers, native value and missing recipients (0.244542ms)
+✔ unsupported oracle version, missing code, methods, wrong ABI and negative fee shapes fail closed (6.23175ms)
+✔ latest estimate detects canonical block changes and never silently uses a confirmation fallback (1.164125ms)
+✔ wrong chain before or after fee observation fails closed (1.158416ms)
+✔ finalized receipt accounting sums every component at the receipt block, including reverted transactions (2.925792ms)
+✔ Isthmus arithmetic uses floor division and Jovian uses the updated scalar (0.829667ms)
+✔ zero operator fee requires historical zero evidence when receipt fields are absent (2.272666ms)
+✔ missing L1 data, partial operator fields and mismatched historical parameters retain reservations (1.851167ms)
+✔ receipt accounting binds original hash, exact intent, receipt and canonical transaction index (0.552708ms)
+✔ pending finality, reorged reverted receipt and late finality-anchor changes all retain reservations (2.345458ms)
+✔ invalid execution prices, gas use and arithmetic overflow fail closed (1.036334ms)
+✔ Jovian DA footprint receipt fields do not become a spurious second blob fee (0.847042ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- <development-dependencies>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <development-dependencies>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ client offers free discovery and quote, while spending is disabled by default (740.041875ms)
+✔ client rejects external origins, altered destinations, unrequested offers, expired quotes, and invalid keys (8.060042ms)
+✔ client enforces both token and native-fee budgets before signing a payment (22.28825ms)
+✔ client rejects result-hash tampering before an offered payment is authorized (15.331875ms)
+✔ concurrent payments reserve atomically and only one fits a one-quote budget (96.305875ms)
+✔ concurrent retries of the same quote pay once and leave no token allowance (74.781458ms)
+✔ a dropped paid response is recovered without a second payment (84.491417ms)
+✔ HTTP 202 settlement-pending preserves recovery guidance and does not repay (73.020166ms)
+✔ uncertain transaction wait retains its reservation and reconciles the original hash (94.715583ms)
+✔ an unrelated reverted transaction cannot release an unknown payment reservation (130.585625ms)
+✔ client rejects a tampered signed receipt and retries delivery without paying again (91.51375ms)
+✔ concurrent recoveries account for an uncertain approval and payment exactly once (99.83525ms)
+✔ recovery keeps the native-fee cap when an earlier approval hash is unknown (65.818042ms)
+✔ recovering an externally paid quote after ALREADY_PAID accounts for its spend (81.692083ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- <development-dependencies>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <development-dependencies>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ fixed supply, six decimals, standard ERC20 transfer and exact approvals (755.750417ms)
+✔ signed payment transfers exact amount, emits binding receipt, and consumes approval (92.060916ms)
+✔ wrong payer, altered amount, altered request, wrong chain and wrong router are rejected (88.274958ms)
+✔ expired, zero amount, zero quote ID and unauthorized signatures are rejected (39.325ms)
+✔ failed approval or insufficient balance cannot consume a quote or charge the payer (147.221125ms)
+✔ a second router cannot replay another router signature (61.62ms)
+✔ competing transactions cannot spend the same token balance twice (84.124291ms)
+✔ reset local chains reject old-boot quote signatures (107.493708ms)
+✔ unsigned dispenser add-on pins reserve, constructor and deterministic creation/funding without permission (321.201333ms)
+✔ preparation CLI writes only a new unsigned plan and rejects duplicates and overwrite (1375.241708ms)
+✔ dispenser plan rejects chain, caps, identities, unknown fields and unsafe nonce (0.524958ms)
+✔ dispenser plans reject modified calldata, cap, token pin, authorization and hash (5.374917ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- <development-dependencies>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <development-dependencies>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ separate dispenser is prefunded from unchanged fixed supply and exposes no owner/mint/sweep authority (165.680875ms)
+✔ empty or insufficient funding leaves a claim retryable; later funding permits exactly one payout (338.045125ms)
+✔ one address is not one identity: distinct local fixture accounts can exhaust the immutable total cap (530.265125ms)
+✔ excess funding and later topups cannot extend the cap; surplus has no withdrawal path (378.636292ms)
+✔ competing distinct-address transactions cannot exceed the last available claim (92.421292ms)
+✔ constructor rejects missing token code and zero, excessive, inverted or indivisible limits (153.33475ms)
+✔ unsupported token recipient transfer tax rolls back balances, supply and claim state; same claimant can retry (362.875834ms)
+✔ unsupported token sender transfer tax rolls back balances, supply and claim state; same claimant can retry (349.694583ms)
+✔ unsupported token false return after balance mutation rolls back balances, supply and claim state; same claimant can retry (351.33175ms)
+✔ unsupported token reverting transfer rolls back balances, supply and claim state; same claimant can retry (335.959291ms)
+✔ unsupported token successful no-op transfer rolls back balances, supply and claim state; same claimant can retry (336.244917ms)
+✔ caught token reentry cannot claim for a second address or increase the outer exact payout (310.444041ms)
+✔ bubbled token reentry reverts the entire claim and remains retryable (332.26625ms)
+✔ native value cannot be accepted through claim and does not consume the address entitlement (211.839875ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- <development-dependencies>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <development-dependencies>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ active same-instance submission rejects changed offer, order key and unidentified explicit proof (944.110208ms)
+✔ active recovery rejects a different proof when the original hash is recorded (600.046625ms)
+✔ active recovery rejects a different proof when the original hash is known only to the active recovery (561.055667ms)
+✔ separate clients share a durable total budget across successful process restart (964.875833ms)
+✔ two independent processes cannot reserve or spend beyond their shared one-payment cap (550.85775ms)
+✔ separate concurrent processes using the same quote settle it only once (936.134958ms)
+✔ SIGKILL before approve dispatch retains state and recovery never resends (1595.396375ms)
+✔ SIGKILL after approve dispatch retains state and recovery never resends (1561.606083ms)
+✔ SIGKILL before pay dispatch retains state and recovery never resends (1589.373417ms)
+✔ SIGKILL after pay dispatch retains state and recovery never resends (1700.379625ms)
+✔ SIGKILL after reservation commit recovers committed evidence without resubmission or duplicate fees (2646.1885ms)
+✔ SIGKILL after approval hash persistence recovers committed evidence without resubmission or duplicate fees (1980.364875ms)
+✔ SIGKILL after payment hash persistence recovers committed evidence without resubmission or duplicate fees (1678.288ms)
+✔ SIGKILL after settlement accounting commit before delivery recovers committed evidence without resubmission or duplicate fees (1728.323667ms)
+✔ a dropped committed delivery response is recovered after process restart without any send (970.524333ms)
+✔ changed policy ID or policy contents cannot reset an existing journal budget (720.032666ms)
+✔ missing persistent state fails closed before approvals or payments (361.890792ms)
+✔ corrupt persistent state fails closed before approvals or payments (381.635209ms)
+✔ readonly persistent state fails closed before approvals or payments (370.985833ms)
+✔ journal becoming missing after client startup blocks the first broadcast (388.09075ms)
+✔ journal becoming readonly after client startup blocks the first broadcast (381.325583ms)
+✔ recovery of an untracked offer cannot create a fresh budget or send a transaction (386.143875ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- <development-dependencies>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <development-dependencies>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ Ethereum unsigned plan uses separate network/schema and domain while preserving bytecode and zero value (1268.771209ms)
+✔ local Ethereum deployment verifies source/runtime/immutables without claiming public deployment (54.548375ms)
+✔ public Ethereum configuration requires canonical genesis and forbids cross-network modes or unmarked fixtures (10.115542ms)
+✔ public Ethereum runtime routes only to fixed RPC and actually checks the canonical genesis (11.652084ms)
+✔ Ethereum router rejects Base-domain signatures and accepts one exact local Ethereum payment (189.704917ms)
+✔ Ethereum recovery preserves expiry, finalized-anchor, altered-proof and identity-drift guards (249.197291ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- <development-dependencies>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <development-dependencies>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ explicit loopback factory runs SAME standard client+Ethereum fee boundary and no public constructor relaxation (2191.366334ms)
+✔ complete execution cap denial happens before reservations or signer calls (131.100833ms)
+✔ lost real HTTP delivery recovers after reopening using original chain payment and no signer (724.345458ms)
+✔ crash before original broadcast retains intent and recovery never resumes it (207.622291ms)
+✔ lost payment-send response accounts observed payment but retains original fee cap and gate (613.479833ms)
+✔ live original owner waits for approval finality then pays once; read-only recovery remains separate (708.38875ms)
+(node:53237) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 close listeners added to [Server]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ separate processes share one token budget and wallet gate on real local Ethereum RPC (730.860042ms)
+✔ bounded finality timeout retains the known approval and restarted recovery never progresses to payment (250.983542ms)
+✔ concurrent original calls and later replay deliver one result with only one exact approval/payment pair (926.791833ms)
+✔ malformed exact transaction requests cannot reach signer or durable intent even when a quote is reserved (70.405042ms)
+✔ quote expiry after finalized approval stops payment and retains the approved wallet gate (326.953417ms)
+✔ Ethereum exact type-2 bound covers all network fees and separately enforces the policy maximum (4.466417ms)
+✔ fee assertion recomputes transaction, encoding, every fee component and reservation rather than trusting flags (2.382167ms)
+✔ ordinary profile rejects alternate networks, blobs, authorization/access lists, native value and unsafe integer shapes (0.171375ms)
+✔ pre-Prague, Prague and Amsterdam inclusion/calldata reservations use their reviewed rules (4.579834ms)
+✔ preparation refuses delegated/code-bearing payers, missing state, underpriced fees and reorged observations (3.419416ms)
+✔ chain mismatch at the beginning or end of a fee observation never falls back to mainnet or Base (1.125584ms)
+✔ finalized receipt fees include the full scalar gasUsed charge for success and revert (5.761167ms)
+✔ ECDSA signature, serialized hash and recovered payer are independently checked (4.378125ms)
+✔ ECDSA RPC integer scalars with leading zeroes omitted retain their exact signature value (4.929417ms)
+✔ exact intent and receipt/block/index binding reject conflicting proof fields (10.314791ms)
+✔ separate OP/deposit/blob receipt evidence is rejected rather than silently undercounted (3.756ms)
+✔ pending receipt and unfinalized receipt have distinct retryable read-only statuses (5.471459ms)
+✔ parent and inclusion reorgs, late finalized-anchor changes and coded historical payers retain reservations (14.435959ms)
+✔ completion rechecks finalized tag regression, same-height contradiction and advanced canonical binding (8.754125ms)
+✔ receipt price/gas invariants enforce the cap without imposing obsolete 21000 receipt floor (13.280292ms)
+✔ uint256 overflow is refused and caller mutation cannot alter an in-flight intent (0.558208ms)
+✔ explicit initialization pins full policy and chain identity; opening never creates or resets authority (11.413959ms)
+✔ policy, offer and unsigned intent reject unknown fields and unbounded approval calldata (6.940167ms)
+✔ shared reservations enforce totals, preserve ownership, and retain cancelled tombstones (9.502958ms)
+✔ separate processes cannot reserve more than one shared budget under a simultaneous start (96.735875ms)
+✔ exact original intent and receipt accounting survive restart without charging twice (26.562ms)
+✔ crashed unrecorded submission keeps authority reserved and cannot be resumed by another process (7.516334ms)
+✔ observed payment accounts once but cannot release an unknown original fee or wallet gate (21.187625ms)
+✔ read-only, deleted, replaced and locked journals fail closed without fallback (1080.491292ms)
+✔ valid SQLite corruption cannot erase an active reservation even with a recomputed row checksum (15.53375ms)
+✔ active handle detects an in-place corrupted SQLite header before authorizing a send (6.318167ms)
+✔ hard-linked journal aliases cannot split wallet authority into separate WAL paths (5.761458ms)
+✔ missing fee accounting is corruption rather than silently freed native budget (17.148917ms)
+✔ changed receipt evidence cannot overwrite monotonic spending or replace an original hash (14.032ms)
+✔ public journal rejects local chain/origin, unpinned deployment and non-synthetic policy (3.668208ms)
+✔ Ethereum journal requires a non-null genesis and retains the exact configured anchor (2.351458ms)
+✔ type-2 intent pins fee fields and rejects a legacy or excessive execution fee request (5.737959ms)
+✔ canonical total fee overruns are durably counted instead of hidden or reset (15.399917ms)
+✔ approval fee overrun stops payment continuation without hiding spent fees or freeing its gate (11.358958ms)
+✔ a shared journal rejects cross-network identities even with identical addresses and config hashes (4.576541ms)
+✔ Ethereum intents reject unsupported transaction magnitudes and extra signing fields (4.026875ms)
+✔ network registry permits only explicit numeric Sepolia IDs and freezes network identity and fee model (0.695916ms)
+✔ Ethereum reader fixes the provider endpoint with no credentials, redirects or endpoint override (2.308166ms)
+✔ Ethereum reader forbids signing, broadcasts, arbitrary methods, state overrides and nonzero call value (0.255417ms)
+✔ Ethereum reader rejects mismatched RPC replies, other-origin responses and oversized payloads (0.797458ms)
+✔ Ethereum observation verifies canonical genesis and ordered canonical heads without an OP oracle or readiness claim (0.992208ms)
+✔ Ethereum observation fails closed on unavailable or incorrect genesis, wrong chain and inconsistent finality (0.316875ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- <development-dependencies>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <development-dependencies>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ free root, manifest, OpenAPI and health provide truthful local discovery without spending (752.407791ms)
+✔ HTTP quote retries preserve exact offer; conflicting key rejects changed input (7.919875ms)
+✔ HTTP payment proof and result recovery complete once on the local chain (103.296125ms)
+✔ malformed JSON, wrong envelope, unsupported fields and absent idempotency fail clearly (3.881125ms)
+✔ unknown transaction produces a pending status, never a success result or second payment (9.821167ms)
+✔ local HTTP rejects browser cross-origin and DNS-rebinding Host headers (3.622458ms)
+✔ body, nesting and node limits reject resource abuse before issuing offers (2.2335ms)
+✔ duplicate decoded JSON keys and invalid UTF-8 are rejected instead of silently normalized (3.4815ms)
+✔ very deep JSON and unsafe integers produce bounded client errors (1.114958ms)
+✔ explicit initialization pins full policy and chain identity; opening never creates or resets authority (10.693541ms)
+✔ policy, offer and unsigned intent reject unknown fields and unbounded approval calldata (6.165583ms)
+✔ shared reservations enforce totals, preserve ownership, and retain cancelled tombstones (8.5115ms)
+✔ separate processes cannot reserve more than one shared budget under a simultaneous start (92.889709ms)
+✔ exact original intent and receipt accounting survive restart without charging twice (21.8735ms)
+✔ crashed unrecorded submission keeps authority reserved and cannot be resumed by another process (8.020833ms)
+✔ observed payment accounts once but cannot release an unknown original fee or wallet gate (20.987833ms)
+✔ read-only, deleted, replaced and locked journals fail closed without fallback (1069.249125ms)
+✔ valid SQLite corruption cannot erase an active reservation even with a recomputed row checksum (13.8805ms)
+✔ active handle detects an in-place corrupted SQLite header before authorizing a send (7.443417ms)
+✔ hard-linked journal aliases cannot split wallet authority into separate WAL paths (7.211417ms)
+✔ missing fee accounting is corruption rather than silently freed native budget (18.505583ms)
+✔ changed receipt evidence cannot overwrite monotonic spending or replace an original hash (18.640708ms)
+✔ MCP refuses remote, credentialed, path and redirect-prone API origins (0.916417ms)
+✔ discovery is free metadata with explicit custom protocol and payment boundaries (0.589916ms)
+✔ MCP modern 2026-07-28 lists only non-spending tools and forwards discovery, quote and proof (101.636625ms)
+✔ MCP supports the negotiated 2025-11-25 legacy initialization (72.678416ms)
+✔ public MCP pins its HTTPS origin; fixtures require an explicit separate loopback mode (0.714458ms)
+✔ public MCP bounds input before transport and leaves instruction-shaped text as data (0.572ms)
+✔ public MCP HTTP client omits credentials and never follows metadata links or the protected MCP route (1.745208ms)
+✔ public MCP rejects changed response origins and malformed or oversized responses (1.217542ms)
+✔ public MCP preserves authentication failures without attempting auth, retries or another endpoint (0.206917ms)
+✔ public MCP enforces a concurrency ceiling and times out stalled transport (31.6155ms)
+✔ public MCP rejects actual HTTP redirects without following them (13.296125ms)
+✔ public MCP deadline covers slow HTTP headers and stalled response bodies (107.186417ms)
+✔ public MCP SDK stdio modern discovery and audit use only the anonymous fixture HTTP API (102.098084ms)
+✔ public MCP SDK supports the legacy 2025-11-25 initialization without HTTP or auth (66.358375ms)
+✔ official MCP Client and StdioClientTransport legacy connect, list and call the public bridge (121.190709ms)
+✔ official MCP Client and StdioClientTransport modern connect, list and call the public bridge (190.464709ms)
+✔ official-client evaluation script produces honest controlled evidence against a loopback fixture (179.929375ms)
+✔ free discovery exposes exact paths, zero cost, limits, and honest settlement state (9.203833ms)
+✔ public and local modes produce identical core results with explicit free hash receipt (3.278041ms)
+✔ public parser rejects duplicate, malformed, over-limit, and invalid UTF-8 inputs (1.575209ms)
+✔ schema failure is a useful successful response, unsupported schema is a caller error (0.47825ms)
+✔ stateless MCP discovers and calls only the free bounded audit tool (1.118875ms)
+✔ stalled streamed body times out and is canceled without execution (5001.989541ms)
+✔ worker-safe validator yields exact pointer, constraint, and observed type (2.419791ms)
+✔ required checks own properties and escapes JSON pointers (0.328834ms)
+✔ reject malformed and unsupported schemas without code generation or network refs (0.648834ms)
+✔ canonicalization preserves instruction-like input as literal data (0.440583ms)
+✔ bounded numeric representation rejects precision-losing integer values (0.164042ms)
+✔ limits reject deep, wide, oversized inputs and too many subschemas (0.394209ms)
+✔ prototype keys are ordinary data, with no prototype mutation (0.18925ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- <development-dependencies>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <development-dependencies>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ free quote binds canonical request, payer, exact integer price and EIP-712 signature (749.809875ms)
+✔ simultaneous same-key quotes return one offer; conflicting input or payer is rejected (10.566875ms)
+✔ invalid payer, missing idempotency key and unsupported schema fail before charging (7.827833ms)
+✔ real payment delivers canonical output and signed receipt; replays do not debit again (112.422625ms)
+✔ wrong-router, another quote payment, malformed and unconfirmed proofs cannot unlock a result (96.904583ms)
+✔ reverted EVM transaction cannot serve as a successful payment proof (17.96375ms)
+✔ concurrent reconciliation rejects in-flight duplicate then replays one committed result (80.948417ms)
+✔ dropped response recovers identical stored receipt after service restart without another payment (88.055625ms)
+✔ crash after chain verification recovers from original transaction without charging twice (80.895916ms)
+✔ SQLite store rejects a different local chain boot instead of silently replaying old state (93.017917ms)
+✔ reorganized local chain cannot return a previously paid result as settled (66.844375ms)
+✔ embedded instructions stay ordinary document data and validation failures remain useful results (65.773833ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- <development-dependencies>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <development-dependencies>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ quote capacity rejects new keys while preserving existing idempotent retries and conflicts (10.586084ms)
+✔ reconciliation-key capacity preserves prior keys and read recovery instead of growing unbounded (19.107459ms)
+✔ concurrent quote signing cannot exceed the atomic store capacity after all callers pass precheck (840.364917ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- <development-dependencies>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <development-dependencies>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ runtime import does not load solc, Ganache, local accounts or signing/broadcast capabilities (1361.622417ms)
+✔ offline config binds full verified source/build, creation evidence and immutable roles; hash is separately pinned (54.624625ms)
+✔ production mode permits pruned genesis but never accepts a fixture reader or endpoint override (4.210833ms)
+✔ actual local paid proof binds exact transaction, receipt, event, quote, finalized state and configuration (109.135208ms)
+✔ full signed offer is authenticated before any RPC and its router EIP712 domain is checked (9.015708ms)
+✔ pending, reverted and unfinalized payments never produce a paid proof (119.035666ms)
+✔ tx and receipt mismatch, wrong chain/sender/value/input and missing or altered Paid events fail closed (808.131584ms)
+✔ identity checks reject checkpoint/genesis/runtime/immutable/deployment changes (142.825875ms)
+✔ finalized support and beginning/ending canonical anchors are mandatory (117.85825ms)
+✔ consumed state and mined deadline are verified independently of event data (85.416833ms)
+✔ previously finalized payment remains recoverable after quote expiry without another transfer (141.874792ms)
+✔ completed recovery preserves and revalidates its historical signed finalized anchor after heads advance (295.044459ms)
+✔ CLI exposes no broadcast, signer, alternate RPC or credential option (1515.565ms)
+✔ offline CLI validates roles before creating files and never overwrites a prepared plan (3304.462125ms)
+✔ Ethereum offline plan selects only its own network; no secret or broadcast options added (2331.800375ms)
+✔ public constructor pins HTTPS/Base deployment; ordinary execution refuses fees before any signer call (51.253542ms)
+✔ quotes require public synthetic acknowledgment and authenticate metadata/request before remembering an offer (13.212ms)
+✔ controlled RPC fixture completes useful work automatically with exact durable approval/payment and total fees (47.823792ms)
+✔ lost service response recovers after restart using finalized original transaction without ANY signer call (84.815875ms)
+✔ crash before approval send leaves durable intent and restarted recovery never submits (30.125958ms)
+✔ crash after payment submission before hash record retains original fee reservation after observed payment recovery (60.904875ms)
+✔ missing L1 fee evidence retains known approval reservation and recovery cannot proceed to a new payment (43.823583ms)
+✔ canonical reorg or conflicting payment hash cannot release or overwrite completed authority (53.886667ms)
+✔ reverted original payment accounts actual total fee once and releases only known final authority (50.737209ms)
+✔ active journal deletion/read-only/corruption before execution fails closed without signer calls (33.962ms)
+✔ concurrent duplicate calls share one operation and conflicting order keys are rejected (46.11025ms)
+✔ known payment with unavailable total fee evidence reconciles after restart without paying again (73.119667ms)
+✔ unfinalized approval retains authority; later finality permits accounting but never resumes payment (39.438583ms)
+✔ tampered results/receipt anchors are rejected after settlement and retried without a second payment (160.678167ms)
+✔ original-input reconstruction restores a missing service record after restart without signing or repaying (73.04925ms)
+✔ reconstruction rejects input tampering and missing acknowledgment before any recovery request (39.485959ms)
+✔ original-input reconstruction cannot revive an unidentified original submission (35.935125ms)
+✔ a delivery-time reorg remains reconciliation-required rather than being relabeled finalized (61.985667ms)
+✔ pilot HTTP requires configured HTTPS origin and ignores untrusted proxy headers (18.790667ms)
+✔ pilot actions require exact fields and public-synthetic declaration (11.104209ms)
+✔ pilot rejects malformed, duplicate and oversized requests before service calls (3.397666ms)
+✔ recovery-only readiness remains usable without implying new quote permission (2.280791ms)
+✔ unavailable durable state and pending proof fail without exposing internal error detail (2.228375ms)
+✔ free audit stays available, unchanged and uncharged; no remote MCP route (4.695541ms)
+✔ Ethereum Sepolia discovery advertises only its enforced type-2 policy and matching protocol (2.695458ms)
+✔ explicit initialization pins full policy and chain identity; opening never creates or resets authority (13.291583ms)
+✔ policy, offer and unsigned intent reject unknown fields and unbounded approval calldata (7.568708ms)
+✔ shared reservations enforce totals, preserve ownership, and retain cancelled tombstones (10.693166ms)
+✔ separate processes cannot reserve more than one shared budget under a simultaneous start (100.666834ms)
+✔ exact original intent and receipt accounting survive restart without charging twice (26.499041ms)
+✔ crashed unrecorded submission keeps authority reserved and cannot be resumed by another process (9.163042ms)
+✔ observed payment accounts once but cannot release an unknown original fee or wallet gate (22.888625ms)
+✔ read-only, deleted, replaced and locked journals fail closed without fallback (1067.98775ms)
+✔ valid SQLite corruption cannot erase an active reservation even with a recomputed row checksum (8.950167ms)
+✔ active handle detects an in-place corrupted SQLite header before authorizing a send (4.922666ms)
+✔ hard-linked journal aliases cannot split wallet authority into separate WAL paths (5.919709ms)
+✔ missing fee accounting is corruption rather than silently freed native budget (16.757084ms)
+✔ changed receipt evidence cannot overwrite monotonic spending or replace an original hash (14.590625ms)
+✔ public journal rejects local chain/origin, unpinned deployment and non-synthetic policy (4.159125ms)
+✔ a pinned finalized checkpoint supports a pruned genesis without allowing identity changes (5.241333ms)
+✔ type-2 intent pins fee fields and rejects a legacy or excessive execution fee request (6.679292ms)
+✔ canonical total fee overruns are durably counted instead of hidden or reset (17.964416ms)
+✔ approval fee overrun stops payment continuation without hiding spent fees or freeing its gate (13.138584ms)
+✔ live WAL backup retains orders and unknown/finalized states; restore is permanently recovery-only (67.829ms)
+✔ backup fixes one WAL snapshot while a separate worker connection changes a proof state (69.895708ms)
+✔ missing post-snapshot orders are not fabricated and restore never enables fresh offers (44.830708ms)
+✔ a backup of a recovery database retains quarantine through another restore (83.195208ms)
+✔ backup and restore require independent identity and reject a different deployment (26.311791ms)
+✔ missing input, corrupt SQLite and truncated databases do not initialize destinations (8.373333ms)
+✔ live store, manifests, lock files and SQLite sidecars are never overwritten (24.85725ms)
+✔ symlink sources, directory sources and destination symlinks are refused (6.651875ms)
+✔ manifest corruption, duplicate fields and metadata/hash changes fail closed (23.316458ms)
+✔ restore rejects unhashed WAL and recovery sidecars (21.5215ms)
+✔ matching a rewritten manifest hash does not admit a different database schema (21.069167ms)
+✔ oversized sparse source fails before allocating a destination snapshot (5.141042ms)
+✔ host databases, payer journals, extra tables and executable schema objects are rejected (20.699166ms)
+✔ order checksum damage, invalid attempt state and dangling references are rejected (18.518125ms)
+✔ source recovery mode change and path replacement during backup prevent publication (10.632958ms)
+✔ a concurrent destination owner wins without overwrite (12.4065ms)
+✔ recovery-lock helper cannot grant normal quote authority or overwrite a lock (7.350292ms)
+✔ CLI requires public identity, emits recovery-only mode and rejects in-place restore (302.113375ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- <development-dependencies>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <development-dependencies>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ verification bundle recompiles all sources without imports and preserves existing bytecode (1583.289583ms)
+✔ plan is deterministic, unsigned, zero-value and explicit about prediction and authority (3.655458ms)
+✔ configuration rejects secrets, missing roles, zero addresses, other chains and unsafe nonces (0.698084ms)
+✔ plan recomputation rejects changed arguments, bytecode, nonces, flags or added fields even after rehashing (14.999042ms)
+✔ local rehearsal deploys both exact creations and verifies finalized RPC evidence without claiming public deployment (46.898917ms)
+✔ verification rejects a different RPC chain before reading deployment evidence (3.105333ms)
+✔ finalized support, finalized height and canonical hashes are mandatory with no fallback (139.117167ms)
+✔ creation proofs reject missing receipts, reverts, wrong hashes, sender, nonce, value and arguments (94.360375ms)
+✔ runtime verification handles real immutable values but rejects changed executable code (45.989916ms)
+✔ verification independently checks supply, router immutables, signature domain and mint allocation (156.524ms)
+✔ local 84532 fixture accepts the first exact payment signed for its actual router domain (124.112208ms)
+✔ local payment replay and wrong-chain signatures fail; deployment evidence remains valid after use (65.222291ms)
+✔ reader pins endpoint, omits credentials, rejects redirects, and uses unique matching RPC IDs (3.230208ms)
+✔ reader denies writes, signing, arbitrary methods and malformed params before invoking fetch (0.619292ms)
+✔ reader exposes bounded safe calls needed for a deployment verifier without sending a transaction (1.200458ms)
+✔ reader rejects mismatched IDs, malformed envelopes, duplicate result/error, and remote RPC errors (0.848667ms)
+✔ reader rejects redirected/wrong-origin, HTTP failures and oversized declared or streamed bodies (0.794959ms)
+✔ reader timeout covers fetch and stalled response body even when a mock ignores abort (0.611584ms)
+✔ inspection reports observed heads, oracle code and explicit non-deployment/non-fee scope (1.854375ms)
+✔ inspection fails closed for wrong/changing chain and malformed or missing finality (0.353416ms)
+✔ inspection rejects inverted heads, same-height hash conflicts, broken ancestry and reorgs (0.266417ms)
+✔ inspection fails when oracle code is missing or malformed instead of claiming fee readiness (0.230333ms)
+✔ known pruned genesis produces an explicitly partial diagnostic with no pinned identity or readiness (0.832166ms)
+✔ pruned genesis never weakens finality checks or disguises other genesis RPC errors (1.197875ms)
+✔ restricted offline signer signs only exact Base quote domain and bounded public test envelopes (11.460875ms)
+✔ restricted signer can attest finalized delivery without extending expired payment authority (2.572583ms)
+✔ runtime refuses absent key/config, fixture mode and transaction-key aliases without exposing values (91.949ms)
+✔ admin exposes explicit initialization and read-only reconciliation, with no send or credential options (329.096292ms)
+✔ temporary provider setup is maintenance-only and exposes no initialization or signing endpoint (17.1085ms)
+✔ Ethereum runtime selects only its dedicated quote key and rejects cross-network key aliases (7.269625ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- <development-dependencies>/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <development-dependencies>/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ service imports no fixture/compiler runtime and refuses missing state, wrong signer and connected signer (14.989917ms)
+✔ only the two fixed numeric testnets are admitted and network-bound offers cannot cross recovery stores (32.148542ms)
+✔ snapshot checks reject mismatched network and protocol in stored offers or receipts even with recomputed row checksum (21.840208ms)
+✔ quote lifetime uses fixed network defaults and ceilings without changing Base behavior (37.397167ms)
+✔ synthetic declaration and supported input are required before persistence or signing (4.887417ms)
+✔ unsigned input/result/draft commit precedes signer call and a crash retries the same draft (18.18875ms)
+✔ quote idempotency binds payer and request; concurrent identical calls cannot bypass the active gate (13.942459ms)
+✔ unknown proof persists across restart; finalized retry after wall-clock expiry recovers without new quote (33.7075ms)
+✔ failed or mismatched proofs do not deliver; pending candidates cannot pin out the actual payment (24.974916ms)
+✔ crashes before result commit reconcile once; dropped response returns identical persisted signed receipt after restart (34.739958ms)
+✔ previously delivered receipt becomes unavailable after missing or moved finalized payment (23.330458ms)
+✔ completed recovery validates the saved historical finality anchor and never rewrites a stale signed receipt (28.685417ms)
+✔ admission caps preserve existing quotes, proof keys and completed-order recovery (29.725333ms)
+✔ concurrent reconciliation rejects conflicting work and one transaction cannot deliver two orders (35.03325ms)
+✔ both persisted store files and deployment binding are mandatory; stored completed keys retain conflict checks (22.711208ms)
+✔ store rejects concurrent process gate, changed deployment, corrupt schema, changed file and lost permissions (126.654875ms)
+✔ snapshot inspection detects recomputed-checksum semantic damage and quarantine cannot issue new offers (22.703791ms)
+✔ recovery reconstructs a lost post-backup row only from original authenticated offer, input and finalized payment (44.414333ms)
+✔ missing-row reconstruction rejects a conflicting persisted proof key atomically and binds its successful key (58.917875ms)
+✔ SIGKILL after committed delivery releases process gate; restart returns the exact stored receipt (135.656541ms)
+✔ actual local 84532 EVM fixture settles once, restarts and reconstructs a quarantined lost order (1964.463083ms)
+✔ actual local 11155111 EVM fixture settles once, restarts and reconstructs a quarantined lost order (787.350791ms)
+ℹ tests 330
+ℹ suites 0
+ℹ pass 330
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 80328.918917

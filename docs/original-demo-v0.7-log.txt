@@ -1,0 +1,70 @@
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- <workspace>/mote-testnet-pilot/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- <workspace>/mote-testnet-pilot/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+{
+  "mode": "controlled local development fixture; not external adoption",
+  "at": "2026-10-30T13:50:42.073Z",
+  "successes": 1,
+  "attemptedUsefulTasks": 1,
+  "successRate": 1,
+  "discoveredWithoutPayment": true,
+  "discoveryMs": 8,
+  "taskMs": 111,
+  "httpRequests": 4,
+  "amountBaseUnits": "3520",
+  "asset": "MOTE",
+  "tokenBalanceDelta": "3520",
+  "actualLocalEvmSettlement": true,
+  "chainId": 31337,
+  "paymentTransactionHash": "0x164d9535e2f4963f73ebafaaea0e76a947bb0190cf10db6280405e157e0a3c7d",
+  "responseLossInjected": true,
+  "receiptRecovered": true,
+  "repeatedCallsChargedAgain": false,
+  "outOfPolicyCallRejected": true,
+  "result": {
+    "service": "json.audit",
+    "version": 1,
+    "dialect": "mote-draft-07-subset-v1",
+    "canonicalization": "mote-sorted-json-v1",
+    "digestAlgorithm": "sha-256",
+    "valid": true,
+    "errors": [],
+    "canonicalJson": "{\"limit\":3,\"query\":\"synthetic agent tool call\"}",
+    "sha256": "0x1c27c59b4efd2d7d11dff1c1b980b16e473b78f327efe47698e30a0bc6a04e9f",
+    "bytes": 47,
+    "inputNodes": 18
+  },
+  "receipt": {
+    "protocol": "mote-local-v1",
+    "quoteId": "0x4679424c065592929c9191f64b6590dee97056e53f5fb5f084e74383b3e0952f",
+    "requestHash": "0xcf40e66a9c229eefefb7e4806a441301f73f2d0c21eb8d2c0c80f77d66e01bc2",
+    "resultHash": "0x8d3949a4f81b729d1ed3035afd6c115a0ed08c96bfba4b092afbb288845ac39c",
+    "payer": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "amount": "3520",
+    "asset": "MOTE",
+    "chainId": 31337,
+    "token": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    "router": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    "recipient": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "quoteSigner": "0xec2FbE153b95432af7d1B9a0Df8a3cCFdac711C2",
+    "transactionHash": "0x164d9535e2f4963f73ebafaaea0e76a947bb0190cf10db6280405e157e0a3c7d",
+    "blockNumber": 5,
+    "blockHash": "0xbff169cebc24c38fba9a0f0dcf4dc971c47d4a9ea681ae0a79f60567d20e89ac",
+    "logIndex": 1,
+    "settledAt": "2026-10-30T13:50:42.000Z",
+    "localOnly": true
+  },
+  "budget": {
+    "tokenReserved": "0",
+    "tokenSpent": "3520",
+    "gasReservedWei": "0",
+    "gasSpentWei": "235504000000000"
+  }
+}

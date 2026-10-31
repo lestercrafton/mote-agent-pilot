@@ -1,0 +1,103 @@
+{
+  "schema": "mote-onboarding-candidate-verification-v1",
+  "version": "0.7.0-onboarding.1",
+  "verifiedAtUtc": "2026-10-30T13:52:28.376927+00:00",
+  "node": "24.22.2",
+  "platform": "darwin-arm64",
+  "fullRegression": {
+    "passed": 402,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 156222.681833,
+    "log": "onboarding-full-tests-v0.7.txt",
+    "sha256": "b9ecb24b6b966dbdff557e880089871c1bf62eea61cc0648e0bca7a828bbd3c2"
+  },
+  "demos": {
+    "eightTransactionOnboarding": {
+      "passed": true,
+      "evidence": "onboarding-demo-v0.7.json",
+      "sha256": "52f5df837fcf2ddbe3ecec3f0426c7c3e361a25a83f078fc4908c915a1dc2b15"
+    },
+    "originalLocalDemo": {
+      "passed": true,
+      "log": "original-demo-v0.7-log.txt",
+      "sha256": "02e943e05b80df770f3cbd64ef3d7e41a0ab685c195dbb8a16e8f3b363d01022"
+    }
+  },
+  "productionDependencyImportSmoke": {
+    "passed": true,
+    "modules": [
+      "dispenser-chain",
+      "dispenser-discovery",
+      "claim-client",
+      "claim-journal",
+      "keychain-custody",
+      "testnet-http"
+    ],
+    "usesPreviouslyVerifiedNpmOmitDevInstallation": true,
+    "solcPresent": false,
+    "ganachePresent": false,
+    "noNativeKeychainCalls": true,
+    "freshInstallForV07": false
+  },
+  "nativeCustody": "../scripts/keychain/verification.json",
+  "independentReview": {
+    "scope": "focused source and boundary review, not a full security audit",
+    "claimBoundaryRegressionsPassed": 4,
+    "bootstrapVerifierTestsPassed": 15,
+    "fixedFindings": [
+      "Quote handoff without an inner payment row now retains the outer wallet gate.",
+      "Unexpected SQLite schema objects are rejected.",
+      "Historical finalized bootstrap anchors are rechecked across restart.",
+      "Signer methods are captured before awaits and expiry is rechecked immediately before signing/submission.",
+      "Native helper trust uses executable identity and exact restricted login Keychain binding."
+    ],
+    "remainingConcreteFindingsReported": 0
+  },
+  "preservedCore": "onboarding-preserved-core-v0.7.json",
+  "dispenserCreationRuntimeAndAbiUnchangedFromV06": true,
+  "newSourceSha256": {
+    "src/bootstrap-plan.mjs": "a41e2a0a8e36b52eac2a6cd598484f844a3c27b1451d896a49ea9289ccd995e9",
+    "src/bootstrap-runner.mjs": "188d3757efafbd110fe63e6e688cd17f0e832b35239eef59cc80130c6f28890f",
+    "src/bootstrap-verifier.mjs": "00fb2d7a97d95e8a6bca7310309e9afdfcfe9f658568b0fcfa43b8e8713628ba",
+    "src/claim-client.mjs": "7ad2f2013f0efe1fb602ab9c83ef3a71f914ef645170b2e47f4a7d9bfc39635a",
+    "src/claim-journal.mjs": "d1eeebf6dd10ee40d59babe7fe81277c343fc0e0a7ff1e8d595be4bf8cd85d1e",
+    "src/dispenser-chain.mjs": "def5ac15c08a1ffcced1da4a3d50938a1b433acbf0ff637d86a17a0149b7a120",
+    "src/dispenser-discovery.mjs": "226d461b02a99a76cbb92b9d8aa8bee3252c7ec8417f20e657e4bdda5791ce0b",
+    "src/keychain-custody.mjs": "932f402905e9cc0c8fb0172a026179a3ec1b151a376339f9b916afce242deb79",
+    "src/testnet-http.mjs": "cb3a7baea7aec7d1a950f791ff918b7e51d988445a79606929669b2eb0d6f520",
+    "scripts/testnet-server.mjs": "85e3809546a196476e52bf335c7dba84ae03a3891d29d88aa4f9f1530b7a4990",
+    "scripts/demo-onboarding.mjs": "4e20a3d1fd307d2d980e675c24235e509902afffd91e007c806de22523fae6c4"
+  },
+  "publicTransactions": 0,
+  "realPersistentKeysCreated": 0,
+  "nativeKeychainCalls": 0,
+  "realCredentialTransfers": 0,
+  "newHostingResources": 0,
+  "publicV05Unchanged": true,
+  "currentPublicForkExecutionTested": false,
+  "actualRender512MiBQualification": false,
+  "nativeAclCompatibilityTested": false,
+  "actualRenderSecretSinkConfigured": false,
+  "limitations": [
+    "Local EVM uses Shanghai and simulated immediate finality.",
+    "All wallet writers must share trusted canonical journals and wrapped signers.",
+    "No protection from full well-formed storage rollback or duplicated authority.",
+    "Unidentified submissions and ambiguous quote handoffs may remain gated indefinitely.",
+    "Public metadata is not spending authority or independent consensus evidence.",
+    "No organic adoption or real-value claim."
+  ],
+  "blockedActions": [
+    {
+      "action": "Render Deploy web service",
+      "target": "Mote / mote-testnet-pilot / Oregon / 512MB + 1GB /var/data",
+      "status": "denied-before-execution; renewed exact approval pending",
+      "reason": "Automatic review did not recognize exact billable deployment authorization; no retry or alternate route performed."
+    },
+    {
+      "action": "A/Q key provisioning, P rehearsal signer, faucet session and eight public testnet transactions",
+      "status": "not executed; exact action-time approval pending",
+      "reason": "Real host destination, approved custody sink and specific authorization must be established."
+    }
+  ]
+}

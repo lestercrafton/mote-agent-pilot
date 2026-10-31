@@ -1,0 +1,45 @@
+{
+  "schema": "mote-custody-preparation-evidence-v1",
+  "node": "24.22.2",
+  "platform": "darwin-arm64",
+  "fixtureTestsPassed": 11,
+  "nativeCompiled": true,
+  "nativeLegacyApiWarnings": true,
+  "nativeSelfTest": {
+    "ok": true,
+    "backend": "memory-only",
+    "keychainCalls": 0
+  },
+  "unknownArgumentsRejectedWithoutDiagnostics": true,
+  "nativeKeychainOperationsExecuted": 0,
+  "realKeysGenerated": 0,
+  "realItemsCreatedOrRead": 0,
+  "realHandoffs": 0,
+  "publicTransactions": 0,
+  "nativeAclStorageCompatibilityVerified": false,
+  "helperSha256": "76f97cf10235d532980f411eff8862009462e43f209572b89cc55fd8155dac7a",
+  "sourceHashes": {
+    "src/keychain-custody.mjs": "932f402905e9cc0c8fb0172a026179a3ec1b151a376339f9b916afce242deb79",
+    "scripts/keychain/mote-keychain.swift": "5706d5e78adc52f7691b2c2f5733fa7506d51d4af7c7d0e123e0fec8199934bd",
+    "scripts/keychain/build.mjs": "3823a4ddf7b4a66b0e2bb056919f02d3e918362c9d8ffc4060b8020ec871cedb",
+    "test/keychain-custody.test.mjs": "84da916f097bda37b016883d537653517d25762e68a872c1b285ca5fc18aa117"
+  },
+  "limitations": [
+    "Native Security API branches were not executed.",
+    "Actual login-Keychain ACL/storage behavior remains unverified.",
+    "Trusted callback can copy/log private bytes and requires independent implementation review.",
+    "Node/Swift buffers and immutable wallet strings are not a complete memory-erasure guarantee.",
+    "Same-user helper replacement between hashing and spawn is outside the custody boundary."
+  ],
+  "nativePrivateChannelSelfTest": {
+    "ok": true,
+    "backend": "private-pipes-only",
+    "stdioAliasRejected": true,
+    "keychainCalls": 0
+  },
+  "buildScriptExecuted": true,
+  "independentReview": {
+    "javascript": "no concrete finding after snapshot fix",
+    "native": "argv0 trust, redundant sync flag and ACL claim fixes applied; pure socket separation/alias test passed; no native Keychain operation"
+  }
+}

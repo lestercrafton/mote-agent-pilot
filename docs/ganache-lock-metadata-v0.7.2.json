@@ -1,0 +1,100 @@
+{
+  "schema": "mote-packaging-metadata-evidence-v1",
+  "candidateVersion": "0.7.0-onboarding.2",
+  "scope": "Packaging metadata only; no application, contract, policy or dependency-version changes",
+  "observedFailure": {
+    "reportedBy": "Parent's independent Linux installation review",
+    "command": "npm ci --ignore-scripts",
+    "code": "EBADPLATFORM",
+    "package": "ganache/node_modules/fsevents@2.3.2",
+    "cause": "The root lock descriptor retained os:[darwin] but lost upstream dev:true and optional:true and instead recorded extraneous:true"
+  },
+  "upstreamArtifact": {
+    "package": "ganache",
+    "version": "7.9.2",
+    "url": "https://registry.npmjs.org/ganache/-/ganache-7.9.2.tgz",
+    "bytes": 14502267,
+    "integrity": "sha512-7gsVVDpO9AhrFyDMWWl7SpMsPpqGcnAzjxz3k32LheIPNd64p2XsY9GYRdhWmKuryb60W1iaWPZWDkFKlbRWHA==",
+    "sha256": "b01fa458a186dc018469dc86093a2c843193e5ca890d03979cfa203a351ba878",
+    "integrityMatchedExistingLock": true,
+    "inspection": "Downloaded over verified HTTPS, checked against the existing SHA-512 pin, and read JSON members without executing package scripts",
+    "metadataMember": "package/npm-shrinkwrap.json",
+    "metadataLockfileVersion": 2,
+    "descriptorPath": "packages[node_modules/fsevents]",
+    "fseventsFilesBundledInArchive": false
+  },
+  "upstreamDescriptor": {
+    "version": "2.3.2",
+    "resolved": "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz",
+    "integrity": "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==",
+    "dev": true,
+    "optional": true,
+    "os": ["darwin"],
+    "engines": { "node": "^8.16.0 || ^10.6.0 || >=11.0.0" }
+  },
+  "upstreamOptionalEdge": {
+    "metadataPath": "packages[node_modules/chokidar].optionalDependencies.fsevents",
+    "parentVersion": "3.5.2",
+    "range": "~2.3.2"
+  },
+  "repair": {
+    "file": "package-lock.json",
+    "target": "packages[node_modules/ganache/node_modules/fsevents]",
+    "remove": { "extraneous": true },
+    "restore": { "dev": true, "optional": true },
+    "preserve": ["version", "resolved", "integrity", "os", "engines"],
+    "changedPackageDescriptors": 1,
+    "otherExtraneousDescriptorsChanged": 0,
+    "beforeSha256": "93f0f2c7ca16b2f324238288b2c1aecdeb3594d654840b8d22d498e3631d00f0",
+    "afterSha256": "f5387b2923531d10fd0790d1791db5346d6b9336ea08cec901c7f5b5f0c0bf47",
+    "tool": "scripts/repair-ganache-lock.mjs",
+    "check": "node scripts/repair-ganache-lock.mjs --check",
+    "explicitWrite": "node scripts/repair-ganache-lock.mjs --write",
+    "defaultWrites": false,
+    "idempotent": true,
+    "networkOrDependencyExecution": false,
+    "installHookAdded": false,
+    "usesForceOrPlatformBypass": false,
+    "futureRegeneration": "Run the check after any npm lock regeneration. The tool repairs only this exact known malformed descriptor; missing entries, changed identities, changed optional edges or other metadata require review. Broad regeneration was not used for the release fix."
+  },
+  "localVerification": {
+    "platform": "darwin-arm64",
+    "nodeVersions": ["25.4.0", "24.22.2"],
+    "checks": {
+      "defaultCheckLeavesBytesUnchanged": true,
+      "repairEqualsPublishedDescriptor": true,
+      "onlyOnePackageDescriptorChanges": true,
+      "repeatedWriteLeavesBytesUnchanged": true,
+      "metadataDriftCasesRejectedWithoutWrite": 8,
+      "node24CheckPasses": true,
+      "applicationFilesComparedWithImmutableV071": 94,
+      "applicationFilesChangedOrRemoved": 0
+    }
+  },
+  "qualificationLimits": {
+    "actualLinuxInstallVerifiedByThisTask": false,
+    "darwinOsCpuFlagsAreLinuxProof": false,
+    "reason": "npm's nonoptional platform-check path can inspect the executing host platform rather than the target os/cpu flags. Actual Linux npm ci qualification remains necessary.",
+    "fullRegressionStatus": "Parent runs fresh installation, regression and container qualification separately",
+    "nativeInstallScriptsExecutedByThisTask": false,
+    "publicActionsOrCredentials": false
+  },
+  "officialReferences": [
+    {
+      "url": "https://docs.npmjs.com/cli/v11/configuring-npm/package-lock-json/",
+      "relevance": "The packages descriptor defines dev/optional flags; an optional dependency of a development dependency carries both flags. OS restrictions remain in the descriptor."
+    },
+    {
+      "url": "https://docs.npmjs.com/cli/v11/configuring-npm/npm-shrinkwrap-json/",
+      "relevance": "Published npm-shrinkwrap metadata defines the dependency tree at the dependency package."
+    },
+    {
+      "url": "https://docs.npmjs.com/cli/v11/configuring-npm/package-json/#optionaldependencies",
+      "relevance": "optionalDependencies declares an optional edge; the published chokidar edge independently agrees with the restored descriptor."
+    },
+    {
+      "url": "https://github.com/npm/cli/blob/v11.19.1/workspaces/arborist/lib/arborist/build-ideal-tree.js",
+      "relevance": "Platform checks distinguish optional and nonoptional nodes; target flags on Darwin are not a substitute for executing npm on Linux."
+    }
+  ]
+}

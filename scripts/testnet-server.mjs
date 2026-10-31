@@ -22,7 +22,12 @@ export function pilotEnvironment(env) {
   const port = Number(env.PORT ?? '10000');
   if (!/^\d+$/.test(env.PORT ?? '10000') || !Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Invalid port.');
   if (env.MOTE_RECOVERY_ONLY !== undefined && !['true','false'].includes(env.MOTE_RECOVERY_ONLY)) throw new Error('Recovery mode must be explicit boolean text.');
-  return { origin, database, port, chainId, networkSlug: network.slug, quoteKeyName, configPath: resolve(env.MOTE_CHAIN_CONFIG), configHash: env.MOTE_CONFIG_HASH, recoveryOnly: env.MOTE_RECOVERY_ONLY === 'true' };
+  let dispenserSettings={};
+  if(env.MOTE_DISPENSER_CONFIG || env.MOTE_DISPENSER_CONFIG_HASH) {
+    if(chainId!==11155111 || !env.MOTE_DISPENSER_CONFIG || !/^0x[0-9a-f]{64}$/.test(env.MOTE_DISPENSER_CONFIG_HASH??'')) throw new Error('An Ethereum dispenser requires a public configuration file and independent hash pin.');
+    dispenserSettings={dispenserConfigPath:resolve(env.MOTE_DISPENSER_CONFIG),dispenserConfigHash:env.MOTE_DISPENSER_CONFIG_HASH};
+  }
+  return { origin, database, port, chainId, networkSlug: network.slug, quoteKeyName, configPath: resolve(env.MOTE_CHAIN_CONFIG), configHash: env.MOTE_CONFIG_HASH, recoveryOnly: env.MOTE_RECOVERY_ONLY === 'true', ...dispenserSettings };
 }
 export async function startPilotFromEnvironment(env) {
   const settings = pilotEnvironment(env);
@@ -32,10 +37,17 @@ export async function startPilotFromEnvironment(env) {
   if (config.mode !== settings.networkSlug || config.chainId !== settings.chainId || config.origin !== settings.origin) throw new Error('The deployed web entrypoint cannot use fixture mode or another origin.');
   if (['deployer','initialHolder','merchant'].some(role => config.roles[role] === config.roles.quoteSigner)) throw new Error('The web quote key must be separate from deployment, holder and merchant authority.');
   const adapter = await createTestnetChain({ config, expectedConfigHash: settings.configHash });
+  let dispenser=null;
+  if(settings.dispenserConfigPath) {
+    const info=await stat(settings.dispenserConfigPath);
+    if(!info.isFile() || info.size>262144) throw new Error('Invalid public dispenser configuration file.');
+    const {createDispenserChain}=await import('../src/dispenser-chain.mjs');
+    dispenser=await createDispenserChain({config:parseJson(await readFile(settings.dispenserConfigPath,'utf8')),expectedConfigHash:settings.dispenserConfigHash,baseConfig:config,expectedBaseConfigHash:settings.configHash});
+  }
   const quoteSigner = createPilotQuoteSigner(env[settings.quoteKeyName], adapter.identity);
   const service = await createTestnetService({ adapter, quoteSigner, origin: settings.origin, database: settings.database, recoveryOnly: settings.recoveryOnly });
   let transport;
-  try { transport = await startTestnetHttp({ service, origin: settings.origin, port: settings.port }); }
+  try { transport = await startTestnetHttp({ service, origin: settings.origin, port: settings.port, dispenser }); }
   catch (error) { service.close(); throw error; }
   let closed = false;
   return { service, transport, async close() { if (closed) return; closed = true; try { await transport.close(); } finally { service.close(); } } };

@@ -1,0 +1,28 @@
+{
+  "purpose": "Explain why npm os/cpu overrides on macOS cannot validate the independently reported native Linux failure.",
+  "actualLinuxExecution": false,
+  "baselineLock": "immutable v0.7.0-onboarding.1",
+  "observations": [
+    {
+      "mode": "full",
+      "host": "darwin-arm64",
+      "npm": "11.19.1",
+      "npmTarget": "linux-x64",
+      "exitCode": 0,
+      "output": "\nadded 369 packages in 1m\nnpm notice\nnpm notice New major version of npm available! 11.19.1 -> 12.2.1\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1\nnpm notice To update run: npm install -g npm@12.2.1\nnpm notice\n",
+      "fseventsInstalled": true,
+      "ganacheInstalled": true
+    },
+    {
+      "mode": "production",
+      "host": "darwin-arm64",
+      "npm": "11.19.1",
+      "npmTarget": "linux-x64",
+      "exitCode": 0,
+      "output": "\nadded 14 packages in 591ms\n",
+      "fseventsInstalled": false,
+      "ganacheInstalled": false
+    }
+  ],
+  "interpretation": "The old malformed lock passed on Darwin even with target os=linux. npm nonoptional platform checking used the host; these are not Linux install results and do not refute the parent reviewer native-Linux EBADPLATFORM evidence."
+}

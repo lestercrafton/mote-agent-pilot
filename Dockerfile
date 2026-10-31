@@ -4,7 +4,7 @@ FROM node:24.22.2-bookworm-slim@sha256:a43f7fc3e52e87d12a905f46eea0275def84ca8f2
 WORKDIR /app
 ENV NODE_ENV=production
 COPY package.json package-lock.json ./
-RUN npm ci --omit=dev --ignore-scripts && npm cache clean --force
+RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund && rm -rf /root/.npm
 COPY src/ ./src/
 COPY scripts/ ./scripts/
 COPY artifacts/ ./artifacts/

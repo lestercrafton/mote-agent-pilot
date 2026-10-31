@@ -4,6 +4,7 @@ import { isIP } from 'node:net';
 import { LIMITS, SCHEMA_KEYWORDS, MoteError, parseJson } from './json.mjs';
 import { publicFetch, publicOpenapi } from './public.mjs';
 import { getTestnetNetwork } from './testnet-networks.mjs';
+import { dispenserMetadata } from './dispenser-discovery.mjs';
 
 export function testnetOrigin(value) {
   const url = new URL(value);
@@ -14,11 +15,11 @@ export function testnetOrigin(value) {
 const jsonSchema = { type: 'object', required: ['document'], additionalProperties: false, properties: { document: {}, schema: { anyOf: [{ type: 'object' }, { type: 'boolean' }] } } };
 const address = { type: 'string', pattern: '^0x[0-9a-fA-F]{40}$' };
 const hash = { type: 'string', pattern: '^0x[0-9a-fA-F]{64}$' };
-export function testnetManifest(config, readiness) {
+export function testnetManifest(config, readiness, dispenser = null) {
   const network = getTestnetNetwork(config.chainId);
   const origin = testnetOrigin(config.origin);
   return {
-    manifestVersion: 'mote-testnet-pilot-v1', name: 'Mote', workingName: true, version: '0.5.0-sepolia.1',
+    manifestVersion: 'mote-testnet-pilot-v1', name: 'Mote', workingName: true, version: '0.7.0-onboarding.1',
     launchStatus: 'unlaunched-candidate', environment: `${network.slug}-public-synthetic-test`, testOnly: true,
     baseUrl: origin, openapi: `${origin}/openapi.json`, health: `${origin}/health`, readiness: `${origin}/ready`,
     description: 'Experimental exact-price token settlement for public synthetic JSON preflight. New-token necessity and demand are unproven.',
@@ -41,16 +42,17 @@ export function testnetManifest(config, readiness) {
     payer: { feeModel: network.feeModel, standardType2Submission: network.chainId === 11155111 ? 'permitted under explicit caller policy; gasLimit * maxFeePerGas reserved before submission' : 'disabled because a full enforceable native-fee cap is unavailable', enforceableNativeFeeCeiling: network.chainId === 11155111, recoveryNeverSubmits: true, originalOfferAndInputMustBeRetained: true },
     recovery: { ordinaryRestart: 'same proof and idempotency key', restoredDatabase: 'quarantined recovery-only; cannot issue new offers', missingRows: 'reconstruct from original signed offer, matching public input and finalized proof' },
     serviceReadiness: readiness,
+    tokenAcquisition: dispenser ? { method:'onchain-claim', metadata:`${origin}/v1/dispenser`, ...dispenserMetadata(config,dispenser.identity) } : { configured:false, method:null },
     x402: { implemented: false }, remoteMcp: { implemented: false }, tips: { enabled: false },
     economics: { valueClaim: false, peg: null, redemption: false, returnPromise: false }, adoption: { externalUsageClaim: false },
   };
 }
-export function testnetOpenapi(config) {
+export function testnetOpenapi(config, dispenser = null) {
   const network = getTestnetNetwork(config.chainId);
   const origin = testnetOrigin(config.origin);
   const specification = publicOpenapi(origin);
   delete specification.paths['/mcp'];
-  specification.info = { title: `Mote public-synthetic ${network.slug} pilot`, version: '0.5.0-sepolia.1', description: 'Unlaunched test-only candidate. No real-value claim. Input and results are public synthetic data. Discovery never grants spending authority.' };
+  specification.info = { title: `Mote public-synthetic ${network.slug} pilot`, version: '0.7.0-onboarding.1', description: 'Unlaunched test-only candidate. No real-value claim. Input and results are public synthetic data. Discovery never grants spending authority.' };
   const key = { name: 'Idempotency-Key', in: 'header', required: true, schema: { type: 'string', pattern: '^[A-Za-z0-9._:-]{8,128}$' } };
   const result = description => ({ description, content: { 'application/json': { schema: { type: 'object' } } } });
   const operation = (id, properties, description) => ({ post: { operationId: id, description, parameters: [key], requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', additionalProperties: false, required: Object.keys(properties), properties } } } }, responses: { 200: result('Signed offer or verified result; no transaction submitted by this API'), 202: result('Payment pending finality; retry same proof, never pay again'), 400: result('Input rejected'), 409: result('Conflicting or quarantined state'), 413: result('Input too large'), 503: result('Evidence or durable state unavailable') } } });
@@ -59,6 +61,10 @@ export function testnetOpenapi(config) {
   specification.paths['/v1/recover'] = operation('recoverSignedOffer', { offer: { type: 'object' }, input: jsonSchema, transactionHash: hash, publicSynthetic: { const: true } }, 'Recover from signed offer and original public input when a stored row was lost. Does not issue a new quote or submit payment.');
   specification.paths['/v1/orders/{quoteId}'] = { get: { operationId: 'recoverStoredOrder', parameters: [{ name: 'quoteId', in: 'path', required: true, schema: hash }], responses: { 200: result('Public order status or verified stored result'), 202: result('Pending finality'), 404: result('Row missing; use signed-offer recovery'), 503: result('Evidence unavailable') } } };
   specification.paths['/ready'] = { get: { operationId: 'pilotReadiness', responses: { 200: result('Service ready, possibly recovery-only'), 503: result('Durable state unavailable') } } };
+  if(dispenser) {
+    dispenserMetadata(config,dispenser.identity);
+    specification.paths['/v1/dispenser']={get:{operationId:'inspectTestDispenser',description:'Reverify configured onchain dispenser deployment and retrieve exact claim metadata. Read-only: no claim, wallet authorization, nonce allocation or gas payment is performed by this endpoint.',responses:{200:result('Verified test-only dispenser identity and claim calldata'),503:result('Canonical deployment evidence unavailable; do not sign')}}};
+  }
   specification['x-mote-test-only'] = true;
   specification['x-mote-chain-id'] = network.chainId;
   specification['x-mote-protocol'] = network.protocol;
@@ -87,9 +93,15 @@ async function body(incoming) {
   } catch (error) { if (timedOut) throw new MoteError('REQUEST_TIMEOUT', 'Body deadline exceeded.', 408); throw error; }
   finally { clearTimeout(timer); }
 }
-export async function startTestnetHttp({ service, origin = service.config.origin, port = 10000, host = '0.0.0.0' }) {
+export async function startTestnetHttp({ service, origin = service.config.origin, port = 10000, host = '0.0.0.0', dispenser = null }) {
   origin = testnetOrigin(origin);
   if (service.config.origin !== origin) throw new Error('Service and HTTP origin differ.');
+  if(dispenser) {
+    if(typeof dispenser.verifyIdentity!=='function') throw new Error('Verified dispenser adapter required.');
+    const fresh=await dispenser.verifyIdentity();
+    if(JSON.stringify(fresh)!==JSON.stringify(dispenser.identity)) throw new Error('Dispenser identity changed before HTTP startup.');
+    dispenserMetadata(service.config,dispenser.identity);
+  }
   let closing = false;
   let active = 0;
   const server = http.createServer({ maxHeaderSize: 16384 }, async (incoming, outgoing) => {
@@ -103,8 +115,13 @@ export async function startTestnetHttp({ service, origin = service.config.origin
       const readiness = await service.readiness();
       if (incoming.method === 'GET' && url.pathname === '/health') return send(200, { service: 'mote-testnet-pilot', launchStatus: 'unlaunched-candidate', testOnly: true, serviceReady: readiness.ready === true });
       if (incoming.method === 'GET' && url.pathname === '/ready') return send(readiness.ready === true ? 200 : 503, { ...readiness, testOnly: true });
-      if (incoming.method === 'GET' && ['/', '/.well-known/mote.json'].includes(url.pathname)) return send(200, testnetManifest(service.config, readiness));
-      if (incoming.method === 'GET' && url.pathname === '/openapi.json') return send(200, testnetOpenapi(service.config));
+      if (incoming.method === 'GET' && ['/', '/.well-known/mote.json'].includes(url.pathname)) return send(200, testnetManifest(service.config, readiness, dispenser));
+      if (incoming.method === 'GET' && url.pathname === '/openapi.json') return send(200, testnetOpenapi(service.config,dispenser));
+      if (incoming.method === 'GET' && url.pathname === '/v1/dispenser' && dispenser) {
+        const fresh=await dispenser.verifyIdentity();
+        if(JSON.stringify(fresh)!==JSON.stringify(dispenser.identity)) throw new Error('Dispenser identity changed.');
+        return send(200,dispenserMetadata(service.config,fresh));
+      }
       if (incoming.method === 'POST' && url.pathname === '/v1/audit') {
         const request = new Request(url, { method: 'POST', headers: incoming.headers, body: Readable.toWeb(incoming), duplex: 'half' });
         const response = await publicFetch(request);

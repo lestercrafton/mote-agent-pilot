@@ -1,0 +1,70 @@
+{
+  "baseline": "v0.5.0-sepolia.1",
+  "files": [
+    {
+      "file": "contracts/MoteToken.sol",
+      "byteIdenticalToV05": true,
+      "sha256": "d44b5088ca36fa41954541f8cb957165e325245d166f96906f1d8856eb2905b9"
+    },
+    {
+      "file": "contracts/MotePayments.sol",
+      "byteIdenticalToV05": true,
+      "sha256": "1cb9e0bf7d93e13296579371be6d6413b21d6f3476cbd65a7a122e48be82d82d"
+    },
+    {
+      "file": "artifacts/MoteToken.json",
+      "byteIdenticalToV05": true,
+      "sha256": "98523167f60ff6674e9eb6d7f4f1961515809485eaad39b388c593ae3a38b67d"
+    },
+    {
+      "file": "artifacts/MotePayments.json",
+      "byteIdenticalToV05": true,
+      "sha256": "4122ad1df61d597d784ba380e60233a121c18086ad5af05889602f6f69b09b06"
+    },
+    {
+      "file": "src/testnet-client.mjs",
+      "byteIdenticalToV05": true,
+      "sha256": "59dee3426d5384a4ea650fee8e37eb85814dd843565001164085bfdc5830a7c1"
+    },
+    {
+      "file": "src/testnet-journal.mjs",
+      "byteIdenticalToV05": true,
+      "sha256": "1bb65b776999eefcc36ae5020af04ae42816baf75b660186b4653e1bdefffc2a"
+    },
+    {
+      "file": "src/testnet-service.mjs",
+      "byteIdenticalToV05": true,
+      "sha256": "3c1463efc0d786817028fa3fee2aed74bbbbf89375435bee17517aa33c5841da"
+    },
+    {
+      "file": "src/testnet-chain.mjs",
+      "byteIdenticalToV05": true,
+      "sha256": "5ec25b8e90627e0f6dffb489430f95e6f43f553548a26045d5fba52b6a86d978"
+    },
+    {
+      "file": "src/ethereum-fees.mjs",
+      "byteIdenticalToV05": true,
+      "sha256": "bc9455a35c8701655339d14469f9bd42b98361ae964d6a45e49572c96ac26873"
+    },
+    {
+      "file": "src/testnet-rpc.mjs",
+      "byteIdenticalToV05": true,
+      "sha256": "712a06cd0805daae159e95c78ffe6d09e05a826ce504a4e78ba7dca89fadd46a"
+    },
+    {
+      "file": "src/json.mjs",
+      "byteIdenticalToV05": true,
+      "sha256": "45d2718a6164f189524c0337982d238b3c7f2d49c73d4804d18f97dab251a033"
+    },
+    {
+      "file": "src/schema.mjs",
+      "byteIdenticalToV05": true,
+      "sha256": "0c65a323760b65406fbce47c6b083a43f4eb1aacb17698a57f4e9ac33951bdb2"
+    },
+    {
+      "file": "src/public.mjs",
+      "byteIdenticalToV05": true,
+      "sha256": "f0a70bbab09611716e5c6953accaceb3d821a1929e1bc467422c6b7b5eaddc8f"
+    }
+  ]
+}
