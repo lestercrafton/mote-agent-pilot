@@ -58,6 +58,19 @@ test('impossible receipt-before-key state refuses publication and clears every r
 test('replacement root is rejected before challenge or key publication',t=>{
  const f=fixture(t),store=reserveQuoteImport(f.options),receiver=challenge(f);t.after(()=>receiver.close());renameSync(f.options.fixtureRoot,f.options.fixtureRoot+'-original');mkdirSync(f.options.fixtureRoot,{mode:0o700});assert.throws(()=>store.bindChallenge(receiver.challenge),/CHANGED/);assert.equal(existsSync(join(f.options.fixtureRoot,'challenge.json')),false);assert.equal(existsSync(join(f.options.fixtureRoot,'quote.key')),false);
 });
+test('ancestor permission changes after reservation block challenge and secret commit',t=>{
+ for(const point of ['challenge','commit']){
+  const f=fixture(t),store=reserveQuoteImport(f.options),receiver=challenge(f);t.after(()=>receiver.close());
+  if(point==='commit')store.bindChallenge(receiver.challenge);
+  chmodSync(f.base,0o770);
+  if(point==='challenge')assert.throws(()=>store.bindChallenge(receiver.challenge),/UNSAFE_PERMISSIONS/);
+  else{const bytes=Buffer.from(PUBLIC_KEY.slice(2),'hex');assert.throws(()=>store.commit(bytes),/OUTCOME_UNKNOWN/);assert(bytes.every(x=>x===0));}
+  assert.equal(existsSync(join(f.options.fixtureRoot,'quote.key')),false);chmodSync(f.base,0o700);
+ }
+});
+test('ancestor permission change blocks an existing private-key read before callback',async t=>{
+ const f=fixture(t);complete(f);chmodSync(f.base,0o770);await assert.rejects(withQuoteFileEnvironment(f.options,()=>assert.fail('must not expose key')),/STARTUP_FAILED/);chmodSync(f.base,0o700);
+});
 test('symlink root/key, extra hardlink, wrong mode and corrupt receipt fail closed',async t=>{
  const cases=['root-symlink','key-symlink','hardlink','mode','receipt','key-short','extra'];
  for(const which of cases){const f=fixture(t);complete(f);const key=join(f.options.fixtureRoot,'quote.key');

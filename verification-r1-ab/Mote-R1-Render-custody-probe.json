@@ -1,0 +1,27 @@
+{
+  "observedAtApproximate": "2026-10-31T22:02:00Z",
+  "serviceId": "srv-dbijuvou01pc73d59c30",
+  "instance": "gjzmj",
+  "sourceSha256": "4d971cfad8163ca1eaa70e75db708ee299729653b7005c7442282bad389d4c5f",
+  "readOnly": true,
+  "secretAccess": false,
+  "attempts": 50,
+  "passed": 50,
+  "procLinkCountsRange": [
+    721,
+    723
+  ],
+  "groupsLine": "Groups:\t1000 ",
+  "procMountOptions": [
+    "10647 10645 0:1145 / /proc rw,nosuid,nodev,noexec,relatime - proc proc rw"
+  ],
+  "mount": {
+    "path": "/var/data",
+    "uid": 1000,
+    "gid": 1000,
+    "mode": "42775",
+    "dev": "66333",
+    "ino": "12"
+  },
+  "priorTimedOutProbeOutcome": "unverified; no prior marker found in shell history; this records the separately observed completed probe"
+}

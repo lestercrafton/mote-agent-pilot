@@ -1,6 +1,6 @@
 {
   "name": "mote-local-prototype",
-  "version": "0.7.2-custody.2",
+  "version": "0.7.4-recovery.2",
   "private": true,
   "type": "module",
   "description": "Inactive encrypted quote-key handoff preparation for a bounded Ethereum Sepolia pilot",

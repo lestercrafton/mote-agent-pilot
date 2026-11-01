@@ -1,0 +1,69 @@
+{
+  "schema": "mote-r1-preserved-record-pins-v1",
+  "files": [
+    {
+      "path": "mote-launch-control-v073/runtime/ethereum-sepolia-v073-fresh-a2/bootstrap-plan.json",
+      "sha256": "db1b7d74a4ae25bbc1bfd26a794303e3327b5865bb08f6ac88dfc436d239919e"
+    },
+    {
+      "path": "mote-launch-control-v073/runtime/ethereum-sepolia-v073-fresh-a2/bootstrap-authorization.json",
+      "sha256": "21d56599e8ec9bfc38e35968fcea15dec79cdf72851a7fb18c61e2adaa08d663"
+    },
+    {
+      "path": "mote-launch-control-v073/runtime/ethereum-sepolia-v073-fresh-a2/payer-public.json",
+      "sha256": "fda6c45fe91ebd9bca1854c165bbc771549d36d8ff5b4033647be66bb3d3d169"
+    },
+    {
+      "path": "mote-launch-control-v073/runtime/ethereum-sepolia-v073-fresh-a2/state.json",
+      "sha256": "2beb8b83882fd20edd20fe5158f9d5c22efd0c0e52cf73b9be14823fec66cebc"
+    },
+    {
+      "path": "mote-launch-control-v073/runtime/ethereum-sepolia-v073-fresh-a2/bootstrap.sqlite",
+      "sha256": "f85612901ad09839dce7d24ae20198ef8cfdafbc4a7a2a6685f0fcd3bfb41bac"
+    },
+    {
+      "path": "mote-launch-control-v073/runtime/ethereum-sepolia-v073-fresh-a2/bootstrap.sqlite-wal",
+      "sha256": "cc64e3f229b2f1641225b04ac50e3c5fc38f696aa87d50e2483fd6822c2552d0"
+    },
+    {
+      "path": "mote-launch-control-v073/runtime/ethereum-sepolia-v073-fresh-a2/bootstrap.sqlite-shm",
+      "sha256": "62c097f74d21227314f162a196de0aebeb08f8e43a33be41bbe4b41956f28775"
+    },
+    {
+      "path": "mote-launch-control-v073/runtime/ethereum-sepolia-v073-fresh-a2/bootstrap.sqlite.lock.sqlite",
+      "sha256": "42b0670705256a71c7a3319d2483b871f8be284e4eac32f8a13f153994efb4c1"
+    },
+    {
+      "path": "mote-launch-control-v073/runtime/ethereum-sepolia-v073-fresh-a2/bootstrap.sqlite.lock.sqlite-wal",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mote-launch-control-v073/runtime/ethereum-sepolia-v073-fresh-a2/bootstrap.sqlite.lock.sqlite-shm",
+      "sha256": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb"
+    },
+    {
+      "path": "mote-launch-control-v073/provisioning/bootstrap/intent.json",
+      "sha256": "b8ec43275e8653bbc64f4cf7f423660a98977445fec3ff10d00725852b30648d"
+    },
+    {
+      "path": "mote-launch-control-v073/provisioning/bootstrap/prepared.json",
+      "sha256": "064967f906ef0212a3a98da050a0977e3bd4673e93b7afee3ef0592d3f7ed098"
+    },
+    {
+      "path": "mote-launch-control-v073/provisioning/bootstrap/verified.json",
+      "sha256": "2e790cecfd4128450708579016d5d4426074daeff869bb2477bbf753a462b7f8"
+    },
+    {
+      "path": "mote-launch-control-v073/provisioning/quote-backup/intent.json",
+      "sha256": "a11de0fe7a1c192a12419c8591769442a708af5f9376f635dbc2cd4178d55f6f"
+    },
+    {
+      "path": "mote-launch-control-v073/provisioning/quote-backup/prepared.json",
+      "sha256": "9e7605f1cb11aba03ec26b99adf20b6c461afe082e4834363c15b48653ba4c95"
+    },
+    {
+      "path": "mote-launch-control-v073/provisioning/quote-backup/verified.json",
+      "sha256": "157fbb07a077f1cf3a526c95109f22b9125d9512a142f91834271bc22712bc1f"
+    }
+  ]
+}

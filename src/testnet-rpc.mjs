@@ -17,6 +17,14 @@ const QUANTITY = /^0x(?:0|[1-9a-fA-F][0-9a-fA-F]{0,63})$/;
 const DATA = /^0x(?:[0-9a-fA-F]{2})*$/;
 const HEAD_TAGS = new Set(['latest', 'safe', 'finalized']);
 const METHODS = new Set(['eth_chainId', 'eth_getBlockByNumber', 'eth_getCode', 'eth_call', 'eth_getTransactionReceipt', 'eth_getTransactionByHash', 'eth_getBalance', 'eth_getTransactionCount']);
+// Some exact numbered-block state reads have returned this error and later
+// succeeded at the same endpoint. Retry only Ethereum Sepolia's exact diagnosis;
+// this does not prove backend architecture, retention or eventual availability.
+const STATE_METHODS = new Set(['eth_getCode', 'eth_call', 'eth_getBalance', 'eth_getTransactionCount']);
+const HISTORICAL_STATE_MISS = /^historical state [0-9a-f]{64} is not available$/;
+export const HISTORICAL_STATE_ATTEMPTS = 6;
+export const HISTORICAL_STATE_TOTAL_MS = 15_000;
+const HISTORICAL_STATE_PAUSE_MS = 200;
 
 export class TestnetRpcError extends Error {
   constructor(code, message, { cause, rpcCode, rpcMessage } = {}) {
@@ -66,7 +74,7 @@ async function readBoundedJson(response) {
   catch (cause) { throw new TestnetRpcError('RPC_RESPONSE_INVALID', 'RPC response was not valid JSON', { cause }); }
 }
 
-/** Fixed public read endpoint. No signer, credentials, endpoint override or retry. */
+/** Fixed public read endpoint. No signer, credentials or endpoint override; the only retry is the bounded same-endpoint historical-state miss above. */
 export function createBaseSepoliaReader(options = {}) {
   return createFixedReader(BASE_SEPOLIA, options);
 }
@@ -79,11 +87,7 @@ function createFixedReader(network, options) {
   const fetchImpl = options.fetchImpl ?? globalThis.fetch;
   check(typeof fetchImpl === 'function', 'RPC_OPTIONS_INVALID', 'A fetch implementation is required');
   let nextId = 1;
-  return Object.freeze({
-    endpoint: network.rpcUrl,
-    readOnly: true,
-    async send(method, params = []) {
-      validateParams(method, params);
+  const sendOnce = async (method, params, timeoutMs) => {
       check(Number.isSafeInteger(nextId), 'RPC_REQUEST_LIMIT', 'RPC request identifier limit reached');
       const id = nextId++;
       const body = JSON.stringify({ jsonrpc: '2.0', id, method, params });
@@ -91,7 +95,7 @@ function createFixedReader(network, options) {
       const controller = new AbortController();
       let timer;
       const timeout = new Promise((_, reject) => {
-        timer = setTimeout(() => { controller.abort(); reject(new TestnetRpcError('RPC_TIMEOUT', 'Read-only RPC request exceeded its time limit')); }, TESTNET_RPC_LIMITS.timeoutMs);
+        timer = setTimeout(() => { controller.abort(); reject(new TestnetRpcError('RPC_TIMEOUT', 'Read-only RPC request exceeded its time limit')); }, timeoutMs);
         timer.unref?.();
       });
       const work = async () => {
@@ -117,8 +121,40 @@ function createFixedReader(network, options) {
         if (controller.signal.aborted) throw new TestnetRpcError('RPC_TIMEOUT', 'Read-only RPC request exceeded its time limit', { cause });
         throw new TestnetRpcError('RPC_NETWORK_ERROR', 'Fixed-endpoint read-only RPC request failed', { cause });
       } finally { clearTimeout(timer); controller.abort(); }
+  };
+  return Object.freeze({
+    endpoint: network.rpcUrl,
+    readOnly: true,
+    async send(method, params = []) {
+      validateParams(method, params);
+      // Snapshot before the first await, then revalidate the serialized value.
+      // Caller mutation and custom accessors cannot redirect a later attempt.
+      const fixed = JSON.parse(JSON.stringify(params));
+      validateParams(method, fixed);
+      const eligible = network.chainId === ETHEREUM_SEPOLIA.chainId && STATE_METHODS.has(method) && QUANTITY.test(fixed[1]);
+      const deadline = performance.now() + (eligible ? HISTORICAL_STATE_TOTAL_MS : TESTNET_RPC_LIMITS.timeoutMs);
+      for (let attempt = 1; ; attempt++) {
+        const remaining = Math.floor(deadline - performance.now());
+        check(remaining > 0, 'RPC_TIMEOUT', 'Read-only RPC total time limit reached');
+        try {
+          const result = await sendOnce(method, fixed, Math.min(TESTNET_RPC_LIMITS.timeoutMs, remaining));
+          check(performance.now() < deadline, 'RPC_TIMEOUT', 'Read-only RPC total time limit reached');
+          return result;
+        }
+        catch (error) {
+          if (!eligible || attempt >= HISTORICAL_STATE_ATTEMPTS || !historicalStateMiss(method, fixed, error)) throw error;
+          check(deadline - performance.now() > HISTORICAL_STATE_PAUSE_MS, 'RPC_TIMEOUT', 'Read-only RPC total time limit reached');
+          // The pending retry must keep standalone clients alive.
+          await new Promise(resolve => setTimeout(resolve, HISTORICAL_STATE_PAUSE_MS));
+        }
+      }
     },
   });
+}
+
+function historicalStateMiss(method, params, error) {
+  return STATE_METHODS.has(method) && QUANTITY.test(params[1]) && error instanceof TestnetRpcError && error.code === 'RPC_REMOTE_ERROR'
+    && error.rpcCode === -32000 && typeof error.rpcMessage === 'string' && HISTORICAL_STATE_MISS.test(error.rpcMessage);
 }
 
 function parseBlock(block, label, expectedNumber) {

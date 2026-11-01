@@ -1,0 +1,12 @@
+[
+  {
+    "name": "local",
+    "exitCode": 0,
+    "durationSeconds": 1.26
+  },
+  {
+    "name": "onboarding",
+    "exitCode": 0,
+    "durationSeconds": 30.847
+  }
+]

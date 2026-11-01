@@ -1,0 +1,18 @@
+{
+  "serviceId": "srv-dbijuvou01pc73d59c30",
+  "instance": "gjzmj",
+  "node": "24.22.2",
+  "platform": "linux",
+  "tests": 117,
+  "passed": 117,
+  "failed": 0,
+  "skipped": 0,
+  "durationSeconds": 13.004,
+  "sourceFilesVerified": 74,
+  "payloadSha256": "ef9a8ca007370d10b54116d1b080e71c6798d49cefd9463f99ab0af555b85539",
+  "secretAccess": false,
+  "serviceFilesChanged": false,
+  "fixtureLocation": "isolated temporary directory removed after run",
+  "dependencies": "existing deployed production dependencies; no installation",
+  "scope": "five focused test files listed in payload hashes; includes native directory and quote import crash/replay tests"
+}

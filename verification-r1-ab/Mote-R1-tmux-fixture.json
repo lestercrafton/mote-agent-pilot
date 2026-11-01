@@ -1,0 +1,9 @@
+{
+  "tmuxVersion": "3.8",
+  "detachedProcessSurvivedSeparateCalls": true,
+  "memoryMarkerRetained": true,
+  "observedMarkers": 2,
+  "fixtureServerRemoved": true,
+  "keysGenerated": false,
+  "liveControllerStarted": false
+}

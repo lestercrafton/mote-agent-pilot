@@ -1,0 +1,30 @@
+{
+  "candidateVersion": "0.7.4-recovery.2",
+  "eightTransactionManifestSha256": "abf4d50c2e7a10067544cda16ab1c06c8d31faf25f95012a14788a3fa067df68",
+  "helperSha256": "a517358dde3f41f19bea26a9e8ec04666284228a121d23eb788fdd32322e96a7",
+  "serviceId": "srv-dbijuvou01pc73d59c30",
+  "origin": "https://mote-testnet-pilot.onrender.com",
+  "chainId": 11155111,
+  "rpc": "https://ethereum-sepolia-rpc.publicnode.com",
+  "genesisHash": "0x25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9",
+  "requestHash": "0x9545c044cebfb772bb7c90b2d82afef9e6fd07e1bbbd57dce09456f5efa71b56",
+  "resultHash": "0x5ce47ea8f8ec74846fe0155083ed8b2e5a7e83f88fdcf01a16ec27ded0f66751",
+  "tokenPriceBaseUnits": "4200",
+  "allocationPlusFeesWei": "44500000000000000",
+  "overlayVersion": "0.7.3-fresh-custody.1",
+  "overlayManifestSha256": "f9c98117a69993c3f723f2bff37be61a264de80fcf287d6e05b55ce9428224c8",
+  "quarantineFiles": [
+    {
+      "path": "mote-native-provisioning-v0722/bootstrap-intent.json",
+      "sha256": "d4c578e082976c724c08569ca36acb3678fad9735e69b9ff845f04162d710d0d"
+    },
+    {
+      "path": "mote-native-provisioning-v0722/bootstrap-unknown.json",
+      "sha256": "326bd3d84138245f724219519a9f7a545c3086120d831bd9493f22fb7fa04510"
+    },
+    {
+      "path": "mote-sepolia-custody-v0.7.1/helper",
+      "sha256": "9096b3596f49220e35e661eed8018d87256ba80f709a251799c2c220a6235700"
+    }
+  ]
+}

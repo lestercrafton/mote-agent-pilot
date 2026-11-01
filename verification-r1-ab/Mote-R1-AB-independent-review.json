@@ -1,0 +1,29 @@
+{
+  "reviewer": "existing internal independent security reviewer",
+  "scope": "R1 A/B critical diff and corrected signer boundaries",
+  "blockingFindingsRemaining": 0,
+  "fixedFindings": [
+    "Native policy five-intent shape preserved privately; exposed signer restricted to remaining nonces 2-4",
+    "Request and offer accessor mutation prevented by snapshot/data-property checks"
+  ],
+  "independentTests": {
+    "passed": 20,
+    "failed": 0,
+    "skipped": 0,
+    "node": "24.22.2",
+    "durationSeconds": 1.601
+  },
+  "reviewedSha256": {
+    "recovery/payer-signer.mjs": "fb47a8f7418048eda8497ffb9a62aa6759f5e47b0c9bf50574027fee51a4d3b5",
+    "recovery/operator-signer.mjs": "b046bef514442f330234f819c93145cd989d663c412b2fe46d7bfaa1e7109cdd",
+    "recovery/keychain-custody.mjs": "64cdfd138856a4707944d3de6be1335c107c8f154da22be04324289a9a778d7d",
+    "recovery/live-adapter.mjs": "2f475aa6e56d98c9d5e0821e899e295207132a1323ca8dd20a8e56765feb52f0"
+  },
+  "actionsExcluded": [
+    "native Keychain access",
+    "network",
+    "credentials",
+    "P2 creation",
+    "public transactions"
+  ]
+}

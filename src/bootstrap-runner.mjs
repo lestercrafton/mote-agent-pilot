@@ -1,3 +1,4 @@
+import { R1, assertRecoveryTime } from './recovery-r1-policy.mjs';
 import { DatabaseSync } from 'node:sqlite';
 import { constants, closeSync, fstatSync, lstatSync, openSync, readSync, realpathSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
@@ -186,10 +187,16 @@ export function estimateBootstrapTransaction({ plan: raw, index }) {
   const plan = validateBootstrapPlan(raw); return estimate(plan, index, createEthereumSepoliaReader(), plan.genesisHash);
 }
 
-async function open(options, fixture) {
+async function open(options, fixture, recovery = null) {
   const allowed = ['plan', 'authorization', 'path', 'signer'];
   check(options && Object.keys(options).every((key) => allowed.includes(key)), 'BOOTSTRAP_CONFIG', 'Unknown runner option');
   const plan = validateBootstrapPlan(options.plan), permission = authorization(options.authorization, plan);
+  if (recovery) {
+    check(permission.expiresAt === Math.floor(R1.expiresAt/1000), 'BOOTSTRAP_RECOVERY_SCOPE', 'Recovery expiry is fixed by original approval');
+    check(plan.roles.operator === recovery.operator && plan.roles.merchant === recovery.operator && plan.roles.quoteSigner === recovery.quoteSigner
+      && plan.roles.payer !== recovery.originalPayer && plan.operatorNonce === '0' && plan.payerNativeWei === '7000000000000000'
+      && plan.policy.combinedMaximumWei === R1.combinedCeilingWei, 'BOOTSTRAP_RECOVERY_SCOPE', 'Recovery may change only the payer');
+  }
   // Capture opaque custody once: caller mutation across awaits cannot redirect
   // signing after the checked address or replace a method on the same object.
   const suppliedSigner = options.signer;
@@ -211,7 +218,8 @@ async function open(options, fixture) {
       if (row.state === 'pending') break;
       check(row.transactionHash, 'BOOTSTRAP_UNKNOWN', 'An interrupted signing intent has no known hash; do not sign, replace, reset or resume it');
       const proof = await verifier({ plan, index: row.index, transactionHash: row.transactionHash, reader,
-        ...(row.proof ? { finalizedAnchor: row.proof.finalized } : {}) });
+        ...(row.proof ? { finalizedAnchor: row.proof.finalized } : recovery && row.index < 2 ? { finalizedAnchor: recovery.adopted[row.index].finalizedAnchor } : {}) });
+      if (recovery && row.index < 2) check(row.transactionHash === recovery.adopted[row.index].transactionHash && proof.feeWei === recovery.adopted[row.index].feeWei, 'BOOTSTRAP_RECOVERY_PROOF', 'Adoption differs from approved original receipt');
       check(proof.planHash === plan.planHash && proof.index === row.index && proof.transactionHash === row.transactionHash && same(proof.transaction, row.intent), 'BOOTSTRAP_PROOF', 'Verifier did not bind the original step');
       if (row.proof) check(proof.blockHash === row.proof.blockHash && proof.blockNumber === row.proof.blockNumber && proof.feeWei === row.proof.feeWei && proof.success === row.proof.success,
         'BOOTSTRAP_REORG', 'Previously accounted finalized evidence changed; retain the original authority');
@@ -224,7 +232,9 @@ async function open(options, fixture) {
   const advance = async () => {
     const status = await reconcile(); if (status.complete) return status;
     const index = status.steps.findIndex((row) => row.state === 'pending');
+    if (recovery) { assertRecoveryTime(); check(index >= 2, 'BOOTSTRAP_ADOPTION_REQUIRED', 'Both existing transactions must be verified; never re-sign or resend them'); }
     check(index >= 0, 'BOOTSTRAP_UNKNOWN', 'Unresolved original intent blocks all new steps');
+    if (recovery) assertRecoveryTime();
     check(Math.floor(Date.now() / 1000) <= permission.expiresAt, 'BOOTSTRAP_AUTHORIZATION_EXPIRED', 'Authorization expired; read-only reconciliation remains available');
     check(signer, 'BOOTSTRAP_SIGNER', 'An explicitly provisioned opaque operator signer is required');
     check(getAddress(await signer.getAddress()).toLowerCase() === plan.roles.operator, 'BOOTSTRAP_SIGNER', 'Signer does not match the exact operator role');
@@ -246,7 +256,8 @@ async function open(options, fixture) {
     let hash = null;
     try {
       await fixture?.hooks?.afterIntent?.(index);
-      check(Math.floor(Date.now() / 1000) <= permission.expiresAt, 'BOOTSTRAP_AUTHORIZATION_EXPIRED', 'Authorization expired before custody; do not sign');
+      if (recovery) assertRecoveryTime();
+    check(Math.floor(Date.now() / 1000) <= permission.expiresAt, 'BOOTSTRAP_AUTHORIZATION_EXPIRED', 'Authorization expired before custody; do not sign');
       journal.read();
       const raw = await signer.signTransaction(unsigned(intent));
       check(typeof raw === 'string' && /^0x(?:[0-9a-fA-F]{2})+$/.test(raw) && raw.length <= 262144, 'BOOTSTRAP_SIGNATURE', 'Signer did not return bounded serialized transaction bytes');
@@ -258,10 +269,12 @@ async function open(options, fixture) {
       await fixture?.hooks?.afterSigned?.(index, hash);
       await preflight();
       await estimate(plan, index, reader, genesisHash);
-      check(Math.floor(Date.now() / 1000) <= permission.expiresAt, 'BOOTSTRAP_AUTHORIZATION_EXPIRED', 'Authorization expired before submission; do not re-sign');
+      if (recovery) assertRecoveryTime();
+    check(Math.floor(Date.now() / 1000) <= permission.expiresAt, 'BOOTSTRAP_AUTHORIZATION_EXPIRED', 'Authorization expired before submission; do not re-sign');
       journal.change(index, ['signed'], { state: 'submitted' });
       await fixture?.hooks?.beforeBroadcast?.(index, hash);
-      check(Math.floor(Date.now() / 1000) <= permission.expiresAt, 'BOOTSTRAP_AUTHORIZATION_EXPIRED', 'Authorization expired immediately before submission; do not resubmit');
+      if (recovery) assertRecoveryTime();
+    check(Math.floor(Date.now() / 1000) <= permission.expiresAt, 'BOOTSTRAP_AUTHORIZATION_EXPIRED', 'Authorization expired immediately before submission; do not resubmit');
       journal.read();
       const returned = await bootstrapRpc(reader.endpoint, 'eth_sendRawTransaction', [raw]);
       check(returned === hash, 'BOOTSTRAP_BROADCAST_UNKNOWN', 'RPC returned a different transaction hash; reconcile only the original signed hash');
@@ -273,8 +286,25 @@ async function open(options, fixture) {
       error.doNotResubmit = true; error.transactionHash = hash; throw error;
     }
   };
+  const adoptNext = async () => {
+    check(recovery, 'BOOTSTRAP_RECOVERY_DISABLED', 'Only the explicit R1 runner can adopt');
+    assertRecoveryTime();
+    const status = await reconcile();
+    const index = status.steps.findIndex(row => row.state === 'pending');
+    check(index === 0 || index === 1, 'BOOTSTRAP_ADOPTION_COMPLETE', 'Only the two approved hashes may be adopted');
+    const adopted = recovery.adopted[index];
+    // Atomically retain the known hash before any fallible evidence query. A
+    // failed query can only be reconciled read-only; advance cannot re-sign it.
+    assertRecoveryTime();
+    journal.change(index, ['pending'], { state: 'submitted', transactionHash: adopted.transactionHash });
+    await fixture?.hooks?.afterAdoptionIntent?.(index);
+    const result = await reconcile();
+    await fixture?.hooks?.afterAdoptionFinalized?.(index);
+    return result;
+  };
   try { await identity(); } catch (error) { journal.close(); throw error; }
   return Object.freeze({ plan, authorization: permission, advance: () => exclusive(advance), reconcile: () => exclusive(reconcile),
+    ...(recovery ? { adoptNext: () => exclusive(adoptNext) } : {}),
     status: () => ({ binding: clone(journal.binding), steps: journal.read() }),
     close() { if (closed) return; closed = true; journal.close(); } });
 }
@@ -286,4 +316,15 @@ export function createLoopbackBootstrapRunner({ ack, genesisHash, reader, hooks,
   check(url.protocol === 'http:' && ['127.0.0.1', '[::1]', 'localhost'].includes(url.hostname) && !url.username && !url.password
     && (url.pathname === '/' || url.pathname === '') && !url.search && !url.hash && typeof reader.send === 'function', 'BOOTSTRAP_FIXTURE', 'Only an explicit HTTP loopback EVM reader may be injected');
   return open(options, { reader, genesisHash, hooks });
+}
+
+/** R1-only recovery: fixed original receipts, original verifier, no old sends. */
+export function createRecoveryBootstrapRunner(options) { return open(options, null, R1); }
+/** Public local-chain fixture seam, unavailable to public-mode journals. */
+export function createLoopbackRecoveryBootstrapRunner({ ack, genesisHash, reader, hooks, recovery, ...options }) {
+  fixtureCheck(ack, genesisHash);
+  check(process.env.NODE_TEST_CONTEXT && recovery && recovery.adopted?.length === 2, 'BOOTSTRAP_FIXTURE', 'Explicit test-only recovery fixture required');
+  const u = new URL(reader?.endpoint);
+  check(u.protocol === 'http:' && ['127.0.0.1','[::1]','localhost'].includes(u.hostname) && !u.username && !u.password && u.pathname === '/' && !u.search && !u.hash, 'BOOTSTRAP_FIXTURE', 'Loopback only');
+  return open(options, {reader,genesisHash,hooks}, structuredClone(recovery));
 }
