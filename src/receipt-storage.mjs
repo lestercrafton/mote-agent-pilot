@@ -7,13 +7,14 @@ import {openQuoteDirectory} from '../legacy/src/quote-directory.mjs';
 import {verifyRenderPrivateGroupMount} from '../legacy/src/render-mount-policy.mjs';
 import {readTransition} from './release-binding.mjs';
 import {PRODUCTION_ROOT} from './production-policy.mjs';
-import {assert,address} from './protocol.mjs';
+import {assert,address,hash32} from './protocol.mjs';
 import {hashJson} from './core/json.mjs';
+import {validateReceiptRelease} from './receipt-release.mjs';
 const names={intent:'receipt-intent.json',key:'receipt.key',receipt:'receipt-installed.json'};
 const fixtureKey=Buffer.from('00'.repeat(31)+'02','hex');
 function open(options) {
   const fixture=options.fixture===true;let root=PRODUCTION_ROOT,binding;
-  if(fixture){assert(process.env.NODE_TEST_CONTEXT&&options.root?.startsWith(realpathSync(tmpdir())+'/'),'RECEIPT_FIXTURE_ONLY');root=options.root;binding='public-scalar-fixture';}
+  if(fixture){assert(process.env.NODE_TEST_CONTEXT&&options.root?.startsWith(realpathSync(tmpdir())+'/'),'RECEIPT_FIXTURE_ONLY');root=options.root;assert(options.fixtureBinding===undefined||hash32(options.fixtureBinding),'RECEIPT_FIXTURE_BINDING');binding=options.fixtureBinding??'public-scalar-fixture';}
   else {assert(!options.root&&!options.hook&&process.platform==='linux'&&!process.env.NODE_TEST_CONTEXT,'RECEIPT_NATIVE_ONLY');const t=readTransition(options.env);binding=hashJson(t);verifyRenderPrivateGroupMount();
     const p=lstatSync('/var/data/mote-usdc');assert(p.isDirectory()&&!p.isSymbolicLink()&&p.uid===process.getuid()&&(p.mode&0o777)===0o700&&realpathSync('/var/data/mote-usdc')==='/var/data/mote-usdc','RECEIPT_DIRECTORY');}
   const s=lstatSync(root);assert(s.isDirectory()&&!s.isSymbolicLink()&&s.uid===process.getuid()&&(s.mode&0o777)===0o700&&realpathSync(root)===root,'RECEIPT_DIRECTORY');
@@ -44,7 +45,15 @@ export function readReceiptSigner(options) {
   const store=open(options);let bytes;
   try {
     const intent=JSON.parse(read(store,names.intent,4096)),receipt=JSON.parse(read(store,names.receipt,4096));
-    assert(Object.keys(intent).sort().join(',')==='address,binding,format,purpose'&&intent.format==='mote-usdc-receipt-signer-v1'&&intent.binding===store.binding&&intent.purpose==='offers-and-receipts-only-unfunded'&&address(intent.address)===address(options.expectedAddress),'RECEIPT_BINDING');
+    assert(Object.keys(intent).sort().join(',')==='address,binding,format,purpose'&&intent.format==='mote-usdc-receipt-signer-v1'&&intent.purpose==='offers-and-receipts-only-unfunded'&&address(intent.address)===address(options.expectedAddress),'RECEIPT_BINDING');
+    if(intent.binding!==store.binding) {
+      // Actual source and artifact were verified by open() before public grant
+      // lookup; the existing private key is not read until all checks pass.
+      assert(!store.fixture||hash32(options.fixtureBinding),'RECEIPT_BINDING');
+      const name=`release-${store.binding.slice(2)}.json`;
+      const grant=JSON.parse(read(store,name,4096));
+      validateReceiptRelease(grant,{expectedHash:options.env.MOTE_RECEIPT_RELEASE_HASH,currentBinding:store.binding,intent});
+    }
     assert(Object.keys(receipt).sort().join(',')==='address,format,installed,intentHash'&&receipt.format==='mote-usdc-receipt-installed-v1'&&receipt.intentHash===hashJson(intent)&&receipt.address===intent.address&&receipt.installed===true,'RECEIPT_INSTALLATION');
     bytes=read(store,names.key,32);assert(bytes.length===32&&(!store.fixture||bytes.equals(fixtureKey)),'RECEIPT_KEY');
     const wallet=new Wallet(hexlify(bytes));assert(address(wallet.address)===intent.address,'RECEIPT_ADDRESS');

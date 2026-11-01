@@ -1,3 +1,5 @@
+> Historical documentation: the v0.8.6 [continuous-admission report](CONTINUOUS-ADMISSION.md) supersedes earlier 100-attempt/24-hour proposals and qualification status. No activation is authorized by these documents.
+
 # Mote v0.8.5-production-prep.1
 
 Local release candidate, November 1, 2026. Payments remain disabled. This is not a production launch or an authorization to provision keys, deploy, accept payments, or spend money.

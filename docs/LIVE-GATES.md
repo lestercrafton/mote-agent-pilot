@@ -1,3 +1,5 @@
+> Historical documentation: the v0.8.6 [continuous-admission report](CONTINUOUS-ADMISSION.md) supersedes earlier 100-attempt/24-hour proposals and qualification status. No activation is authorized by these documents.
+
 # Provider choice and exact live setup gates
 
 Official sources checked November1,2026. These are engineering notes, not acceptance of provider terms or a launch approval.

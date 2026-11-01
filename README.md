@@ -1,11 +1,11 @@
-# Mote USDC v0.8.5 production preparation
+# Mote USDC v0.8.6 continuous-admission candidate
 
-**Local candidate; real payments disabled. Independent review and new Linux/native qualification pending.**
+Local preparation only; deployed v0.8.5 and real payments remain disabled. No publication, deployment, credentials, wallet changes, provider calls or payments occurred for this candidate.
 
-See [the production preparation report](docs/PRODUCTION-PREPARATION.md) for exact changes, test evidence, proposed price/caps, source-binding transition, persistent-signer procedure and one bounded approval bundle. This report supersedes the historical v0.8.1 operations/verification notes retained under docs/.
+See [continuous admission](docs/CONTINUOUS-ADMISSION.md) for the changes, actual capacity limits, qualification and remaining approval gates. This supersedes historical production-cap proposals in the retained v0.8.5 documents. A proposed price is not accepted terms.
 
-The user-confirmed recipient is in a private local overlay, excluded from this source archive. No credentials or live state are included. All 86 vendored legacy files and strict payment/proof state machines retain their recorded provenance.
+The fixed 100-attempt and 24-hour shutdown are removed. New authority is still bounded by explicit provider-dollar reservations, retained-state bytes, pending/rate/concurrency limits, disk/WAL health and verified backup freshness. This does not establish millions of transactions of capacity. Neither free-tier credit nor future revenue automatically increases spending authority.
 
-Use Node24.22.2. After installing the pinned root and legacy dependencies, `npm test` runs synthetic fixtures; `npm run demo` shows one settlement and identical recovery. `Dockerfile.qualification` supplies a root-owned-procfs Linux runner; it is not evidence that the container was executed. The recorded Mac tests used available Node24.22.1. Do not weaken native custody guards in an incompatible sandbox.
+Use Node24.22.2 with pinned root and legacy dependencies. `npm test` uses public synthetic fixture keys only. Local qualification and remaining exact Linux/runtime gaps are recorded in the report. Do not weaken custody guards for a test environment.
 
-Startup defaults to disabled USDC. The existing testnet signer remains source-bound: a new deployment requires the explicit transition described in the report. Merely setting a mainnet network or receiving address does not activate payments. No automatic key generation or journal initialization occurs at startup.
+The existing persistent signer is reused only after a source-bound public grant validates; no signer replacement or custody record rewrite is supported. All original legacy files and strict payment verification remain unchanged. Startup does not create keys or initialize the paid journal. The existing receiving wallet and its recovery are outside service custody.

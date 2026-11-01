@@ -7,6 +7,7 @@ import { verifySchema, JOURNAL_FORMAT } from './journal-schema.mjs';
 import { assert, config, equal, address, requirements, authDomain, AUTH_TYPES, authHash, bindDomain, BIND_TYPES, BINDING, hash32 } from './protocol.mjs';
 import { hashJson } from './core/json.mjs';
 import { requireDisk, DISK_LIMITS } from './disk.mjs';
+import {providerReservation} from './provider-budget.mjs';
 const hashFile = async p => {const h=createHash('sha256');for await(const chunk of createReadStream(p,{highWaterMark:65536}))h.update(chunk);return h.digest('hex');};
 const fileIdentity = (p,maxBytes=DISK_LIMITS.maxDatabaseBytes) => { const s=lstatSync(p); assert(s.isFile()&&!s.isSymbolicLink()&&s.nlink===1&&s.uid===process.getuid()&&(s.mode&0o077)===0&&s.size<=maxBytes,'BACKUP_FILE'); return {ino:s.ino,dev:s.dev}; };
 function parent(p) { const d=dirname(p),s=lstatSync(d); assert(realpathSync(d)===d&&s.isDirectory()&&s.uid===process.getuid()&&(s.mode&0o077)===0,'BACKUP_DIRECTORY'); }
@@ -41,10 +42,11 @@ export function inspectJournal(db,expected) {
   assert(meta.identity===hashJson({identity:expected.identity,limits:expected.limits})&&meta.identityInput===JSON.stringify(expected.identity)&&equal(parse(meta.limits),expected.limits),'BACKUP_IDENTITY');
   assert(db.prepare('SELECT count(*) AS n FROM clients').get().n===0,'CLIENT_BACKUP_FORBIDDEN');
   let count=0, reserved=0;
-  for(const row of db.prepare('SELECT * FROM orders').iterate()) { assert(++count<=expected.limits.maxRecords,'BACKUP_LIMIT'); order(expected.config,row); reserved+=row.reservedBytes; }
+  for(const row of db.prepare('SELECT * FROM orders').iterate()) { count++; assert(expected.limits.maxRecords===null||count<=expected.limits.maxRecords,'BACKUP_LIMIT'); order(expected.config,row); reserved+=row.reservedBytes; }
   assert(reserved<=expected.limits.storageBudgetBytes,'BACKUP_LIMIT');
   const usage=db.prepare('SELECT * FROM usage').all(); assert(usage.length<=1,'BACKUP_USAGE');
-  const attempts=usage[0]?.attempts??0; assert((!usage.length||usage[0].epoch===expected.limits.budgetEpoch)&&Number.isSafeInteger(attempts)&&attempts>=count&&attempts<=expected.limits.maxAttempts,'BACKUP_USAGE');
+  const attempts=usage[0]?.attempts??0; assert((!usage.length||usage[0].epoch===expected.limits.budgetEpoch)&&Number.isSafeInteger(attempts)&&attempts>=count&&(expected.limits.maxAttempts===null||attempts<=expected.limits.maxAttempts),'BACKUP_USAGE');
+  providerReservation(expected.limits,attempts);
   const verificationCount=db.prepare('SELECT count(*) AS n FROM verification').get().n; assert(verificationCount<=expected.limits.maxVerifications,'BACKUP_LIMIT');
   const rate=db.prepare('SELECT * FROM verify_usage').all(); assert(rate.length<=1&&rate.every(r=>r.singleton===1&&Number.isSafeInteger(r.window)&&r.window>=0&&Number.isSafeInteger(r.attempts)&&r.attempts>=0&&r.attempts<=expected.limits.verifyPerMinute),'BACKUP_RATE');
   return {identity:meta.identity,quarantined:meta.quarantine==='1',counts:{orders:count,attempts,verification:verificationCount},reservedBytes:reserved};

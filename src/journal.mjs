@@ -5,11 +5,14 @@ import { assert, fail, uint } from './protocol.mjs';
 import { hashJson } from './core/json.mjs';
 import { SCHEMA_SQL, JOURNAL_FORMAT, verifySchema } from './journal-schema.mjs';
 import { diskStatus, requireDisk } from './disk.mjs';
+import { validateProviderBudget, providerReservation, belowCountLimit } from './provider-budget.mjs';
 
 // One trusted local journal; cloned/rolled-back files or signers used elsewhere are outside this boundary.
 export class Journal {
-  constructor(path, identity, { create = false, recoveryOnly = false, maxPending = 32, perPayer = 4, maxRecords = 10000, maxAttempts = 100, budgetEpoch = 'fixture', clientBudget = '1000000', verifyPerMinute = 120, maxVerifications = 128, storageBudgetBytes = 64 * 1024 * 1024 } = {}) {
-    for (const n of [maxPending, perPayer, maxRecords, maxAttempts, verifyPerMinute, maxVerifications]) assert(Number.isSafeInteger(n) && n > 0 && n <= 100000, 'JOURNAL_LIMITS');
+  constructor(path, identity, { create = false, recoveryOnly = false, maxPending = 32, perPayer = 4, maxRecords = 10000, maxAttempts = 100, budgetEpoch = 'fixture', clientBudget = '1000000', verifyPerMinute = 120, maxVerifications = 128, storageBudgetBytes = 64 * 1024 * 1024, providerBudget } = {}) {
+    for (const n of [maxPending, perPayer, verifyPerMinute, maxVerifications]) assert(Number.isSafeInteger(n) && n > 0 && n <= 100000, 'JOURNAL_LIMITS');
+    if (providerBudget !== undefined) validateProviderBudget(providerBudget);
+    for (const n of [maxRecords, maxAttempts]) assert((n === null && providerBudget !== undefined) || (Number.isSafeInteger(n) && n > 0 && n <= 100000), 'JOURNAL_LIMITS');
     assert(uint(clientBudget) && BigInt(clientBudget) > 0n && typeof budgetEpoch === 'string' && budgetEpoch.length > 0, 'JOURNAL_LIMITS');
     assert(Number.isSafeInteger(storageBudgetBytes) && storageBudgetBytes >= 32768 && storageBudgetBytes <= 256 * 1024 * 1024, 'JOURNAL_LIMITS');
     const parent = lstatSync(dirname(path));
@@ -19,7 +22,8 @@ export class Journal {
     assert(st.isFile() && !st.isSymbolicLink() && st.nlink === 1 && st.uid === process.getuid() && (st.mode & 0o077) === 0, 'JOURNAL_PERMISSIONS');
     this.path = path; this.stat = st; this.identity = hashJson(identity);
     this.db = new DatabaseSync(path);
-    this.limits = { maxPending, perPayer, maxRecords, maxAttempts, budgetEpoch, clientBudget, verifyPerMinute, maxVerifications, storageBudgetBytes };
+    this.limits = { maxPending, perPayer, maxRecords, maxAttempts, budgetEpoch, clientBudget, verifyPerMinute, maxVerifications, storageBudgetBytes, ...(providerBudget === undefined ? {} : {providerBudget:structuredClone(providerBudget)}) };
+    Object.freeze(this.limits.providerBudget); Object.freeze(this.limits);
     try {
       this.db.exec('PRAGMA busy_timeout=1000; PRAGMA trusted_schema=OFF; PRAGMA foreign_keys=ON;');
       assert(this.db.prepare('PRAGMA quick_check').get().quick_check === 'ok', 'JOURNAL_CORRUPT');
@@ -64,10 +68,10 @@ export class Journal {
       const old = this.db.prepare('SELECT * FROM verification WHERE authKey=?').get(v.authKey);
       if (old) { assert(old.fingerprint === v.fingerprint, 'IDEMPOTENCY_CONFLICT'); if (old.leaseUntil > now) return false; }
       const count = (sql, ...args) => this.db.prepare(sql).get(...args).n;
-      assert(count('SELECT count(*) AS n FROM orders') < this.limits.maxRecords, 'ARCHIVE_REQUIRED');
+      assert(belowCountLimit(count('SELECT count(*) AS n FROM orders'), this.limits.maxRecords), 'ARCHIVE_REQUIRED');
       assert(count("SELECT count(*) AS n FROM orders WHERE status='unknown'") < this.limits.maxPending, 'PENDING_CAP');
       assert(count("SELECT count(*) AS n FROM orders WHERE status='unknown' AND payer=?", v.payer) < this.limits.perPayer, 'PAYER_PENDING_CAP');
-      assert(this.attempts() < this.limits.maxAttempts, 'FACILITATOR_BUDGET');
+      this.assertProviderAdmission();
       assert(old || count('SELECT count(*) AS n FROM verification') < this.limits.maxVerifications, 'VERIFY_CAP');
       assert(old || count('SELECT count(*) AS n FROM verification WHERE payer=?', v.payer) < this.limits.perPayer, 'PAYER_VERIFY_CAP');
       const window = Math.floor(now / 60);
@@ -86,12 +90,12 @@ export class Journal {
       if (existing) return { row: existing, owner: false };
       this.assertNewAuthority();
       const count = (sql, ...args) => this.db.prepare(sql).get(...args).n;
-      assert(count('SELECT count(*) AS n FROM orders') < this.limits.maxRecords, 'ARCHIVE_REQUIRED');
+      assert(belowCountLimit(count('SELECT count(*) AS n FROM orders'), this.limits.maxRecords), 'ARCHIVE_REQUIRED');
       assert(count("SELECT count(*) AS n FROM orders WHERE status='unknown'") < this.limits.maxPending, 'PENDING_CAP');
       assert(count("SELECT count(*) AS n FROM orders WHERE status='unknown' AND payer=?", v.payer) < this.limits.perPayer, 'PAYER_PENDING_CAP');
       const epoch = this.limits.budgetEpoch;
       const used = this.attempts();
-      assert(used < this.limits.maxAttempts, 'FACILITATOR_BUDGET');
+      this.assertProviderAdmission();
       const reservedBytes = Buffer.byteLength(JSON.stringify(payment)) + 2 * Buffer.byteLength(JSON.stringify(v.result)) + 16384;
       const heldBytes = this.db.prepare('SELECT coalesce(sum(reservedBytes),0) AS bytes FROM orders').get().bytes;
       assert(Number.isSafeInteger(heldBytes) && heldBytes >= 0 && heldBytes + reservedBytes <= this.limits.storageBudgetBytes, 'STORAGE_BUDGET');
@@ -119,7 +123,9 @@ export class Journal {
     });
   }
   provenUnsettled(key) { this.db.prepare("UPDATE orders SET status='unsettled' WHERE authKey=? AND status='unknown'").run(key); }
-  attempts() { this.check(); const n = this.db.prepare('SELECT attempts FROM usage WHERE epoch=?').get(this.limits.budgetEpoch)?.attempts ?? 0; assert(Number.isSafeInteger(n) && n >= 0 && n <= this.limits.maxAttempts && n >= this.db.prepare('SELECT count(*) AS n FROM orders').get().n, 'USAGE_CORRUPT'); return n; }
+  attempts() { this.check(); const n = this.db.prepare('SELECT attempts FROM usage WHERE epoch=?').get(this.limits.budgetEpoch)?.attempts ?? 0; assert(Number.isSafeInteger(n) && n >= 0 && (this.limits.maxAttempts === null || n <= this.limits.maxAttempts) && n >= this.db.prepare('SELECT count(*) AS n FROM orders').get().n, 'USAGE_CORRUPT'); providerReservation(this.limits,n); return n; }
+  providerStatus() { const n=this.attempts(); return providerReservation(this.limits,n); }
+  assertProviderAdmission() { const n=this.attempts(); assert(belowCountLimit(n,this.limits.maxAttempts) && (providerReservation(this.limits,n)?.canReserve ?? true),'FACILITATOR_BUDGET'); }
   // Only proven-unsettled records can be purged, after signed authorizations are expired.
   // Completed paid receipts stay until an explicit accounting/archive policy is approved.
   pruneUnsettled(now) { return this.db.prepare("DELETE FROM orders WHERE status='unsettled' AND expiresAt < ?").run(now).changes; }
@@ -131,7 +137,7 @@ export class Journal {
       let held = 0n;
       for (const r of this.db.prepare('SELECT amount,state FROM clients').all()) { assert(uint(r.amount) && BigInt(r.amount) > 0n && ['signing', 'signed'].includes(r.state), 'CLIENT_JOURNAL_CORRUPT'); held += BigInt(r.amount); }
       assert(held + BigInt(amount) <= BigInt(this.limits.clientBudget), 'CLIENT_BUDGET');
-      assert(this.db.prepare('SELECT count(*) AS n FROM clients').get().n < this.limits.maxRecords, 'CLIENT_RECORD_CAP');
+      assert(belowCountLimit(this.db.prepare('SELECT count(*) AS n FROM clients').get().n, this.limits.maxRecords), 'CLIENT_RECORD_CAP');
       this.db.prepare("INSERT INTO clients VALUES (?,?,?,'signing',NULL)").run(id, fingerprint, amount);
       return null;
     });

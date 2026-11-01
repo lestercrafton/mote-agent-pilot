@@ -1,6 +1,6 @@
 {
   "name": "mote-usdc-beta-candidate",
-  "version": "0.8.5-production-prep.1",
+  "version": "0.8.6-continuous.3",
   "private": true,
   "type": "module",
   "engines": {

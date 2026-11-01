@@ -1,3 +1,5 @@
+> Historical documentation: the v0.8.6 [continuous-admission report](CONTINUOUS-ADMISSION.md) supersedes earlier 100-attempt/24-hour proposals and qualification status. No activation is authorized by these documents.
+
 # Deployment preparation and recovery
 
 This candidate has not been deployed. No new keys, credentials, accounts, billing agreements or off-host destinations were configured. Existing MOTE/Sepolia service and source remain unchanged.

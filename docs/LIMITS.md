@@ -1,3 +1,5 @@
+> Historical documentation: the v0.8.6 [continuous-admission report](CONTINUOUS-ADMISSION.md) supersedes earlier 100-attempt/24-hour proposals and qualification status. No activation is authorized by these documents.
+
 # Admission, recovery and accounting boundaries
 
 Unpaid quotes are stateless. Local ECDSA request binding is required before a provider call. The standalone HTTP adapter limits connections to32, total headers to24KiB, payment header to22,000 bytes, body to64KiB and request/header timeouts to10s. The combined listener limits connections to32 and retains the legacy16KiB total-header limit,7s request and5s header deadlines; its advertised payment-header limit is12,000 bytes. Headers must also fit the total limit. In both modes, the service allows8 active operations and120 requests/minute per process. These are protective bounds, not a distributed denial-of-service defense or measured hosting capacity.

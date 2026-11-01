@@ -1,3 +1,5 @@
+> Historical documentation: the v0.8.6 [continuous-admission report](CONTINUOUS-ADMISSION.md) supersedes earlier 100-attempt/24-hour proposals and qualification status. No activation is authorized by these documents.
+
 # v0.8.1 integration.1 verification
 
 Recorded November 1, 2026. Local candidate only; no publication/deployment or live CDP payment.

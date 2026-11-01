@@ -5,9 +5,15 @@
   "nativeUSDC": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   "recipient": "SET_PRIVATELY_FROM_USER_CONFIRMED_ADDRESS",
   "receiptSigner": null,
-  "operationWindow": null,
   "proposedPriceBaseUnits": "10000",
-  "proposedMaxSettlementAttempts": 100,
-  "providerBudgetProposalUsd": "1.00",
-  "offhostBackupsEnabled": false
+  "proposedMaxSettlementAttempts": null,
+  "offhostBackupsEnabled": false,
+  "automaticExpiry": null,
+  "providerBudget": null,
+  "providerBudgetApprovalRequired": true,
+  "backupRetentionProposal": {
+    "retainedVerifiedSnapshots": 2,
+    "temporaryMaximumSnapshots": 3,
+    "maxTotalBytes": 268435456
+  }
 }
