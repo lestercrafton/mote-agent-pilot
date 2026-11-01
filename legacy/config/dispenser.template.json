@@ -1,0 +1,9 @@
+{
+  "chainId": 11155111,
+  "token": null,
+  "tokenRuntimeHash": null,
+  "deployer": null,
+  "nonce": null,
+  "claimAmount": "10000000",
+  "distributionCap": "10000000000"
+}

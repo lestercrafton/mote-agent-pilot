@@ -1,0 +1,13 @@
+{
+  "network": "ethereum-sepolia",
+  "chainId": 11155111,
+  "rpcUrl": "https://ethereum-sepolia-rpc.publicnode.com",
+  "explorerUrl": "https://sepolia.etherscan.io",
+  "genesisHash": "0x25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9",
+  "feeModel": "ethereum-eip1559",
+  "tokenAddress": null,
+  "paymentRouterAddress": null,
+  "deploymentStatus": "unlaunched",
+  "testOnly": true,
+  "note": "Public network reference only, not a deployable chain-evidence config or authority to sign."
+}

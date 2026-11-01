@@ -1,0 +1,12 @@
+[
+  {
+    "path": "src/core/json.mjs",
+    "sha256": "45d2718a6164f189524c0337982d238b3c7f2d49c73d4804d18f97dab251a033",
+    "provenance": "v0.7.5 reviewed utility; unchanged"
+  },
+  {
+    "path": "src/core/schema.mjs",
+    "sha256": "0c65a323760b65406fbce47c6b083a43f4eb1aacb17698a57f4e9ac33951bdb2",
+    "provenance": "v0.7.5 reviewed utility; unchanged"
+  }
+]

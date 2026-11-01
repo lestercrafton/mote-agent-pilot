@@ -1,0 +1,8 @@
+FROM node:24.22.2-bookworm-slim
+WORKDIR /candidate
+COPY package.json package-lock.json ./
+RUN npm ci --ignore-scripts --no-audit --no-fund
+COPY legacy/package.json legacy/package-lock.json ./legacy/
+RUN npm ci --prefix legacy --omit=dev --ignore-scripts --no-audit --no-fund
+COPY . .
+CMD ["sh", "-c", "npm test && npm run demo"]

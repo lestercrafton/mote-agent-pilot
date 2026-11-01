@@ -1,53 +1,44 @@
-import http from 'node:http';
-import { MoteError, LIMITS, parseJson } from './json.mjs';
-import { discovery, openapi } from './discovery.mjs';
+import { createServer } from 'node:http';
+import { encodePaymentRequiredHeader, decodePaymentSignatureHeader, encodePaymentResponseHeader } from '@x402/core/http';
+import { parseJson, LIMITS } from './core/json.mjs';
+import { assert, PROFILE, BINDING } from './protocol.mjs';
 
-export async function startHttp({ service, port = 0 }) {
-  let baseUrl;
-  const server = http.createServer(async (req, res) => {
-    const send = (status, body) => {
-      res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' });
-      res.end(JSON.stringify(body));
-    };
+// Dependencies are explicit; this module never reads credentials or starts a listener.
+export function httpServer(service, { manifestPath = '/.well-known/mote.json', healthPath = '/health', maxPaymentHeaderBytes=22000 } = {}) {
+  assert(Number.isSafeInteger(maxPaymentHeaderBytes)&&maxPaymentHeaderBytes>=4096&&maxPaymentHeaderBytes<=22000,'HTTP_LIMIT');
+  const server = createServer({ maxHeaderSize: 24576, requestTimeout: 10000, headersTimeout: 10000 }, async (req, res) => {
+    const send = (code, body, headers = {}) => { res.writeHead(code, { 'content-type': 'application/json', 'cache-control': 'no-store', ...headers }); res.end(JSON.stringify(body)); };
     try {
-      const expectedHost = new URL(baseUrl).host;
-      if (req.headers.host !== expectedHost) throw new MoteError('HOST_REJECTED', 'Unexpected Host header.', 403);
-      if (req.headers.origin && req.headers.origin !== baseUrl) throw new MoteError('ORIGIN_REJECTED', 'Cross-origin local API requests are disabled.', 403);
-      const path = new URL(req.url, baseUrl).pathname;
-      const config = { ...service.config, baseUrl };
-      if (req.method === 'GET') {
-        if (path === '/' || path === '/.well-known/mote.json') return send(200, discovery(config));
-        if (path === '/openapi.json') return send(200, openapi(config));
-        if (path === '/health') return send(200, { status: 'ok', service: 'mote', version: '0.1.0', mode: 'local-evm-fixture', localOnly: true });
-        const match = path.match(/^\/v1\/orders\/(0x[0-9a-fA-F]{64})$/);
-        if (match) return send(200, await service.order(match[1]));
-      }
-      if (req.method === 'POST' && ['/v1/quotes', '/v1/orders'].includes(path)) {
-        if (!/^application\/json(?:\s*;|$)/i.test(req.headers['content-type'] ?? '')) throw new MoteError('CONTENT_TYPE', 'Use application/json.', 415);
-        const chunks = [];
-        let size = 0;
-        for await (const chunk of req) {
-          size += chunk.length;
-          if (size > LIMITS.bodyBytes) throw new MoteError('BODY_TOO_LARGE', 'Request body exceeds 64 KiB.', 413);
-          chunks.push(chunk);
-        }
-        let body;
-        try { body = parseJson(new TextDecoder('utf-8', { fatal: true }).decode(Buffer.concat(chunks))); }
-        catch (error) { if (error instanceof MoteError) throw error; throw new MoteError('INVALID_JSON', 'Malformed UTF-8 JSON.'); }
-        if (!body || typeof body !== 'object' || Array.isArray(body)) throw new MoteError('INVALID_INPUT', 'Expected a JSON object.');
-        const allowed = path === '/v1/quotes' ? ['payer', 'input'] : ['quoteId', 'transactionHash'];
-        if (Object.keys(body).some((key) => !allowed.includes(key))) throw new MoteError('INVALID_INPUT', 'Unexpected request property.');
-        const operation = path === '/v1/quotes' ? service.quote : service.settle;
-        return send(200, await operation(body, req.headers['idempotency-key']));
-      }
-      throw new MoteError('NOT_FOUND', 'Endpoint not found; inspect /.well-known/mote.json.', 404);
+      if (req.method === 'GET' && req.url === healthPath) {const readiness=service.j.readiness();return send(readiness.recoveryAvailable?200:503, { ok:readiness.recoveryAvailable,profile:PROFILE,productionReady:false,...readiness });}
+      if (req.method === 'GET' && req.url === manifestPath) return send(200, {
+        name: 'Mote USDC candidate', profile: PROFILE, productionReady: false, service: 'JSON tool-call preflight',
+        endpoint: service.c.origin + service.c.path, method: 'POST', network: service.c.network, asset: service.c.asset, amount: service.c.amount,
+        payTo: service.c.payTo, offerSigner: service.c.offerSigner, configHash: service.c.identity, requiredExtension: BINDING,
+        wallets: 'EOA EIP-3009 only; use the Mote binding helper', limits: {...LIMITS,paymentHeaderBytes:maxPaymentHeaderBytes},
+        recovery: 'Repeat original body and PAYMENT-SIGNATURE. Optional X-Mote-Transaction is a proof-checked hint. Never sign a replacement on timeout.',
+        privacy: 'Synthetic nonsecret input only. Local journal stores result and signed authorization. No request logging. TLS/operator/storage review required before hosting.',
+        ...(service.disclosure?{beta:service.disclosure}:{}),
+      });
+      assert(req.method === 'POST' && req.url === service.c.path, 'ROUTE');
+      assert(req.headers['content-type']?.split(';')[0] === 'application/json' && !req.headers['content-encoding'], 'CONTENT_TYPE');
+      const declared = Number(req.headers['content-length']);
+      assert(!Number.isFinite(declared) || declared <= LIMITS.bodyBytes, 'BODY_SIZE');
+      let bytes = 0; const chunks = [];
+      for await (const chunk of req) { bytes += chunk.length; assert(bytes <= LIMITS.bodyBytes, 'BODY_SIZE'); chunks.push(chunk); }
+      const input = parseJson(new TextDecoder('utf-8', { fatal: true }).decode(Buffer.concat(chunks)));
+      const header = req.headers['payment-signature'];
+      if (!header) { const offer = await service.offer(input); return send(402, offer, { 'PAYMENT-REQUIRED': encodePaymentRequiredHeader(offer) }); }
+      assert(typeof header === 'string' && header.length <= maxPaymentHeaderBytes, 'PAYMENT_SIZE');
+      const payment = decodePaymentSignatureHeader(header);
+      const result = await service.execute(input, payment, { transaction: req.headers['x-mote-transaction'] });
+      const headers = result.status === 'complete' ? { 'PAYMENT-RESPONSE': encodePaymentResponseHeader({ success: true, transaction: result.receipt.transaction, network: result.receipt.network, payer: result.receipt.payer }) } : {};
+      return send(result.status === 'complete' ? 200 : 202, result, headers);
     } catch (error) {
-      if (!res.headersSent) send(error instanceof MoteError ? error.status : 500, { error: { code: error instanceof MoteError ? error.code : 'INTERNAL_ERROR', message: error instanceof MoteError ? error.message : 'Internal error. Retry or recover using the same quote and payment proof; do not pay again.' } });
+      // Never echo provider messages, signed payloads, JWTs, request bodies or stack traces.
+      const code = /^[A-Z_]+$/.test(error?.code ?? '') ? error.code : 'REQUEST_REJECTED';
+      return send(code === 'ADMISSION_LIMIT' ? 429 : code === 'PROVIDER_UNAVAILABLE' ? 503 : 400, { error: code });
     }
   });
-  server.requestTimeout = 10000;
-  server.headersTimeout = 5000;
-  await new Promise((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', resolve); });
-  baseUrl = `http://127.0.0.1:${server.address().port}`;
-  return { baseUrl, async close() { server.closeAllConnections(); await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve())); } };
+  server.maxConnections = 32;
+  return server;
 }

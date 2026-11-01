@@ -1,0 +1,9 @@
+# Strict CDP attribution subset
+
+Official references checked November 1, 2026: [CDP facilitator](https://docs.cdp.coinbase.com/x402/seller/facilitator), [x402 builder-code wire specification](https://github.com/x402-foundation/x402/blob/main/specs/extensions/builder_code.md), and [Base builder codes](https://docs.base.org/specifications/builder-codes/overview). Encoder pinned to `@x402/extensions` 2.29.0.
+
+Accepted calldata is the exact ABI-encoded `transferWithAuthorization` call, optionally followed by exactly one `[CBOR][uint16 big-endian CBOR length][02][80218021802180218021802180218021]` suffix. Re-encoding with the official encoder must reproduce every suffix byte. This preserves all original transaction hash/signature, payer, chain, asset, amount, recipient, authorization, inclusion, receipt/log and finalized-anchor checks. Attribution is untrusted annotation and never a pricing or spending-authority input.
+
+Limits: 1,024 CBOR bytes, 128 decoded nodes, depth 5, 256 UTF-8 bytes per string, 16 entries per collection and 11 service codes. Optional top-level keys are only `a,w,s,m`; a/w and each s entry match lowercase alphanumeric/underscore codes of 1–32 characters. `s` is a nonempty unique array. Metadata top-level keys start with `x402`. Values use unsigned uint64, text, arrays or maps. Duplicate keys, nonminimal integers/lengths, invalid UTF-8, bytes, tags, floats, negatives, indefinite collections, unknown keys/schema, noncanonical order, gaps and trailing data are rejected. This is a deliberately bounded subset; an otherwise conforming larger CDP suffix would fail closed.
+
+Tests use published and official-encoder vectors, malformed encodings and a fully signed synthetic type-2 transaction with the suffix. They establish local format compatibility, **not** evidence of a real CDP transaction. The first authorized Base Sepolia rehearsal must confirm the provider's actual call shape fits these limits before real funds are considered.

@@ -1,0 +1,19 @@
+✔ fixture custody explicitly uses public bytes and never provisions or falls back to native storage (16.865041ms)
+✔ opaque bootstrap signer signs exact prebound type2 creation and one bounded allocation only (10.710167ms)
+✔ out-of-plan transactions fail before reading custody, including fee/type/chain/destination/calldata changes (0.901084ms)
+✔ policy refuses missing or ambiguous intents, wrong role/network and overbroad access (0.229958ms)
+✔ quote-backup role exposes only address inspection and cannot acquire a transaction signer (0.96875ms)
+✔ native backend has no default activation and is forbidden from the test harness before helper/file access (0.505208ms)
+✔ helper interface keeps secrets out of command arguments, environment, stdout and stderr by construction (3.390375ms)
+✔ quote handoff binds one reviewed Render target and passes public fixture bytes only through private callback (1.397334ms)
+✔ wrong handoff pins, service/origin/key name, sink and signer reject without a secret transfer (0.855625ms)
+✔ handoff exceptions are redacted, retain uncertain outcome and clear callback buffer (0.749041ms)
+✔ policy and handoff snapshots survive caller mutation across asynchronous boundaries (3.312042ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 122.795208

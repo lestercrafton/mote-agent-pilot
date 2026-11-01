@@ -1,0 +1,102 @@
+{
+  "schema": "mote-solidity-verification-v1",
+  "compiler": {
+    "version": "0.8.38+commit.1835d247.Emscripten.clang",
+    "verificationVersion": "v0.8.38+commit.1835d247",
+    "evmVersion": "shanghai",
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    }
+  },
+  "inputHash": "0x72853d790c38eadbe5dd8e9f76abea91d6a0bed86b151ecde225eb72b89ef16c",
+  "contracts": {
+    "MoteToken": {
+      "identifier": "contracts/MoteToken.sol:MoteToken",
+      "creationBytecodeHash": "0xc8873c6f95b53203782d8f6fea8492f51ab2d082da0bc1cff79bb6d89ca6e710",
+      "runtimeTemplateHash": "0xe419e8dcfbd6868ce8df0befa6ceb67c02bdd9b589b4cddd1ad0f02c897d651f",
+      "abiHash": "0x81e4ba9b84fd215710fe8319276952da99e2726a3caee3499b3477ad39754ea0",
+      "immutableReferences": {}
+    },
+    "MotePayments": {
+      "identifier": "contracts/MotePayments.sol:MotePayments",
+      "creationBytecodeHash": "0xec824da25b3f78a15e4bc035d461b21bed7a80048162b90a744e43501ddc5229",
+      "runtimeTemplateHash": "0x166bb5aaa723a07c2baface91aa7f00b16c5093278e470d5b86a6229d132e9dd",
+      "abiHash": "0xb0a9bc22aa4918994975a204faa0dbe5b1334c7af04739c9841a3374797d1e55",
+      "immutableReferences": {
+        "3528": [
+          {
+            "length": 32,
+            "start": 1618
+          }
+        ],
+        "3530": [
+          {
+            "length": 32,
+            "start": 1576
+          }
+        ],
+        "3532": [
+          {
+            "length": 32,
+            "start": 1534
+          }
+        ],
+        "3534": [
+          {
+            "length": 32,
+            "start": 1699
+          }
+        ],
+        "3536": [
+          {
+            "length": 32,
+            "start": 1739
+          }
+        ],
+        "3539": [
+          {
+            "length": 32,
+            "start": 1435
+          }
+        ],
+        "3542": [
+          {
+            "length": 32,
+            "start": 1484
+          }
+        ],
+        "7398": [
+          {
+            "length": 32,
+            "start": 389
+          },
+          {
+            "length": 32,
+            "start": 999
+          }
+        ],
+        "7400": [
+          {
+            "length": 32,
+            "start": 234
+          },
+          {
+            "length": 32,
+            "start": 1034
+          }
+        ],
+        "7402": [
+          {
+            "length": 32,
+            "start": 297
+          },
+          {
+            "length": 32,
+            "start": 791
+          }
+        ]
+      }
+    }
+  }
+}
