@@ -8,6 +8,7 @@ import { assert, config, equal, address, requirements, authDomain, AUTH_TYPES, a
 import { hashJson } from './core/json.mjs';
 import { requireDisk, DISK_LIMITS } from './disk.mjs';
 import {providerReservation} from './provider-budget.mjs';
+import {ADMISSION,validateAdmission} from './admission-evidence.mjs';
 const hashFile = async p => {const h=createHash('sha256');for await(const chunk of createReadStream(p,{highWaterMark:65536}))h.update(chunk);return h.digest('hex');};
 const fileIdentity = (p,maxBytes=DISK_LIMITS.maxDatabaseBytes) => { const s=lstatSync(p); assert(s.isFile()&&!s.isSymbolicLink()&&s.nlink===1&&s.uid===process.getuid()&&(s.mode&0o077)===0&&s.size<=maxBytes,'BACKUP_FILE'); return {ino:s.ino,dev:s.dev}; };
 function parent(p) { const d=dirname(p),s=lstatSync(d); assert(realpathSync(d)===d&&s.isDirectory()&&s.uid===process.getuid()&&(s.mode&0o077)===0,'BACKUP_DIRECTORY'); }
@@ -22,11 +23,13 @@ function order(c,row) {
   assert(Number.isSafeInteger(o.body.issuedAt)&&o.body.expiresAt-o.body.issuedAt===c.offerLifetime&&Number.isSafeInteger(row.created)&&row.created>=o.body.issuedAt&&row.created<Number(a.validBefore)&&row.expiresAt===Number(a.validBefore),'BACKUP_TIME');
   assert(address(verifyMessage(getBytes(hashJson(o.body)),o.signature))===c.offerSigner,'BACKUP_OFFER');
   assert(a.validAfter==='0'&&a.value===c.amount&&address(a.to)===c.payTo&&BigInt(a.validBefore)<=BigInt(o.body.expiresAt)&&hash32(a.nonce),'BACKUP_AUTH');
-  const payer=address(verifyTypedData(authDomain(c),AUTH_TYPES,a,p.payload.signature));
+  const certificate=p.extensions?.[ADMISSION];
+  const payer=certificate?validateAdmission(c,p).payer:address(verifyTypedData(authDomain(c),AUTH_TYPES,a,p.payload.signature));
+  if(certificate)assert(certificate.body.checkedAt<=row.created,'BACKUP_TIME');
   const id=p.extensions?.['payment-identifier']?.info?.id;
   const message={origin:c.origin,method:c.method,path:c.path,requestHash:o.body.requestHash,offerHash:hashJson(o.body),paymentId:id,authorizationHash:authHash(c,a)};
   assert(/^[A-Za-z0-9_-]{16,128}$/.test(id)&&payer===address(a.from)&&payer===row.payer&&id===row.paymentId&&row.authKey===`${c.network}:${c.asset}:${payer}:${a.nonce.toLowerCase()}`&&hashJson({message,accepted:p.accepted})===row.fingerprint,'BACKUP_BINDING');
-  assert(address(verifyTypedData(bindDomain(c),BIND_TYPES,message,info.signature))===payer,'BACKUP_BINDING');
+  if(!certificate)assert(address(verifyTypedData(bindDomain(c),BIND_TYPES,message,info.signature))===payer,'BACKUP_BINDING');
   assert(hashJson(parse(row.result))===row.resultHash&&o.body.resultHash===row.resultHash,'BACKUP_RESULT');
   assert(Number.isSafeInteger(row.reservedBytes)&&row.reservedBytes>=Buffer.byteLength(row.payment)+Buffer.byteLength(row.result)+(row.response?Buffer.byteLength(row.response):0)&&(!row.txHash||hash32(row.txHash)),'BACKUP_STORAGE');
   if(row.status==='complete') {

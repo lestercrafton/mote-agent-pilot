@@ -458,6 +458,14 @@
       "sha256": "fbc3036afe58911c3a5f66dbac34101555091179a274d1247f3b0bb00363e544"
     },
     {
+      "path": "scripts/qualify-native-coinbase.mjs",
+      "sha256": "c53e2f30e26de77dbcf8e624d72db87908f14ef402ff9c4e176a18b2db6f457b"
+    },
+    {
+      "path": "src/admission-evidence.mjs",
+      "sha256": "391788247f955e85dcc1bad965e17e5f75848a5d3f9ecc1458df5563292e149e"
+    },
+    {
       "path": "src/attribution.mjs",
       "sha256": "cb8ad2c6df4e9eecd9a16c46233dd4dd577fd100ac3b636c0af90def05d1d9df"
     },
@@ -467,15 +475,19 @@
     },
     {
       "path": "src/chain-proof.mjs",
-      "sha256": "4e2ac26e1588ca6f17d14762993af68cb381b99240a535f67da2ce0f2f23665a"
+      "sha256": "d4b220ddf22c11885a564a0c61ce3abe8d3ccb3df3aca4c6e51bbbc6033cef77"
     },
     {
       "path": "src/client.mjs",
-      "sha256": "db1f9203ed0cf77aed31669bab70ffdc87693764da39e6c9fe8e4cb2a4669435"
+      "sha256": "c77fefee9cee1e20f485f6a7a0047ff3c7f6c4d6c92066dafeea306ef14ccc34"
     },
     {
       "path": "src/combined.mjs",
       "sha256": "b819421b63e652a3a36994cc81c6aa7f31a67da5ce57e1203236fbdb7907e2b4"
+    },
+    {
+      "path": "src/contract-signatures.mjs",
+      "sha256": "05004adfc66e48af7ef981a5ed0d434706fabb05e972dba0b2f7c3932242f1a2"
     },
     {
       "path": "src/core/json.mjs",
@@ -519,7 +531,11 @@
     },
     {
       "path": "src/maintenance.mjs",
-      "sha256": "103aa27364fa012b0bdf48abea39d622651cfb1dce8b1ea525c780b342a9e97c"
+      "sha256": "0bb26763a2d1fcb7c96c479b6acba2b31f9d6dca1a980d5a5d87b9223bd9398b"
+    },
+    {
+      "path": "src/payment-path.mjs",
+      "sha256": "f92d47ddad462006526d59f3021388f1686574514bf221ab3cb2b3b19404436d"
     },
     {
       "path": "src/production-draft.mjs",
@@ -535,7 +551,7 @@
     },
     {
       "path": "src/protocol.mjs",
-      "sha256": "6468185ef61c2d0445faf96879e1165da174a4b753febad9429f799c6f7f90a7"
+      "sha256": "4325ff4e6546775f6230cbc8656fd92b587a638d48b0530e626a7a4d8ce5c74f"
     },
     {
       "path": "src/provider-budget.mjs",
@@ -555,11 +571,11 @@
     },
     {
       "path": "src/service.mjs",
-      "sha256": "3a9172dd69d09aa0ee40efa3385dca35e31896ab3b3314c2900a3331a13652ec"
+      "sha256": "cb2f90aab90ccbc30b74aeea689496a62f10ac740d8e0e55ab888a01eb54eb9a"
     },
     {
       "path": "src/startup.mjs",
-      "sha256": "fe2b6f9c1b55a98dc810941565051fd7911026ff3a5003fa5cf8401f8d0968fa"
+      "sha256": "22eea77e3e656c7fcadcc3ed57b13eb7c5fe5bdca869b73765ff1292c151557c"
     },
     {
       "path": "test/adapter.test.mjs",
@@ -576,6 +592,18 @@
     {
       "path": "test/continuous.test.mjs",
       "sha256": "0f8591770813bcae9ae1f8cfbadc090376550eb038335cacdb728603a5b99def"
+    },
+    {
+      "path": "test/contract-fixtures/coinbase-runtime.json",
+      "sha256": "f53fa388913cbc2f604200a06814a7ad2e826f58a6dc2b88db14a400847dc648"
+    },
+    {
+      "path": "test/contract-fixtures.mjs",
+      "sha256": "e8e34c6b3f28202046b8e8e49ee690e9fe86b579145d73345a47bfe599e65d2a"
+    },
+    {
+      "path": "test/contract-signatures.test.mjs",
+      "sha256": "ca6827409e8fdcb174923bf2aeb9ad2fbd4a14b85043b933b28b53e2b66ab5e1"
     },
     {
       "path": "test/fixtures.mjs",

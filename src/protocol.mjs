@@ -24,14 +24,15 @@ export const address = (a) => getAddress(a).toLowerCase();
 export const uint = (s) => typeof s === 'string' && /^(0|[1-9][0-9]{0,77})$/.test(s) && BigInt(s) < 2n ** 256n;
 export const hash32 = (s) => typeof s === 'string' && /^0x[0-9a-fA-F]{64}$/.test(s);
 
-export function config({ origin, network = 'eip155:84532', payTo, offerSigner, amount = '1000', policyEpoch = 'fixture-v1', path = '/v1/audit' }) {
+export function config({ origin, network = 'eip155:84532', payTo, offerSigner, amount = '1000', policyEpoch = 'fixture-v1', path = '/v1/audit', payerSignatureProfile }) {
   const url = new URL(origin);
   assert(url.origin === origin && !url.username && !url.password && (url.protocol === 'https:' || ['127.0.0.1', 'localhost'].includes(url.hostname)), 'ORIGIN');
   assert(NETWORKS[network] && uint(amount) && BigInt(amount) > 0n && BigInt(amount) <= 1_000_000n, 'CONFIG');
   assert(typeof policyEpoch === 'string' && policyEpoch.length > 0 && policyEpoch.length < 100, 'EPOCH');
   const n = NETWORKS[network];
   assert(['/v1/audit','/v1/usdc/audit'].includes(path), 'PATH');
-  const c = { profile: PROFILE, origin, path, method: 'POST', network, asset: address(n.asset), payTo: address(payTo), offerSigner: address(offerSigner), amount, policyEpoch, maxTimeoutSeconds: 120, offerLifetime: 180 };
+  assert(payerSignatureProfile===undefined || payerSignatureProfile==='deployed-erc1271-v1','PAYER_SIGNATURE_PROFILE');
+  const c = { ...(payerSignatureProfile?{payerSignatureProfile}:{}), profile: PROFILE, origin, path, method: 'POST', network, asset: address(n.asset), payTo: address(payTo), offerSigner: address(offerSigner), amount, policyEpoch, maxTimeoutSeconds: 120, offerLifetime: 180 };
   assert(c.payTo !== '0x0000000000000000000000000000000000000000', 'PAYEE');
   return Object.freeze({ ...c, identity: hashJson(c) });
 }
@@ -61,7 +62,7 @@ export function validateOffer(c, input, offer, now, { recovery = false } = {}) {
   assert(address(verifyMessage(getBytes(hashJson(b)), offer.signature)) === c.offerSigner, 'OFFER_SIGNATURE');
   return p;
 }
-export function validatePayment(c, input, payment, now, { recovery = false } = {}) {
+export function validatePaymentEnvelope(c, input, payment, now, { recovery = false } = {}) {
   boundedJson(payment, { maxNodes: 512, maxDepth: 12 });
   assert(Buffer.byteLength(canonicalStringify(payment)) <= 16384, 'PAYMENT_SIZE');
   assert(payment?.x402Version === 2 && equal(payment.accepted, requirements(c)), 'PAYMENT_REQUIREMENTS');
@@ -79,9 +80,16 @@ export function validatePayment(c, input, payment, now, { recovery = false } = {
   assert(address(a.to) === c.payTo && a.value === c.amount && a.validAfter === '0', 'AUTH_TUPLE');
   assert(BigInt(a.validBefore) <= BigInt(offer.body.expiresAt) && BigInt(a.validBefore) > BigInt(offer.body.issuedAt), 'AUTH_EXPIRY');
   assert(recovery || BigInt(a.validBefore) > BigInt(now), 'AUTH_EXPIRED');
-  assert(/^0x[0-9a-fA-F]{130}$/.test(payment.payload.signature), 'EOA_ONLY');
-  assert(address(verifyTypedData(authDomain(c), AUTH_TYPES, a, payment.payload.signature)) === payer, 'PAYMENT_SIGNATURE');
   const message = bindingMessage(c, input, offer, id, a);
-  assert(address(verifyTypedData(bindDomain(c), BIND_TYPES, message, ext.info.signature)) === payer, 'REQUEST_SIGNATURE');
-  return { ...p, id, payer, nonce: a.nonce.toLowerCase(), authKey: `${c.network}:${c.asset}:${payer}:${a.nonce.toLowerCase()}`, fingerprint: hashJson({ message, accepted: payment.accepted }), expiresAt: Number(a.validBefore) };
+  const value = { ...p, id, payer, nonce: a.nonce.toLowerCase(), authKey: `${c.network}:${c.asset}:${payer}:${a.nonce.toLowerCase()}`, fingerprint: hashJson({ message, accepted: payment.accepted }), expiresAt: Number(a.validBefore) };
+  return { value, authorization: a, binding: message, authorizationSignature: payment.payload.signature, bindingSignature: ext.info.signature };
+}
+
+// Original EOA profile remains the default. Envelopes alone are never payment proof.
+export function validatePayment(c, input, payment, now, options) {
+  const {value,authorization:a,binding:message,authorizationSignature:signature,bindingSignature}=validatePaymentEnvelope(c,input,payment,now,options);
+  assert(/^0x[0-9a-fA-F]{130}$/.test(signature), 'EOA_ONLY');
+  assert(address(verifyTypedData(authDomain(c), AUTH_TYPES, a, signature)) === value.payer, 'PAYMENT_SIGNATURE');
+  assert(address(verifyTypedData(bindDomain(c), BIND_TYPES, message, bindingSignature)) === value.payer, 'REQUEST_SIGNATURE');
+  return value;
 }

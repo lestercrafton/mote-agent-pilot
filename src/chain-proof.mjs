@@ -3,6 +3,17 @@ import { assert, address, hash32, NETWORKS } from './protocol.mjs';
 import { readLimitedText } from '@x402/core/http';
 import { validateTransferCalldata } from './attribution.mjs';
 import { lookupRpc, locateLogs } from './log-recovery.mjs';
+import { opaqueSignature } from './contract-signatures.mjs';
+const BYTES_AUTH_ABI = new Interface(['function transferWithAuthorization(address from,address to,uint256 value,uint256 validAfter,uint256 validBefore,bytes32 nonce,bytes signature)']);
+export function authorizationCalldata(payment, {allowContractSignatures=false,encoding}={}) {
+  const a=payment.payload.authorization, signature=payment.payload.signature;
+  if(allowContractSignatures && (encoding==='bytes' || (encoding===undefined && typeof signature==='string' && signature.length!==132))) {
+    opaqueSignature(signature);
+    return BYTES_AUTH_ABI.encodeFunctionData('transferWithAuthorization',[a.from,a.to,a.value,a.validAfter,a.validBefore,a.nonce,signature]);
+  }
+  const sig=Signature.from(signature);
+  return USDC_ABI.encodeFunctionData('transferWithAuthorization',[a.from,a.to,a.value,a.validAfter,a.validBefore,a.nonce,sig.v,sig.r,sig.s]);
+}
 
 export const USDC_ABI = new Interface([
   'function transferWithAuthorization(address from,address to,uint256 value,uint256 validAfter,uint256 validBefore,bytes32 nonce,uint8 v,bytes32 r,bytes32 s)',
@@ -15,7 +26,7 @@ export function rpcReader(url, { fetchImpl = fetch, timeoutMs = 10000 } = {}) {
   const target = new URL(url);
   assert(target.protocol === 'https:' && !target.username && !target.password && !target.hash && !target.search, 'RPC_URL');
   return async (method, params, { signal } = {}) => {
-    assert(['eth_chainId', 'eth_getBlockByNumber', 'eth_getTransactionByHash', 'eth_getTransactionReceipt', 'eth_call', 'eth_getLogs'].includes(method), 'READ_ONLY_RPC');
+    assert(['eth_chainId', 'eth_getBlockByNumber', 'eth_getTransactionByHash', 'eth_getTransactionReceipt', 'eth_call', 'eth_getLogs', 'eth_getCode'].includes(method), 'READ_ONLY_RPC');
     const timeout = AbortSignal.timeout(timeoutMs);
     const r = await fetchImpl(target.href, { method: 'POST', redirect: 'error', signal: signal ? AbortSignal.any([signal, timeout]) : timeout, headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) });
     assert(r.ok && !r.redirected, 'RPC_UNAVAILABLE');
@@ -25,7 +36,7 @@ export function rpcReader(url, { fetchImpl = fetch, timeoutMs = 10000 } = {}) {
   };
 }
 export class FinalizedProof {
-  constructor(c, rpc) { this.c = c; this.rpc = rpc; }
+  constructor(c, rpc, {allowContractSignatures=false}={}) { assert(typeof allowContractSignatures === 'boolean', 'SIGNATURE_MODE'); this.c = c; this.rpc = rpc; this.allowContractSignatures=allowContractSignatures; }
   async anchor() {
     assert(quantity(await this.rpc('eth_chainId', [])) === BigInt(NETWORKS[this.c.network].chainId), 'CHAIN_MISMATCH');
     const f = await this.rpc('eth_getBlockByNumber', ['finalized', false]);
@@ -47,8 +58,7 @@ export class FinalizedProof {
     assert(Number.isSafeInteger(index) && receipt.transactionIndex === tx.transactionIndex && Array.isArray(block.transactions) && block.transactions[index] === txHash, 'BLOCK_MEMBERSHIP');
     assert(quantity(receipt.status) === 1n && address(tx.to) === this.c.asset && address(receipt.to) === this.c.asset && quantity(tx.value) === 0n, 'WRONG_TRANSFER');
     const a = payment.payload.authorization;
-    const sig = Signature.from(payment.payload.signature);
-    const expected = USDC_ABI.encodeFunctionData('transferWithAuthorization', [a.from, a.to, a.value, a.validAfter, a.validBefore, a.nonce, sig.v, sig.r, sig.s]);
+    const expected = authorizationCalldata(payment,{allowContractSignatures:this.allowContractSignatures,encoding:tx.input?.slice(0,10).toLowerCase()==='0xcf092995'?'bytes':'vrs'});
     validateTransferCalldata(tx.input, expected);
     let used = 0; let moved = 0;
     assert(Array.isArray(receipt.logs) && receipt.logs.length <= 128, 'LOG_LIMIT');
@@ -71,7 +81,7 @@ export class FinalizedProof {
   }
   async locate(payment, options) {
     const snapshot = structuredClone(payment), rpc = lookupRpc(this.rpc, options);
-    try { const result = await locateLogs({ config: this.c, payment: snapshot, rpc, proof: new FinalizedProof(this.c, rpc), abi: USDC_ABI }); rpc.check(); return result; }
+    try { const result = await locateLogs({ config: this.c, payment: snapshot, rpc, proof: new FinalizedProof(this.c, rpc, {allowContractSignatures:this.allowContractSignatures}), abi: USDC_ABI }); rpc.check(); return result; }
     finally { rpc.close(); }
   }
   async expiredUnused(payment) {

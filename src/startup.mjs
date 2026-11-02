@@ -6,6 +6,7 @@ import { Journal } from './journal.mjs';
 import { CdpTransport, cdpAuth } from './facilitator.mjs';
 import { FinalizedProof, rpcReader } from './chain-proof.mjs';
 import { Service } from './service.mjs';
+import {paymentPath} from './payment-path.mjs';
 import { offhostPlan } from './maintenance.mjs';
 import { installCombinedRoutes, USDC_PATH } from './combined.mjs';
 import { startFilePilotFromEnvironment } from '../legacy/scripts/testnet-file-server.mjs';
@@ -47,8 +48,8 @@ export async function prepareUsdc(env) {
     assert(Object.keys(credentials).sort().join(',')==='apiKeyId,apiKeySecret','USDC_CREDENTIAL_FORMAT');
     journal=new Journal(USDC_ROOT+'/orders.sqlite',c.identity,{...settings.limits,create:false,recoveryOnly:env.MOTE_USDC_RECOVERY_ONLY==='true'});
     const facilitator=new CdpTransport({auth:cdpAuth(credentials)}); await facilitator.supported(c);
-    const proof=new FinalizedProof(c,rpcReader(settings.rpcUrl));await proof.anchor();
-    return new Service({config:c,journal,facilitator,proof,receiptSigner});
+    const path=paymentPath(c,rpcReader(settings.rpcUrl)),proof=path.proof;await proof.anchor();
+    return new Service({config:c,journal,facilitator,...path,receiptSigner});
   } catch(e){journal?.close();throw e;} finally{key.fill(0);credentialBytes?.fill(0);}
 }
 export function defaultLegacyFactory(env){return env.MOTE_RELEASE_TRANSITION_HASH?startTransitionPilot(env):startFilePilotFromEnvironment(env);}
@@ -58,7 +59,7 @@ export function installProductionControls(service,{operation,backups,now}) {
   const offer=service.offer.bind(service);service.offer=async input=>{j.assertProviderAdmission();return offer(input);};
   j.readiness=()=>{const state=ready();let providerAvailable=false;try{j.assertProviderAdmission();providerAvailable=true;}catch{}let windowOpen=false;try{gate();windowOpen=true;}catch{}return {...state,newAdmissionAllowed:state.newAdmissionAllowed&&windowOpen&&backups.status().available&&providerAvailable,providerReservation:j.providerStatus(),windowOpen,backup:backups.status(),settlementAttempts:j.attempts(),settlementAttemptCap:j.limits.maxAttempts};};
   service.shutdown=()=>backups.stop();
-  service.disclosure={mode:'resource-bounded-mainnet-beta',priceUSDC:'0.01',newPaymentsUntil:operation.notAfter??null,providerAuthorizationMicrousd:operation.providerBudget?.authorizedMicrousd??null,providerInvoiceCapGuaranteed:false,settlementAttemptCap:j.limits.maxAttempts,operator:'Lester Crafton',jurisdiction:'Tennessee, USA',refunds:'No automatic refunds; operator review required. Do not sign a replacement payment on timeout.',privacy:'Public synthetic inputs only. Results, public payer address and signed authorizations are retained on the private service disk and local backups. No off-host backup or input logging is enabled.',wallets:'EOA EIP-3009 payer and Mote request-binding helper required. Smart-wallet payers are not supported.'};
+  service.disclosure={mode:'resource-bounded-mainnet-beta',priceUSDC:'0.01',newPaymentsUntil:operation.notAfter??null,providerAuthorizationMicrousd:operation.providerBudget?.authorizedMicrousd??null,providerInvoiceCapGuaranteed:false,settlementAttemptCap:j.limits.maxAttempts,operator:'Lester Crafton',jurisdiction:'Tennessee, USA',refunds:'No automatic refunds; operator review required. Do not sign a replacement payment on timeout.',privacy:'Public synthetic inputs only. Results, public payer address and signed authorizations are retained on the private service disk and local backups. No off-host backup or input logging is enabled.',wallets:service.c.payerSignatureProfile==='deployed-erc1271-v1'?'Deployed ERC-1271 (including EIP-7702) or EOA EIP-3009 payer plus Mote request-binding helper required. Undeployed/6492 wallets are unsupported. Hosted facilitator acceptance remains wallet-dependent.':'EOA EIP-3009 payer and Mote request-binding helper required. Smart-wallet payers are not supported.'};
   return service;
 }
 export async function prepareProduction(env) {
@@ -74,8 +75,8 @@ export async function prepareProduction(env) {
     assert(Object.keys(credentials).sort().join(',')==='apiKeyId,apiKeySecret'&&hashJson({apiKeyId:credentials.apiKeyId})===env.MOTE_CDP_KEY_ID_HASH,'USDC_CREDENTIAL_IDENTITY');
     journal=new Journal(PRODUCTION_ROOT+'/orders.sqlite',c.identity,{...settings.limits,create:false,recoveryOnly:env.MOTE_USDC_RECOVERY_ONLY==='true'});
     const facilitator=new CdpTransport({auth:cdpAuth(credentials)});await facilitator.supported(c);
-    const proof=new FinalizedProof(c,rpcReader(settings.rpcUrl));await proof.anchor();
-    const service=new Service({config:c,journal,facilitator,proof,receiptSigner,maxActive:4,requestsPerMinute:60});
+    const path=paymentPath(c,rpcReader(settings.rpcUrl)),proof=path.proof;await proof.anchor();
+    const service=new Service({config:c,journal,facilitator,...path,receiptSigner,maxActive:4,requestsPerMinute:60});
     backups=new BackupSupervisor({source:journal.path,directory:PRODUCTION_ROOT+'/backups',expected:{identity:c.identity,config:c,limits:journal.limits},policy:settings.backup});
     // Failure leaves recovery serving but blocks every new reservation/settle.
     try{await backups.start();}catch{}

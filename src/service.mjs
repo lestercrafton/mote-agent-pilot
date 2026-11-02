@@ -1,10 +1,13 @@
 import { getBytes, verifyMessage } from 'ethers';
-import { assert, address, hash32, makeOffer, validatePayment, requirements } from './protocol.mjs';
+import { assert, address, hash32, makeOffer, validatePayment, validatePaymentEnvelope, requirements } from './protocol.mjs';
 import { hashJson } from './core/json.mjs';
+import { ADMISSION,attestAdmission,validateAdmission } from './admission-evidence.mjs';
 
 export class Service {
-  constructor({ config, journal, facilitator, proof, receiptSigner, now = () => Math.floor(Date.now() / 1000), maxActive = 8, requestsPerMinute = 120, hook = async () => {} }) {
+  constructor({ config, journal, facilitator, proof, receiptSigner, now = () => Math.floor(Date.now() / 1000), maxActive = 8, requestsPerMinute = 120, hook = async () => {}, paymentValidator = validatePayment, admissionEvidence = false }) {
     assert(address(receiptSigner.address) === config.offerSigner && journal.identity === hashJson(config.identity), 'SERVICE_IDENTITY');
+    assert(typeof admissionEvidence==='boolean' && (!admissionEvidence || (paymentValidator!==validatePayment && proof.allowContractSignatures===true)), 'ADMISSION_MODE');this.admissionEvidence=admissionEvidence;
+    assert(typeof paymentValidator === 'function', 'PAYMENT_VALIDATOR'); this.validatePayment=paymentValidator;
     this.c = config; this.j = journal; this.facilitator = facilitator; this.proof = proof; this.signer = receiptSigner; this.now = now; this.active = 0; this.maxActive = maxActive; this.rate = requestsPerMinute; this.window = -1; this.requests = 0; this.hook = hook;
   }
   async limited(fn) {
@@ -50,23 +53,35 @@ export class Service {
     // Snapshot caller-owned objects before the first await to avoid cross-request mutation.
     input = structuredClone(input); payment = structuredClone(payment);
     return this.limited(async () => {
-      const recovered = validatePayment(this.c, input, payment, this.now(), { recovery: true });
+      const recovered = this.admissionEvidence ? validatePaymentEnvelope(this.c,input,payment,this.now(),{recovery:true}).value : await this.validatePayment(this.c, input, payment, this.now(), { recovery: true });
       const old = this.j.find(recovered);
       if (old) {
-        const saved = validatePayment(this.c, input, JSON.parse(old.payment), this.now(), { recovery: true });
+        const stored=JSON.parse(old.payment);
+        let saved;
+        if(this.admissionEvidence){
+          saved=validatePaymentEnvelope(this.c,input,stored,this.now(),{recovery:true}).value;
+          validateAdmission(this.c,stored);
+          const supplied=structuredClone(payment);supplied.extensions[ADMISSION]=stored.extensions[ADMISSION];
+          validateAdmission(this.c,supplied); // Binds BOTH exact signatures to prior admission.
+        }else saved=await this.validatePayment(this.c,input,stored,this.now(),{recovery:true});
         assert(saved.authKey === old.authKey && saved.fingerprint === old.fingerprint && saved.resultHash === old.resultHash && hashJson(JSON.parse(old.result)) === old.resultHash, 'ORDER_CORRUPT');
         return this.reconcile(old, transaction);
       }
-      const v = validatePayment(this.c, input, payment, this.now());
+      assert(!payment.extensions?.[ADMISSION],'UNEXPECTED_ADMISSION_EVIDENCE');
+      let v = await this.validatePayment(this.c, input, payment, this.now());
       if (!this.j.admitVerification(v, this.now())) return { status: 'pending', paymentId: v.id, transaction: null, recovery: 'Verification in progress or cooling down. Repeat this exact signed request.' };
       const verification = await this.facilitator.verify(payment, requirements(this.c));
       assert(verification.isValid === true && address(verification.payer) === v.payer, 'FACILITATOR_REJECTED');
       // Recheck time after external verification; completed handler result is already deterministic and bounded.
-      validatePayment(this.c, input, payment, this.now());
+      v = await this.validatePayment(this.c, input, payment, this.now());
+      validatePaymentEnvelope(this.c,input,payment,this.now()); // Fresh time after every external signature check.
+      if(this.admissionEvidence) payment=await attestAdmission(this.c,payment,v,this.signer,this.now());
+      validatePaymentEnvelope(this.c,input,payment,this.now());
       const { row, owner } = this.j.reserve(v, payment, this.now());
       if (!owner) return this.reconcile(row, transaction);
       await this.hook('afterReservation');
       this.j.assertNewAuthority(); // Disk/restore pressure may have changed while verification or hooks ran.
+      validatePaymentEnvelope(this.c,input,payment,this.now()); // Also recheck after reservation hooks, before any settlement.
       let settlement;
       try { settlement = await this.facilitator.settle(payment, requirements(this.c)); }
       catch { return this.pending(row); }

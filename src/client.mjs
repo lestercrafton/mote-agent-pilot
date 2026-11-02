@@ -3,7 +3,7 @@ import { BINDING, PROFILE, assert, address, bindDomain, BIND_TYPES, bindingMessa
 import { hashJson } from './core/json.mjs';
 
 // The signer exposes typed signatures only. No private key, transaction, approve, swap, or gas-funding API.
-export async function authorize({ config: c, input, offerResponse, paymentId, signer, journal, policy, now = Math.floor(Date.now() / 1000) }) {
+export async function authorize({ config: c, input, offerResponse, paymentId, signer, journal, policy, now = Math.floor(Date.now() / 1000), paymentValidator = validatePayment }) {
   input = structuredClone(input); offerResponse = structuredClone(offerResponse);
   assert(policy.enabled === true && uint(policy.maxPerPayment) && uint(policy.maxTotal) && BigInt(policy.maxPerPayment) > 0n && BigInt(policy.maxPerPayment) <= BigInt(policy.maxTotal) && policy.maxTotal === journal.limits.clientBudget, 'CLIENT_POLICY');
   assert(journal.identity === hashJson({ config: c.identity, policy }), 'CLIENT_JOURNAL_IDENTITY');
@@ -28,7 +28,7 @@ export async function authorize({ config: c, input, offerResponse, paymentId, si
     'payment-identifier': { info: { required: true, id: paymentId } },
     [BINDING]: { info: { required: true, profile: PROFILE, offer, signature } },
   } };
-  validatePayment(c, input, payment, now);
+  await paymentValidator(c, input, payment, now);
   journal.clientSave(paymentId, payment);
   return payment;
 }
