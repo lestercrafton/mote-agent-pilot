@@ -483,7 +483,7 @@
     },
     {
       "path": "src/combined.mjs",
-      "sha256": "b819421b63e652a3a36994cc81c6aa7f31a67da5ce57e1203236fbdb7907e2b4"
+      "sha256": "b0ac21f26092a5cae3bf8d5b72545eaf24645f065f6b8284efcbee9654b6b4f1"
     },
     {
       "path": "src/contract-signatures.mjs",
@@ -507,7 +507,7 @@
     },
     {
       "path": "src/http.mjs",
-      "sha256": "ee900f99602666f1d6885746472ddd45cfd3fbdc35082c42732863b04e09f2ea"
+      "sha256": "127b3ac911df39ab7a21d41c0b81c3aa5d0f872a224166d041db4437aa2fc65e"
     },
     {
       "path": "src/journal-schema.mjs",
@@ -663,7 +663,7 @@
     },
     {
       "path": "test/sepolia-paused.test.mjs",
-      "sha256": "a8d61b9d2e4f07493a05aae494c19914070cccc692090da8344e6150f4f8e555"
+      "sha256": "b97a763ce89c95cbe1e90477fcf2090bb22e6702b05a209483c08772ecc0df51"
     },
     {
       "path": "test/source-transition.test.mjs",
