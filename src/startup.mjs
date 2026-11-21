@@ -11,6 +11,7 @@ import { offhostPlan } from './maintenance.mjs';
 import { installCombinedRoutes, USDC_PATH } from './combined.mjs';
 import { startFilePilotFromEnvironment } from '../legacy/scripts/testnet-file-server.mjs';
 import { startFilePilotFromEnvironment as startTransitionPilot } from './legacy-transition-startup.mjs';
+import { startPausedLegacyFromEnvironment } from './legacy-sepolia-disabled.mjs';
 import { readTransition } from './release-binding.mjs';
 import { PRODUCTION_ROOT,PRODUCTION_ACTIVATION,validateProductionSettings,admissionWindow } from './production-policy.mjs';
 import { BackupSupervisor } from './backup-supervisor.mjs';
@@ -52,7 +53,10 @@ export async function prepareUsdc(env) {
     return new Service({config:c,journal,facilitator,...path,receiptSigner});
   } catch(e){journal?.close();throw e;} finally{key.fill(0);credentialBytes?.fill(0);}
 }
-export function defaultLegacyFactory(env){return env.MOTE_RELEASE_TRANSITION_HASH?startTransitionPilot(env):startFilePilotFromEnvironment(env);}
+export function defaultLegacyFactory(env) {
+  if (env.MOTE_LEGACY_SEPOLIA_DISABLED === 'true') return startPausedLegacyFromEnvironment(env);
+  return env.MOTE_RELEASE_TRANSITION_HASH ? startTransitionPilot(env) : startFilePilotFromEnvironment(env);
+}
 export function installProductionControls(service,{operation,backups,now}) {
   const gate=admissionWindow(operation,now),j=service.j,original=j.assertNewAuthority.bind(j),ready=j.readiness.bind(j);
   j.assertNewAuthority=()=>{original();gate();backups.assertReady();};
@@ -85,6 +89,8 @@ export async function prepareProduction(env) {
 }
 export async function startCombinedFromEnvironment(env, { legacyFactory=defaultLegacyFactory, usdcFactory=prepareUsdc }={}) {
   assert(['false','true',undefined].includes(env.MOTE_USDC_ENABLED),'USDC_ENABLE_FLAG');
+  assert(['false', 'true', undefined].includes(env.MOTE_LEGACY_SEPOLIA_DISABLED), 'SEPOLIA_PAUSE_FLAG');
+  assert(env.MOTE_LEGACY_SEPOLIA_DISABLED !== 'true' || env.MOTE_USDC_ENABLED !== 'true' || env.MOTE_USDC_ACTIVATION === PRODUCTION_ACTIVATION, 'SEPOLIA_PAUSE_MAINNET_ONLY');
   // Pass the actual deployment environment unchanged: never spoof the source commit to bypass legacy custody.
   const legacy=await legacyFactory(env);
   let usdc=null;

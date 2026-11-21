@@ -8,6 +8,8 @@ Keep automatic deploys off because each revision needs a source-binding transiti
 
 Deploy with `MOTE_USDC_ENABLED=false`. Verify `/ready`, the legacy discovery document, the free `/v1/audit` route, and the disabled USDC discovery response. Run the source-bound production preflight with `MOTE_USDC_PREFLIGHT=approved-source-bound-read-only-v1` while USDC is still disabled. It checks the receipt signer, CDP support for Base, and a finalized chain anchor.
 
+Set `MOTE_LEGACY_SEPOLIA_DISABLED=true` to keep free JSON validation and the independently configured Base mainnet service available while Ethereum Sepolia history is unavailable. In this mode the legacy quote, order, recovery, and dispenser routes return 503. Existing Sepolia records stay on the disk. Check `legacySepolia` and `usdc` separately in `/ready`. Only restore the Sepolia routes once the pinned deployment and dispenser history pass their existing verification.
+
 ## Mainnet activation
 
 Once the operator approves the commercial terms and provider allowance, use `productionDraft` from `src/production-draft.mjs` with the confirmed payee, the installed receipt signer, the approved start time, provider allowance, and state limit. Select `payerSignatureProfile: "deployed-erc1271-v1"` for deployed smart accounts. Save the resulting settings in `/var/data/mote-usdc/production/config.json` as an owner-only file and pin the returned `settingsHash` in `MOTE_USDC_SETTINGS_HASH`. Reuse `production/receipt.key` and the existing `cdp.json` on the same disk.

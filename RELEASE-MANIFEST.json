@@ -59,7 +59,7 @@
     },
     {
       "path": "docs/OPERATIONS.md",
-      "sha256": "24a5fae00796a088abd311af7fafe542f4742d22d944a9802dfa40030b920d78"
+      "sha256": "5b2b33b0e4438f99a32c2b61eb2f6cef1d242633417cbe2c12c52a0a99735630"
     },
     {
       "path": "docs/PRODUCTION-PREPARATION.md",
@@ -435,7 +435,7 @@
     },
     {
       "path": "scripts/combined-server.mjs",
-      "sha256": "2ab70a226bcf4653a3b83b9457e4424db1c302c0487b05b358338138d9da072a"
+      "sha256": "59e8a2de733b1e2c815b083d0bbd15dde08f7638eb0146eac24d6ff935164227"
     },
     {
       "path": "scripts/demo.mjs",
@@ -522,6 +522,10 @@
       "sha256": "e0b1ac0d9611a18d9e47ea1cea8a4620c7fd22c46769afc23fef89c6c1d9330b"
     },
     {
+      "path": "src/legacy-sepolia-disabled.mjs",
+      "sha256": "886c85f446829baa9b953fab0341c062c374dba3ef69f9f76a246b1757da6bbc"
+    },
+    {
       "path": "src/legacy-transition-startup.mjs",
       "sha256": "0eef0a8a5afe6c078d16b5f9aa2186c27b5c3d8380a0c8b3866a122deed3ceb8"
     },
@@ -575,7 +579,7 @@
     },
     {
       "path": "src/startup.mjs",
-      "sha256": "90ce5e723337fe50ad83ce0a2089645d3fdaabc36dc19282c45cf917008b162a"
+      "sha256": "796e54b19ec8f57ecd8eb7ab1ffa1b8a7e8bbb5c7d0cc1b58e3a9f6f46e28103"
     },
     {
       "path": "test/adapter.test.mjs",
@@ -656,6 +660,10 @@
     {
       "path": "test/receipt-worker.mjs",
       "sha256": "fc3d23ead3fe4e7f68fd26f29688039bd994f038138416d5d836227940d0093e"
+    },
+    {
+      "path": "test/sepolia-paused.test.mjs",
+      "sha256": "a8d61b9d2e4f07493a05aae494c19914070cccc692090da8344e6150f4f8e555"
     },
     {
       "path": "test/source-transition.test.mjs",
