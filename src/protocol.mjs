@@ -4,6 +4,7 @@ import { hashJson, prepareAudit, canonicalStringify, boundedJson } from './core/
 
 export const PROFILE = 'mote-bound-eip3009-v1';
 export const BINDING = 'mote-request-binding';
+export const CONTRACT_PROFILE = 'deployed-erc1271-v1';
 export const NETWORKS = Object.freeze({
   'eip155:84532': { chainId: 84532, asset: '0x036CbD53842c5426634e7929541eC2318f3dCF7e', name: 'USDC', version: '2' },
   'eip155:8453': { chainId: 8453, asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', name: 'USD Coin', version: '2' },
@@ -31,10 +32,15 @@ export function config({ origin, network = 'eip155:84532', payTo, offerSigner, a
   assert(typeof policyEpoch === 'string' && policyEpoch.length > 0 && policyEpoch.length < 100, 'EPOCH');
   const n = NETWORKS[network];
   assert(['/v1/audit','/v1/usdc/audit'].includes(path), 'PATH');
-  assert(payerSignatureProfile===undefined || payerSignatureProfile==='deployed-erc1271-v1','PAYER_SIGNATURE_PROFILE');
+  assert(payerSignatureProfile===undefined || payerSignatureProfile===CONTRACT_PROFILE,'PAYER_SIGNATURE_PROFILE');
   const c = { ...(payerSignatureProfile?{payerSignatureProfile}:{}), profile: PROFILE, origin, path, method: 'POST', network, asset: address(n.asset), payTo: address(payTo), offerSigner: address(offerSigner), amount, policyEpoch, maxTimeoutSeconds: 120, offerLifetime: 180 };
   assert(c.payTo !== '0x0000000000000000000000000000000000000000', 'PAYEE');
   return Object.freeze({ ...c, identity: hashJson(c) });
+}
+export function payerWalletSupport(config) {
+  return config.payerSignatureProfile === CONTRACT_PROFILE
+    ? 'Deployed ERC-1271 (including EIP-7702) or EOA EIP-3009 payer plus Mote request-binding helper required. Undeployed/6492 wallets are unsupported. Hosted facilitator acceptance remains wallet-dependent.'
+    : 'EOA EIP-3009 only; use the Mote binding helper';
 }
 export function requirements(c) {
   const n = NETWORKS[c.network];

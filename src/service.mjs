@@ -75,9 +75,10 @@ export class Service {
       // Recheck time after external verification; completed handler result is already deterministic and bounded.
       v = await this.validatePayment(this.c, input, payment, this.now());
       validatePaymentEnvelope(this.c,input,payment,this.now()); // Fresh time after every external signature check.
-      if(this.admissionEvidence) payment=await attestAdmission(this.c,payment,v,this.signer,this.now());
+      // The signed admission is part of Mote's durable record, not the facilitator payload.
+      const storedPayment = this.admissionEvidence ? await attestAdmission(this.c, payment, v, this.signer, this.now()) : payment;
       validatePaymentEnvelope(this.c,input,payment,this.now());
-      const { row, owner } = this.j.reserve(v, payment, this.now());
+      const { row, owner } = this.j.reserve(v, storedPayment, this.now());
       if (!owner) return this.reconcile(row, transaction);
       await this.hook('afterReservation');
       this.j.assertNewAuthority(); // Disk/restore pressure may have changed while verification or hooks ran.

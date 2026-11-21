@@ -1,6 +1,6 @@
 import { constants, openSync, closeSync, fstatSync, lstatSync, readFileSync, realpathSync } from 'node:fs';
 import { Wallet } from 'ethers';
-import { config, assert, address } from './protocol.mjs';
+import { config, assert, address, payerWalletSupport } from './protocol.mjs';
 import { hashJson } from './core/json.mjs';
 import { Journal } from './journal.mjs';
 import { CdpTransport, cdpAuth } from './facilitator.mjs';
@@ -59,7 +59,7 @@ export function installProductionControls(service,{operation,backups,now}) {
   const offer=service.offer.bind(service);service.offer=async input=>{j.assertProviderAdmission();return offer(input);};
   j.readiness=()=>{const state=ready();let providerAvailable=false;try{j.assertProviderAdmission();providerAvailable=true;}catch{}let windowOpen=false;try{gate();windowOpen=true;}catch{}return {...state,newAdmissionAllowed:state.newAdmissionAllowed&&windowOpen&&backups.status().available&&providerAvailable,providerReservation:j.providerStatus(),windowOpen,backup:backups.status(),settlementAttempts:j.attempts(),settlementAttemptCap:j.limits.maxAttempts};};
   service.shutdown=()=>backups.stop();
-  service.disclosure={mode:'resource-bounded-mainnet-beta',priceUSDC:'0.01',newPaymentsUntil:operation.notAfter??null,providerAuthorizationMicrousd:operation.providerBudget?.authorizedMicrousd??null,providerInvoiceCapGuaranteed:false,settlementAttemptCap:j.limits.maxAttempts,operator:'Lester Crafton',jurisdiction:'Tennessee, USA',refunds:'No automatic refunds; operator review required. Do not sign a replacement payment on timeout.',privacy:'Public synthetic inputs only. Results, public payer address and signed authorizations are retained on the private service disk and local backups. No off-host backup or input logging is enabled.',wallets:service.c.payerSignatureProfile==='deployed-erc1271-v1'?'Deployed ERC-1271 (including EIP-7702) or EOA EIP-3009 payer plus Mote request-binding helper required. Undeployed/6492 wallets are unsupported. Hosted facilitator acceptance remains wallet-dependent.':'EOA EIP-3009 payer and Mote request-binding helper required. Smart-wallet payers are not supported.'};
+  service.disclosure={mode:'resource-bounded-mainnet-beta',priceUSDC:'0.01',newPaymentsUntil:operation.notAfter??null,providerAuthorizationMicrousd:operation.providerBudget?.authorizedMicrousd??null,providerInvoiceCapGuaranteed:false,settlementAttemptCap:j.limits.maxAttempts,operator:'Lester Crafton',jurisdiction:'Tennessee, USA',refunds:'No automatic refunds; operator review required. Do not sign a replacement payment on timeout.',privacy:'Public synthetic inputs only. Results, public payer address and signed authorizations are retained on the private service disk and local backups. No off-host backup or input logging is enabled.',wallets:payerWalletSupport(service.c)};
   return service;
 }
 export async function prepareProduction(env) {

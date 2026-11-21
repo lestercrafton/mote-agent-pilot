@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import { encodePaymentRequiredHeader, decodePaymentSignatureHeader, encodePaymentResponseHeader } from '@x402/core/http';
 import { parseJson, LIMITS } from './core/json.mjs';
-import { assert, PROFILE, BINDING } from './protocol.mjs';
+import { assert, PROFILE, BINDING, payerWalletSupport } from './protocol.mjs';
 
 // Dependencies are explicit; this module never reads credentials or starts a listener.
 export function httpServer(service, { manifestPath = '/.well-known/mote.json', healthPath = '/health', maxPaymentHeaderBytes=22000 } = {}) {
@@ -14,7 +14,8 @@ export function httpServer(service, { manifestPath = '/.well-known/mote.json', h
         name: 'Mote USDC candidate', profile: PROFILE, productionReady: false, service: 'JSON tool-call preflight',
         endpoint: service.c.origin + service.c.path, method: 'POST', network: service.c.network, asset: service.c.asset, amount: service.c.amount,
         payTo: service.c.payTo, offerSigner: service.c.offerSigner, configHash: service.c.identity, requiredExtension: BINDING,
-        wallets: 'EOA EIP-3009 only; use the Mote binding helper', limits: {...LIMITS,paymentHeaderBytes:maxPaymentHeaderBytes},
+        ...(service.c.payerSignatureProfile ? { payerSignatureProfile: service.c.payerSignatureProfile } : {}),
+        wallets: payerWalletSupport(service.c), limits: {...LIMITS,paymentHeaderBytes:maxPaymentHeaderBytes},
         recovery: 'Repeat original body and PAYMENT-SIGNATURE. Optional X-Mote-Transaction is a proof-checked hint. Never sign a replacement on timeout.',
         privacy: 'Synthetic nonsecret input only. Local journal stores result and signed authorization. No request logging. TLS/operator/storage review required before hosting.',
         ...(service.disclosure?{beta:service.disclosure}:{}),

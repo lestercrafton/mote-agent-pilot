@@ -1,5 +1,7 @@
 import test from 'node:test';
 import A from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { encodePaymentSignatureHeader,decodePaymentRequiredHeader } from '@x402/core/http';
 import { fixture,input,signer,PUBLIC_FIXTURE_PAYER } from './fixtures.mjs';
 import { authorize } from '../src/client.mjs';
@@ -58,4 +60,15 @@ test('combined startup closes its new listener on failed USDC readiness; no lega
  await A.rejects(startCombinedFromEnvironment({MOTE_USDC_ENABLED:'true',RENDER_GIT_COMMIT:'real'},{legacyFactory:async e=>{A.equal(e.RENDER_GIT_COMMIT,'real');old=await legacy();return old;},usdcFactory:async()=>{throw Error('fixture startup unavailable');}}),/fixture startup unavailable/);
  A.equal(old.transport.server.listening,false);
  let called=false;await A.rejects(startCombinedFromEnvironment({MOTE_USDC_ENABLED:'yes'},{legacyFactory:()=>{called=true;}}),/USDC_ENABLE_FLAG/);A.equal(called,false);
+});
+test('startup CLI reports a known failure code without exposing environment values', () => {
+ const script = fileURLToPath(new URL('../scripts/combined-server.mjs', import.meta.url));
+ const child = spawnSync(process.execPath, [script], {
+  env: { MOTE_USDC_ENABLED: 'invalid-fixture-value' },
+  encoding: 'utf8',
+  timeout: 10_000,
+ });
+ A.equal(child.status, 1);
+ A.equal(child.stdout, '');
+ A.deepEqual(JSON.parse(child.stderr), { error: 'COMBINED_STARTUP_FAILED', reason: 'USDC_ENABLE_FLAG' });
 });

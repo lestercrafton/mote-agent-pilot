@@ -1,8 +1,8 @@
 import {Service} from './service.mjs';
 import {FinalizedProof} from './chain-proof.mjs';
 import {DeployedSignatureVerifier,deployedPaymentValidator} from './contract-signatures.mjs';
-import {validatePayment} from './protocol.mjs';
-export const CONTRACT_PROFILE='deployed-erc1271-v1';
+import {CONTRACT_PROFILE,validatePayment} from './protocol.mjs';
+export {CONTRACT_PROFILE};
 // Explicit config identity / journal identity change. The default remains EOA.
 export function paymentPath(config,rpc){
  const enabled=config.payerSignatureProfile===CONTRACT_PROFILE;

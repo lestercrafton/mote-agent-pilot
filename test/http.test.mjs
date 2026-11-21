@@ -11,6 +11,8 @@ test('loopback HTTP discovery -> x402 402 -> authorized payment -> receipt -> lo
   const base = `http://127.0.0.1:${server.address().port}`;
   try {
     const manifest = await (await fetch(base+'/.well-known/mote.json')).json(); A.equal(manifest.productionReady,false);
+    A.equal(manifest.payerSignatureProfile, undefined);
+    A.equal(manifest.wallets, 'EOA EIP-3009 only; use the Mote binding helper');
     const offered = await fetch(base+'/v1/audit',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(input)}); A.equal(offered.status,402);
     const offerResponse = decodePaymentRequiredHeader(offered.headers.get('payment-required')); PaymentRequiredV2Schema.parse(offerResponse);
     const p = await authorize({config:f.c,input,offerResponse,paymentId:'http-payment-00001',signer:signer(PUBLIC_FIXTURE_PAYER),journal:f.clientJournal,policy:f.policy,now:f.chain.now}); PaymentPayloadV2Schema.parse(p);

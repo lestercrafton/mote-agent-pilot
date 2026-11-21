@@ -10,6 +10,7 @@ import {snapshot,inspectJournal} from '../src/maintenance.mjs';
 import {ADMISSION} from '../src/admission-evidence.mjs';
 import {ExactEvmScheme as OfficialFacilitator} from '@x402/evm/exact/facilitator';
 import {checkWrapped} from './contract-fixtures.mjs';
+import {httpServer} from '../src/http.mjs';
 function setup(){
  const f=fixture({config:{payerSignatureProfile:'deployed-erc1271-v1'}}),chain=new ContractFixtureChain(f.c,f.chain.now),proof=new FinalizedProof(f.c,chain.rpc,{allowContractSignatures:true}),validator=deployedPaymentValidator(new DeployedSignatureVerifier({network:f.c.network,rpc:chain.rpc}));
  const policy={...f.policy,payer:address(CONTRACT)},client=new Journal(join(f.dir,'contract-client.sqlite'),{config:f.c.identity,policy},{create:true,clientBudget:policy.maxTotal});
@@ -24,8 +25,32 @@ test('224-byte Coinbase wrapper uses a different replay-safe digest; never extra
  const [wrapper]=AbiCoder.defaultAbiCoder().decode(WRAPPER,sig);assert.equal(wrapper.signatureData.length,132);assert.notEqual(wrapper.signatureData,sig);
  const f=setup();try{const p=await f.pay();assert.throws(()=>validatePayment(f.c,input,p,f.chain.now),/EOA_ONLY/);}finally{f.close();}
 });
+test('HTTP discovery advertises the opt-in deployed signature profile', async () => {
+ const f = setup();
+ const server = httpServer(f.service);
+ try {
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  const response = await fetch(`http://127.0.0.1:${server.address().port}/.well-known/mote.json`);
+  assert.equal(response.status, 200);
+  const manifest = await response.json();
+  assert.equal(manifest.payerSignatureProfile, 'deployed-erc1271-v1');
+  assert.match(manifest.wallets, /Deployed ERC-1271/);
+  assert.match(manifest.wallets, /facilitator acceptance remains wallet-dependent/);
+  assert.equal(manifest.configHash, f.c.identity);
+ } finally {
+  server.closeAllConnections();
+  await new Promise(resolve => server.close(resolve));
+  f.close();
+ }
+});
 test('full opaque payment, exact bytes settlement, receipt and restart retry settle once',async()=>{const f=setup();try{
- const p=await f.pay();const result=await f.service.execute(input,p);assert.equal(result.status,'complete');
+ const p=await f.pay();
+ const verify=f.facilitator.verify.bind(f.facilitator),settle=f.facilitator.settle.bind(f.facilitator);
+ f.facilitator.verify=async payload=>{assert.deepEqual(payload,p);return verify(payload);};
+ f.facilitator.settle=async payload=>{assert.deepEqual(payload,p);return settle(payload);};
+ const result=await f.service.execute(input,p);assert.equal(result.status,'complete');
+ const row=f.journal.db.prepare('SELECT payment FROM orders').get();
+ assert.ok(JSON.parse(row.payment).extensions[ADMISSION]);
  assert.equal(authorizationCalldata(p,{allowContractSignatures:true}).slice(0,10),'0xcf092995');
  assert.deepEqual(await f.makeService().execute(input,recoverAuthorization(f.client,p.extensions['payment-identifier'].info.id)),result);
  assert.equal(f.facilitator.settles,1);assert.equal(f.facilitator.verifies,1);

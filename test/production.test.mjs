@@ -27,6 +27,20 @@ test('production settings bind exact native asset, price, start time and explici
 });
 test('disabled production exits before any file access',async()=>{await A.rejects(prepareProduction({}),/PRODUCTION_DISABLED/);});
 test('nonsecret production assembler remains disabled and binds only supplied recipient',()=>{const s=settings(),d=productionDraft({payTo:s.config.payTo,receiptSigner:s.config.offerSigner,notBefore:s.operation.notBefore,providerBudget:s.operation.providerBudget});A.equal(d.enabled,false);A.equal(d.activationAuthorized,false);A.equal(d.settingsHash,hashJson(d.settings));A.equal(d.settings.config.payTo,s.config.payTo);A.throws(()=>productionDraft({payTo:s.config.payTo,receiptSigner:s.config.payTo,notBefore:1000,providerBudget:s.operation.providerBudget}),/PRODUCTION_SIGNER/);});
+test('production assembly binds the selected payer signature profile to the journal and settings',()=>{
+ const s=settings();
+ const options={payTo:s.config.payTo,receiptSigner:s.config.offerSigner,notBefore:s.operation.notBefore,providerBudget:s.operation.providerBudget};
+ const original=productionDraft(options);
+ const deployedWallet=productionDraft({...options,payerSignatureProfile:'deployed-erc1271-v1'});
+ A.equal(original.settings.config.payerSignatureProfile,undefined);
+ A.equal(original.settings.config.identity,s.config.identity);
+ A.equal(deployedWallet.enabled,false);
+ A.equal(deployedWallet.activationAuthorized,false);
+ A.equal(validateProductionSettings(env(deployedWallet.settings),deployedWallet.settings).payerSignatureProfile,'deployed-erc1271-v1');
+ A.notEqual(deployedWallet.settings.config.identity,original.settings.config.identity);
+ A.notEqual(deployedWallet.settingsHash,original.settingsHash);
+ A.throws(()=>productionDraft({...options,payerSignatureProfile:'unsupported'}),/PAYER_SIGNATURE_PROFILE/);
+});
 test('staging preflight calls only supported and chain anchor, without a journal or signing authority',async()=>{const s=settings(),c=preflightConfig({enabled:false,payTo:s.config.payTo,offerSigner:s.config.offerSigner}),calls=[];const result=await checkProductionDependencies({c,receiptSigner:{address:c.offerSigner,signMessage(){A.fail('no signing');}},facilitator:{supported:async()=>calls.push('supported'),verify(){A.fail('no verify');},settle(){A.fail('no settle');}},proof:{anchor:async()=>calls.push('anchor')}});A.deepEqual(calls,['supported','anchor']);A.equal(result.journalCreated,false);A.equal(result.newPayments,false);A.throws(()=>preflightConfig({enabled:true,payTo:c.payTo,offerSigner:c.offerSigner}));});
 test('fixed admission deadline, boundary and clock rollback never reset a window',()=>{let now=99;const g=admissionWindow({notBefore:100,notAfter:200},()=>now);A.throws(g,/WINDOW_CLOSED/);now=100;g();now=199;g();now=198;A.throws(g,/CLOCK_ROLLBACK/);now=200;A.throws(g,/WINDOW_CLOSED/);A.throws(admissionWindow({notBefore:100,notAfter:200},()=>201),/WINDOW_CLOSED/);});
 test('expiry and unhealthy backup block new authority but retain identical paid recovery',async()=>{const f=fixture();let good=true;try{installProductionControls(f.service,{operation:{notBefore:f.chain.now-1,notAfter:f.chain.now+10},now:()=>f.chain.now,backups:{assertReady(){A.ok(good,'BACKUP_UNAVAILABLE');},status(){return {available:good};},stop(){}}});const p=await f.payment(),r=await f.service.execute(input,p);good=false;await A.rejects(f.service.offer(input));A.deepEqual(await f.service.execute(input,p),r);good=true;f.chain.now+=11;await A.rejects(f.service.offer(input),/WINDOW_CLOSED/);A.deepEqual(await f.service.execute(input,p),r);A.equal(f.facilitator.settleCalls,1);A.equal(f.journal.readiness().newAdmissionAllowed,false);}finally{f.close();}});

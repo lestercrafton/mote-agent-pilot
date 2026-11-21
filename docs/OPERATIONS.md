@@ -1,25 +1,20 @@
-> Historical documentation: the v0.8.6 [continuous-admission report](CONTINUOUS-ADMISSION.md) supersedes earlier 100-attempt/24-hour proposals and qualification status. No activation is authorized by these documents.
+# Deployment and recovery
 
-# Deployment preparation and recovery
+## Existing Render service
 
-This candidate has not been deployed. No new keys, credentials, accounts, billing agreements or off-host destinations were configured. Existing MOTE/Sepolia service and source remain unchanged.
+Use the existing native Node service with one 512 MiB instance and its 1 GB persistent disk. Run `npm ci --omit=dev --ignore-scripts --no-audit --no-fund && npm ci --prefix legacy --omit=dev --ignore-scripts --no-audit --no-fund` to build, and `node scripts/combined-server.mjs` to start. Pin Node 24.22.2 and use `/ready` for the health check.
 
-## Proposed existing Render footprint
+Keep automatic deploys off because each revision needs a source-binding transition for the existing quote key. Check the active commit, `MOTE_RELEASE_TRANSITION_HASH`, `MOTE_SOURCE_ARTIFACT_HASH`, and the public transition record at `/var/data/mote-usdc/release-transition.json`. Build and verify the release manifest before binding it to the exact commit. Preserve the last working transition and grant for rollback. The receipt signer needs its own grant for the new transition. See [continuous admission](CONTINUOUS-ADMISSION.md) for the grant fields.
 
-Use the existing one-instance native Node service and 1GB persistent disk only after approval and qualification. Build: `npm ci --omit=dev --ignore-scripts --no-audit --no-fund && npm ci --prefix legacy --omit=dev --ignore-scripts --no-audit --no-fund`. Start: `node scripts/combined-server.mjs`. Node: 24.22.2. Health check: `/ready`. No second port, database subscription or host upgrade is required by the code. Capacity on the 512MB host is unmeasured for this combined candidate; do not reuse previous capacity claims.
+Deploy with `MOTE_USDC_ENABLED=false`. Verify `/ready`, the legacy discovery document, the free `/v1/audit` route, and the disabled USDC discovery response. Run the source-bound production preflight with `MOTE_USDC_PREFLIGHT=approved-source-bound-read-only-v1` while USDC is still disabled. It checks the receipt signer, CDP support for Base, and a finalized chain anchor.
 
-Keep actual existing environment/source identity. The legacy quote-key record is pinned to the old deployment commit. A reviewed source-binding transition is required for any new revision; no environment spoof or second key import is implemented here. Existing legacy files under `/var/data` are not migrated by this adapter.
+## Mainnet activation
 
-USDC is disabled unless `MOTE_USDC_ENABLED=true` and `MOTE_USDC_ACTIVATION=base-sepolia-beta-v1`. It accepts only Base Sepolia and the exact existing `MOTE_PUBLIC_ORIGIN`. Mainnet configuration is rejected even though library fixtures contain mainnet metadata. A failure during combined startup closes the new listener; it does not manipulate an already running deployment.
+Once the operator approves the commercial terms and provider allowance, use `productionDraft` from `src/production-draft.mjs` with the confirmed payee, the installed receipt signer, the approved start time, provider allowance, and state limit. Select `payerSignatureProfile: "deployed-erc1271-v1"` for deployed smart accounts. Save the resulting settings in `/var/data/mote-usdc/production/config.json` as an owner-only file and pin the returned `settingsHash` in `MOTE_USDC_SETTINGS_HASH`. Reuse `production/receipt.key` and the existing `cdp.json` on the same disk.
 
-The separately approved provisioning step must create an owner-only canonical `/var/data/mote-usdc` directory with these preexisting, single-link, owner-owned 0600 files:
+If there is no existing production journal or interrupted initialization, run `npm run initialize:production` once while USDC is disabled, with `MOTE_USDC_INITIALIZE=approved-new-empty-production-journal-v1`. A surviving journal or partial state requires reconciliation. After successful initialization, set `MOTE_USDC_ACTIVATION=base-usdc-receive-beta-v1` and `MOTE_USDC_ENABLED=true` for the approved activation. Startup checks the release, journal binding, facilitator support, finalized RPC anchor, and backup health. Confirm that `/ready` reports `usdc.newAdmissionAllowed: true` and that discovery advertises Base, native USDC, the intended recipient, and the configured profile.
 
-- `config.json`: `{config,limits,rpcUrl,offhost}`. `config` is the complete output of `config()` using an approved public USDC recipient, separate offer/receipt signer address, price/policy epoch, exact origin and `/v1/usdc/audit` path. `limits` is the complete journal limit object with an approved attempt budget/epoch. RPC must be `https://sepolia.base.org`. `offhost` is `{enabled:false,destination:null}` or a proposed nonsecret destination string.
-- `orders.sqlite`: explicitly initialized empty v2 journal bound to that config identity and exact limits. Startup never creates it. v0.8.0 databases are not silently migrated. This is server state, never a client spending journal.
-- `receipt.key`: separate approved offer/receipt-only signer, never A2/Q/P2/P3 or fixture scalars. This is a hot signer; it cannot transfer USDC by this interface but compromise can forge service offers and receipts.
-- `cdp.json`: exactly `{apiKeyId,apiKeySecret}`, scoped to the necessary facilitator API where supported. No CDP wallet secret is read or required. API compromise can consume provider quota/invoice exposure and submit any valid payment capabilities it obtains.
-
-`MOTE_USDC_SETTINGS_HASH` pins `hashJson(config.json contents)`; changed settings fail closed. `MOTE_USDC_RECOVERY_ONLY=true` also blocks new authority. Startup validates public settings before reading secrets, checks provider `/supported` and the configured RPC anchor, and never calls settle. Byte buffers are cleared after loading; JavaScript-managed secret strings cannot be guaranteed erased. File checks assume the service UID and its parent mount are trusted, and do not protect against a malicious owner or host administrator. Native production provisioning/transfer and rotation still require a reviewed secure path and approval; none is supplied or executed by this candidate.
+For the first approved payment, verify the finalized transfer and signed result. Repeat the original body and authorization to confirm identical recovery and a single settlement. If admission must pause after activation, use `MOTE_USDC_RECOVERY_ONLY=true` so existing signed requests can recover. If rolling back to a previous deploy, first confirm its source binding and compatibility with all retained financial state.
 
 ## Backup and quarantined restore
 
