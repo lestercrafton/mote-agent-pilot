@@ -59,6 +59,61 @@ test('CDP verify/supported successful fixtures preserve wire request and exact n
   A.equal((await t.verify({p:1},{r:2})).isValid,true);
   await t.supported({network:'eip155:84532'}); await A.rejects(t.supported({network:'eip155:1'}),/PROVIDER_UNSUPPORTED/);
 });
+test('CDP verification logs the allowlisted reason for a documented HTTP 400 without changing the failure', async () => {
+  const observed = [];
+  const response = { isValid: false, invalidReason: 'insufficient_funds', invalidMessage: 'raw provider error', payer: 'private payer fixture', correlationId: 'private request ID' };
+  const transport = new CdpTransport({
+    auth: async () => 'private JWT fixture',
+    fetchImpl: async (url, init) => {
+      A.equal(url, `${CDP}/verify`);
+      A.equal(init.method, 'POST');
+      return Response.json(response, { status: 400 });
+    },
+    onVerifyFailure: event => observed.push(event),
+  });
+  await A.rejects(transport.verify({ signature: 'private signature fixture' }, {}), { code: 'PROVIDER_UNAVAILABLE' });
+  A.deepEqual(observed, [{ stage: 'provider_verify', httpStatus: 400, reason: 'insufficient_funds' }]);
+});
+test('CDP verification diagnostics distinguish HTTP failure, rejected verification, and invalid envelopes', async () => {
+  const observed = [];
+  const rejected = { isValid: false, invalidReason: 'private_provider_reason_looks_like_a_code', payer: 'private payer fixture' };
+  const cases = [
+    Response.json({ invalidReason: 'insufficient_funds', errorMessage: 'private server error' }, { status: 502 }),
+    Response.json(rejected),
+    Response.json({ isValid: true, payer: PUBLIC_FIXTURE_PAYER.address }),
+    Response.json({ isValid: 'true', invalidReason: 'invalid_payload' }),
+    Response.json({ isValid: false, invalidReason: 'insufficient_funds', invalidMessage: 'x'.repeat(5000) }, { status: 400 }),
+  ];
+  const transport = new CdpTransport({
+    auth: async () => 'fixture', fetchImpl: async () => cases.shift(),
+    onVerifyFailure: event => observed.push(event),
+  });
+  await A.rejects(transport.verify({}, {}), { code: 'PROVIDER_UNAVAILABLE' });
+  A.deepEqual(await transport.verify({}, {}), rejected);
+  A.equal((await transport.verify({}, {})).isValid, true);
+  await A.rejects(transport.verify({}, {}), { code: 'PROVIDER_UNAVAILABLE' });
+  await A.rejects(transport.verify({}, {}), { code: 'PROVIDER_UNAVAILABLE' });
+  A.deepEqual(observed, [
+    { stage: 'provider_verify', httpStatus: 502, reason: 'provider_http_error' },
+    { stage: 'provider_verify', httpStatus: 200, reason: 'provider_rejected' },
+    { stage: 'provider_verify', httpStatus: 200, reason: 'invalid_response' },
+    { stage: 'provider_verify', httpStatus: 400, reason: 'provider_http_error' },
+  ]);
+});
+test('a failing CDP diagnostic sink does not affect verification, supported, or settlement semantics', async () => {
+  const diagnostics = [];
+  const transport = new CdpTransport({
+    auth: async () => 'fixture', fetchImpl: async () => { throw Error('private network error'); },
+    onVerifyFailure: event => {
+      diagnostics.push(event);
+      throw Error('fixture sink unavailable');
+    },
+  });
+  await A.rejects(transport.verify({}, {}), { code: 'PROVIDER_UNAVAILABLE' });
+  await A.rejects(transport.supported({}), { code: 'PROVIDER_UNAVAILABLE' });
+  await A.rejects(transport.settle({}, {}), { code: 'SETTLEMENT_UNKNOWN' });
+  A.deepEqual(diagnostics, [{ stage: 'provider_verify', httpStatus: null, reason: 'transport_error' }]);
+});
 test('RPC reader only allows read methods and rejects redirects/errors/wrong IDs', async () => {
   let calls = 0;
   const rpc = rpcReader('https://fixture.invalid/', { fetchImpl: async (_url, init) => { calls++; A.equal(init.redirect,'error'); return Response.json({jsonrpc:'2.0',id:2,result:'0x1'}); } });

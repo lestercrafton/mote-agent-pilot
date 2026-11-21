@@ -22,3 +22,18 @@ Supported adapter metadata:
 | Base, eip155:8453 | 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913 | USD Coin /2 |
 
 Both use6 decimal places. No bridged assets, alternate recipients, Permit2, approval transactions or fallback networks are accepted. Network metadata alone is not activation or verified facilitator conformance.
+
+## Autonomous Agent Client
+
+For programmatic agents (zero manual wallet popups), use `src/agent-client.mjs` (`payAndAudit`) or the CLI `scripts/agent-pay.mjs`:
+
+```bash
+# Dry-run discovery, live 402 quote verification, cap check, and millisecond dual-signing (zero funds spent):
+npm run agent:pay -- --dry-run
+
+# Create a 0600 disposable EOA key file (prints public Base address only; fund with native Base USDC, 0 ETH gas required):
+npm run agent:pay -- --init-wallet .mote-agent-state/payer.key
+
+# Execute one capped 0.01 USDC job, wait for Base finality, verify signed receipt, and prove identical recovery:
+npm run agent:pay -- --key-file .mote-agent-state/payer.key --max-per-call 10000 --max-total 10000 --verify-recovery
+```

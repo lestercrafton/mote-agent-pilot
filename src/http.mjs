@@ -3,6 +3,8 @@ import { encodePaymentRequiredHeader, decodePaymentSignatureHeader, encodePaymen
 import { parseJson, LIMITS } from './core/json.mjs';
 import { assert, PROFILE, BINDING, payerWalletSupport } from './protocol.mjs';
 
+const clientRelease = 'https://github.com/lestercrafton/mote-agent-pilot/blob/main';
+
 // Dependencies are explicit; this module never reads credentials or starts a listener.
 export function httpServer(service, { manifestPath = '/.well-known/mote.json', healthPath = '/health', maxPaymentHeaderBytes=22000 } = {}) {
   assert(Number.isSafeInteger(maxPaymentHeaderBytes)&&maxPaymentHeaderBytes>=4096&&maxPaymentHeaderBytes<=22000,'HTTP_LIMIT');
@@ -16,6 +18,31 @@ export function httpServer(service, { manifestPath = '/.well-known/mote.json', h
         payTo: service.c.payTo, offerSigner: service.c.offerSigner, configHash: service.c.identity, requiredExtension: BINDING,
         ...(service.c.payerSignatureProfile ? { payerSignatureProfile: service.c.payerSignatureProfile } : {}),
         wallets: payerWalletSupport(service.c), limits: {...LIMITS,paymentHeaderBytes:maxPaymentHeaderBytes},
+        request: {
+          contentType: 'application/json',
+          schema: {
+            type: 'object', required: ['document'], additionalProperties: false,
+            properties: { document: {}, schema: { type: ['object', 'boolean'] } },
+          },
+          example: { document: { task: 'sort', count: 3 } },
+        },
+        client: {
+          profileUrl: clientRelease + '/docs/PROFILE.md',
+          sourceUrl: clientRelease + '/src/client.mjs',
+          agentClientUrl: clientRelease + '/src/agent-client.mjs',
+          cliUrl: clientRelease + '/scripts/agent-pay.mjs',
+          authorize: 'authorize', loadOriginalAuthorization: 'recoverAuthorization', payAndAudit: 'payAndAudit',
+        },
+        responses: {
+          quote: { httpStatus: 402, header: 'PAYMENT-REQUIRED' },
+          pending: { httpStatus: 202, status: 'pending' },
+          unsettled: { httpStatus: 202, status: 'unsettled', terminal: true },
+          complete: { httpStatus: 200, status: 'complete', header: 'PAYMENT-RESPONSE' },
+        },
+        retry: {
+          sameRequestBody: true, authorizationHeader: 'PAYMENT-SIGNATURE',
+          samePaymentSignature: true, signReplacement: false,
+        },
         recovery: 'Repeat original body and PAYMENT-SIGNATURE. Optional X-Mote-Transaction is a proof-checked hint. Never sign a replacement on timeout.',
         privacy: 'Synthetic nonsecret input only. Local journal stores result and signed authorization. No request logging. TLS/operator/storage review required before hosting.',
         ...(service.disclosure?{beta:service.disclosure}:{}),

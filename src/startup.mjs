@@ -78,7 +78,11 @@ export async function prepareProduction(env) {
     credentialBytes=privateFile(USDC_ROOT+'/cdp.json',8192);const credentials=JSON.parse(credentialBytes);
     assert(Object.keys(credentials).sort().join(',')==='apiKeyId,apiKeySecret'&&hashJson({apiKeyId:credentials.apiKeyId})===env.MOTE_CDP_KEY_ID_HASH,'USDC_CREDENTIAL_IDENTITY');
     journal=new Journal(PRODUCTION_ROOT+'/orders.sqlite',c.identity,{...settings.limits,create:false,recoveryOnly:env.MOTE_USDC_RECOVERY_ONLY==='true'});
-    const facilitator=new CdpTransport({auth:cdpAuth(credentials)});await facilitator.supported(c);
+    const facilitator = new CdpTransport({
+      auth: cdpAuth(credentials),
+      onVerifyFailure: diagnostic => console.warn(JSON.stringify(diagnostic)),
+    });
+    await facilitator.supported(c);
     const path=paymentPath(c,rpcReader(settings.rpcUrl)),proof=path.proof;await proof.anchor();
     const service=new Service({config:c,journal,facilitator,...path,receiptSigner,maxActive:4,requestsPerMinute:60});
     backups=new BackupSupervisor({source:journal.path,directory:PRODUCTION_ROOT+'/backups',expected:{identity:c.identity,config:c,limits:journal.limits},policy:settings.backup});

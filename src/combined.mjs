@@ -2,8 +2,9 @@ import { httpServer } from './http.mjs';
 import { assert } from './protocol.mjs';
 export const USDC_MANIFEST = '/.well-known/mote-usdc.json';
 export const USDC_PATH = '/v1/usdc/audit';
+const publicDiscoveryPaths = new Set(['/', '/.well-known/mote.json', '/openapi.json']);
 
-// Legacy request callback is retained verbatim. No URL/body/header rewrite and no second listening port.
+// Legacy request callback is retained verbatim on the same listening port.
 export function installCombinedRoutes({ legacy, usdc = null }) {
   const server=legacy.transport.server;
   const listeners=server.listeners('request'); assert(listeners.length===1,'LEGACY_HANDLER');
@@ -26,6 +27,9 @@ export function installCombinedRoutes({ legacy, usdc = null }) {
         if(!usdc) return json(res,req.method==='GET'&&req.url===USDC_MANIFEST?200:503,{service:'Mote USDC',enabled:false,productionReady:false,reason:'USDC_NOT_ACTIVATED'});
         if(!(req.method==='GET'&&[USDC_MANIFEST,'/v1/usdc/health'].includes(req.url))&&!(req.method==='POST'&&req.url===USDC_PATH))return json(res,404,{error:'ROUTE'});
         return paid(req,res);
+      }
+      if (usdc && req.method === 'GET' && publicDiscoveryPaths.has(req.url?.split('?', 1)[0])) {
+        res.appendHeader('Link', `<${USDC_MANIFEST}>; rel="service-desc"; type="application/json"; title="Mote signed receipts"`);
       }
       return listeners[0].call(server,req,res);
     } catch { if(!res.headersSent)json(res,503,{error:'COMBINED_UNAVAILABLE'});else res.destroy(); }

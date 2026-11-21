@@ -9,6 +9,7 @@
   "scripts": {
     "test": "node --test --test-concurrency=1 test/*.test.mjs",
     "demo": "node scripts/demo.mjs",
+    "agent:pay": "node scripts/agent-pay.mjs",
     "start:combined": "node scripts/combined-server.mjs",
     "maintenance": "node scripts/maintenance.mjs",
     "provision:receipt": "node scripts/provision-receipt.mjs",
