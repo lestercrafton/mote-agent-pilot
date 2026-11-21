@@ -1,0 +1,30 @@
+name: Mote Linux qualification
+
+on:
+  push:
+    branches:
+      - codex/mote-sepolia-recovery
+
+permissions:
+  contents: read
+
+jobs:
+  qualification:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Check out the release under test
+        run: |
+          git checkout --detach HEAD^
+          git rev-parse HEAD
+          sha256sum RELEASE-MANIFEST.json
+      - name: Build with the release-pinned Node and dependencies
+        run: docker build --file Dockerfile.qualification --tag mote-qualification .
+      - name: Run synthetic suite with the production compute limits
+        run: |
+          docker run --rm --network none --memory 512m --memory-swap 512m --cpus 0.5 \
+            --env NODE_OPTIONS=--max-old-space-size=96 mote-qualification
